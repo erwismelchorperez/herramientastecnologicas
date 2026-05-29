@@ -1,0 +1,940 @@
+/* ============================================================
+   FIN-THEME.CSS  —  Dark Financial Theme for AdminLTE 4
+   Compatible: AdminLTE 4.0 + Bootstrap 5.3
+   Sections:
+     1. Design Tokens (CSS custom properties)
+     2. Bootstrap / AdminLTE overrides — dark body
+     3. App Header
+     4. App Sidebar
+     5. Cards & Widgets
+     6. KPI / Stat Cards
+     7. Tables
+     8. Badges & Alerts
+     9. Buttons
+    10. Forms & Inputs
+    11. Charts wrapper
+    12. Progress bars
+    13. Pagination
+    14. Breadcrumb
+    15. Modals
+    16. Toasts / Notifications
+    17. Page header
+    18. Utility helpers
+    19. Animations
+    20. Scrollbar
+   ============================================================ */
+
+
+/* ─────────────────────────────────────────────────────────────
+   1. DESIGN TOKENS
+   ─────────────────────────────────────────────────────────────
+   Override Bootstrap 5.3 CSS vars + AdminLTE 4 CSS vars.
+   All of them are scoped inside [data-bs-theme="dark"] so that
+   AdminLTE's light/dark toggle works out of the box.
+   ───────────────────────────────────────────────────────────── */
+
+:root,
+[data-bs-theme="dark"] {
+
+  /* ── Brand palette ─────────────────────────────── */
+  --fin-bg:            #080d1a;          /* page background          */
+  --fin-surface:       #0f1729;          /* cards, sidebar           */
+  --fin-surface-2:     #162035;          /* inputs, hover states     */
+  --fin-surface-3:     #1c2a42;          /* nested panels, stripes   */
+  --fin-border:        #1e3256;          /* all hairline borders      */
+  --fin-border-soft:   rgba(30,50,86,.5);
+
+  /* ── Accent colours ────────────────────────────── */
+  --fin-cyan:          #00d4ff;
+  --fin-cyan-dim:      rgba(0,212,255,.12);
+  --fin-cyan-rgb:      0,212,255;
+
+  --fin-green:         #00e5a0;
+  --fin-green-dim:     rgba(0,229,160,.12);
+
+  --fin-orange:        #ff8c42;
+  --fin-orange-dim:    rgba(255,140,66,.12);
+
+  --fin-yellow:        #ffd93d;
+  --fin-yellow-dim:    rgba(255,217,61,.12);
+
+  --fin-red:           #ff4757;
+  --fin-red-dim:       rgba(255,71,87,.12);
+
+  --fin-purple:        #a78bfa;
+  --fin-purple-dim:    rgba(167,139,250,.12);
+
+  /* ── Text hierarchy ────────────────────────────── */
+  --fin-text:          #dde6f5;
+  --fin-text-soft:     #8ca3c8;
+  --fin-text-muted:    #4d6690;
+
+  /* ── Typography ────────────────────────────────── */
+  --fin-font-sans:     'Inter', 'Segoe UI', system-ui, sans-serif;
+  --fin-font-mono:     'JetBrains Mono', 'Fira Mono', monospace;
+
+  /* ── Geometry ──────────────────────────────────── */
+  --fin-radius:        4px;
+  --fin-radius-lg:     6px;
+  --fin-sidebar-w:     260px;
+  --fin-header-h:      56px;
+
+  /* ── Transitions ───────────────────────────────── */
+  --fin-speed:         .2s;
+  --fin-ease:          ease-in-out;
+
+  /* ────────────────────────────────────────────────
+     Bootstrap 5.3 variable overrides
+     These are the vars Bootstrap & AdminLTE read
+     ──────────────────────────────────────────────── */
+  --bs-primary:                var(--fin-cyan);
+  --bs-primary-rgb:            var(--fin-cyan-rgb);
+  --bs-body-bg:                var(--fin-bg);
+  --bs-body-color:             var(--fin-text);
+  --bs-border-color:           var(--fin-border);
+  --bs-border-radius:          var(--fin-radius);
+  --bs-border-radius-lg:       var(--fin-radius-lg);
+  --bs-font-sans-serif:        var(--fin-font-sans);
+  --bs-secondary-bg:           var(--fin-surface-2);
+  --bs-tertiary-bg:            var(--fin-surface-3);
+  --bs-secondary-color:        var(--fin-text-soft);
+  --bs-emphasis-color:         var(--fin-text);
+  --bs-link-color:             var(--fin-cyan);
+  --bs-link-hover-color:       #4de3ff;
+  --bs-card-bg:                var(--fin-surface);
+  --bs-card-border-color:      var(--fin-border);
+  --bs-table-bg:               transparent;
+  --bs-table-striped-bg:       rgba(255,255,255,.025);
+  --bs-table-hover-bg:         rgba(0,212,255,.04);
+  --bs-modal-bg:               var(--fin-surface);
+  --bs-modal-border-color:     var(--fin-border);
+  --bs-input-bg:               var(--fin-surface-2);
+  --bs-input-border-color:     var(--fin-border);
+  --bs-input-focus-border-color: var(--fin-cyan);
+  --bs-input-color:            var(--fin-text);
+  --bs-dropdown-bg:            var(--fin-surface);
+  --bs-dropdown-border-color:  var(--fin-border);
+  --bs-dropdown-link-color:    var(--fin-text);
+  --bs-dropdown-link-hover-bg: var(--fin-surface-2);
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   2. BASE — dark body
+   ───────────────────────────────────────────────────────────── */
+
+html, body {
+  background-color: var(--fin-bg) !important;
+  color:            var(--fin-text);
+  font-family:      var(--fin-font-sans);
+  font-size:        .875rem;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Grid background pattern — subtle, noisy feel */
+body.fin-grid::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(0,212,255,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,.025) 1px, transparent 1px);
+  background-size: 36px 36px;
+}
+
+.app-wrapper { position: relative; z-index: 1; }
+
+
+/* ─────────────────────────────────────────────────────────────
+   3. APP HEADER
+   ───────────────────────────────────────────────────────────── */
+
+.app-header.navbar {
+  background-color: var(--fin-surface) !important;
+  border-bottom: 1px solid var(--fin-border);
+  height: var(--fin-header-h);
+  min-height: var(--fin-header-h);
+  box-shadow: 0 1px 24px rgba(0,0,0,.4);
+  z-index: 1040;
+}
+
+/* Brand logo area inside header */
+.app-header .navbar-brand {
+  color: var(--fin-cyan) !important;
+  font-weight: 700;
+  letter-spacing: -.02em;
+  font-size: 1.05rem;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+.app-header .navbar-brand .brand-accent { color: var(--fin-text); }
+
+/* Nav links */
+.app-header .nav-link {
+  color: var(--fin-text-soft) !important;
+  transition: color var(--fin-speed);
+}
+.app-header .nav-link:hover { color: var(--fin-cyan) !important; }
+
+/* Search bar in header */
+.app-header .form-control {
+  background: var(--fin-surface-2);
+  border-color: var(--fin-border);
+  color: var(--fin-text);
+  border-radius: var(--fin-radius);
+  font-size: .8rem;
+}
+.app-header .form-control:focus {
+  border-color: var(--fin-cyan);
+  box-shadow: 0 0 0 .2rem var(--fin-cyan-dim);
+}
+
+/* Navbar dropdown */
+.app-header .dropdown-menu {
+  background: var(--fin-surface);
+  border: 1px solid var(--fin-border);
+  box-shadow: 0 8px 32px rgba(0,0,0,.5);
+  border-radius: var(--fin-radius-lg);
+  min-width: 200px;
+}
+.app-header .dropdown-item {
+  color: var(--fin-text-soft);
+  font-size: .8rem;
+  padding: .45rem 1rem;
+  transition: background var(--fin-speed), color var(--fin-speed);
+}
+.app-header .dropdown-item:hover {
+  background: var(--fin-surface-2);
+  color: var(--fin-cyan);
+}
+
+/* Badge on nav icons */
+.navbar-badge {
+  font-size: .6rem;
+  padding: .15em .4em;
+  background: var(--fin-red);
+  border-radius: 10px;
+  top: 4px !important;
+  right: 2px !important;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   4. APP SIDEBAR
+   ───────────────────────────────────────────────────────────── */
+
+.app-sidebar {
+  background-color: var(--fin-surface) !important;
+  border-right: 1px solid var(--fin-border) !important;
+  width: var(--fin-sidebar-w);
+  box-shadow: 2px 0 24px rgba(0,0,0,.35);
+}
+
+/* Brand strip */
+.sidebar-brand .brand-link {
+  background-color: var(--fin-bg) !important;
+  border-bottom: 1px solid var(--fin-border) !important;
+  padding: .9rem 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  text-decoration: none;
+}
+.sidebar-brand .brand-text {
+  color: var(--fin-cyan) !important;
+  font-weight: 700;
+  font-size: .95rem;
+  letter-spacing: -.01em;
+  line-height: 1;
+}
+.sidebar-brand .brand-text small {
+  display: block;
+  color: var(--fin-text-muted);
+  font-size: .65rem;
+  font-weight: 400;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+/* Section headings inside sidebar */
+.nav-sidebar .nav-header {
+  color: var(--fin-text-muted);
+  font-size: .6rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: 1rem 1rem .4rem;
+  font-weight: 600;
+}
+
+/* Nav items */
+.nav-sidebar .nav-item { margin-bottom: 1px; }
+
+.nav-sidebar .nav-link {
+  color: var(--fin-text-soft) !important;
+  border-radius: var(--fin-radius);
+  margin: 0 .5rem;
+  padding: .52rem .85rem;
+  font-size: .8rem;
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  transition: background var(--fin-speed), color var(--fin-speed);
+  position: relative;
+}
+.nav-sidebar .nav-link:hover {
+  background: var(--fin-surface-2) !important;
+  color: var(--fin-text) !important;
+}
+.nav-sidebar .nav-link.active {
+  background: var(--fin-cyan-dim) !important;
+  color: var(--fin-cyan) !important;
+}
+/* active left-bar accent */
+.nav-sidebar .nav-link.active::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 50%;
+  transform: translateY(-50%);
+  width: 3px; height: 60%;
+  background: var(--fin-cyan);
+  border-radius: 0 3px 3px 0;
+}
+
+.nav-sidebar .nav-icon {
+  width: 1.1rem;
+  font-size: .95rem;
+  opacity: .7;
+  flex-shrink: 0;
+}
+.nav-sidebar .nav-link.active .nav-icon { opacity: 1; }
+
+/* Treeview arrow */
+.nav-sidebar .nav-arrow {
+  margin-left: auto;
+  font-size: .7rem;
+  opacity: .5;
+  transition: transform var(--fin-speed);
+}
+.nav-sidebar .nav-item.menu-open > .nav-link .nav-arrow { transform: rotate(90deg); }
+
+/* Sub-menu */
+.nav-sidebar .nav-treeview {
+  background: transparent;
+  padding-left: 1.2rem;
+}
+.nav-sidebar .nav-treeview .nav-link {
+  font-size: .77rem;
+  padding: .38rem .8rem;
+  color: var(--fin-text-muted) !important;
+}
+.nav-sidebar .nav-treeview .nav-link:hover  { color: var(--fin-text) !important; }
+.nav-sidebar .nav-treeview .nav-link.active { color: var(--fin-cyan) !important; }
+
+/* Badge inside menu */
+.nav-sidebar .badge {
+  margin-left: auto;
+  font-size: .58rem;
+  padding: .2em .55em;
+}
+
+/* Sidebar footer / user panel */
+.sidebar-footer {
+  border-top: 1px solid var(--fin-border);
+  padding: .75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+}
+.sidebar-footer .user-name  { color: var(--fin-text); font-size: .78rem; font-weight: 600; }
+.sidebar-footer .user-role  { color: var(--fin-text-muted); font-size: .65rem; }
+.sidebar-footer img { border: 2px solid var(--fin-border); border-radius: 50%; width: 34px; height: 34px; }
+
+
+/* ─────────────────────────────────────────────────────────────
+   5. CARDS & WIDGETS
+   ───────────────────────────────────────────────────────────── */
+
+.card {
+  background: var(--fin-surface);
+  border: 1px solid var(--fin-border);
+  border-radius: var(--fin-radius-lg);
+  box-shadow: 0 4px 20px rgba(0,0,0,.25);
+  transition: border-color var(--fin-speed), box-shadow var(--fin-speed);
+}
+.card:hover {
+  border-color: rgba(0,212,255,.22);
+  box-shadow: 0 6px 28px rgba(0,0,0,.35);
+}
+
+.card-header {
+  background: transparent;
+  border-bottom: 1px solid var(--fin-border);
+  padding: .85rem 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-title {
+  color: var(--fin-text);
+  font-size: .8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  margin: 0;
+}
+.card-body  { padding: 1.1rem; }
+.card-footer {
+  background: transparent;
+  border-top: 1px solid var(--fin-border);
+  padding: .7rem 1.1rem;
+  font-size: .75rem;
+  color: var(--fin-text-soft);
+}
+
+/* Card tool buttons (AdminLTE card-widget) */
+.card-tools .btn-tool {
+  color: var(--fin-text-muted);
+  background: transparent;
+  border: none;
+  padding: .2rem .4rem;
+  font-size: .8rem;
+  transition: color var(--fin-speed);
+}
+.card-tools .btn-tool:hover { color: var(--fin-cyan); }
+
+/* Accent top border variants */
+.card.card-accent-cyan   { border-top: 2px solid var(--fin-cyan);   }
+.card.card-accent-green  { border-top: 2px solid var(--fin-green);  }
+.card.card-accent-orange { border-top: 2px solid var(--fin-orange); }
+.card.card-accent-red    { border-top: 2px solid var(--fin-red);    }
+.card.card-accent-yellow { border-top: 2px solid var(--fin-yellow); }
+.card.card-accent-purple { border-top: 2px solid var(--fin-purple); }
+
+
+/* ─────────────────────────────────────────────────────────────
+   6. KPI / STAT CARDS
+   ───────────────────────────────────────────────────────────── */
+
+/* Usage:
+   <div class="fin-kpi fin-kpi-cyan">
+     <div class="fin-kpi-icon"><i class="bi bi-bank2"></i></div>
+     <div class="fin-kpi-body">
+       <span class="fin-kpi-label">Capital Vigente</span>
+       <span class="fin-kpi-value">$4,846 M</span>
+       <span class="fin-kpi-sub">↑ 8.2% vs año anterior</span>
+     </div>
+   </div>
+*/
+
+.fin-kpi {
+  background: var(--fin-surface);
+  border: 1px solid var(--fin-border);
+  border-radius: var(--fin-radius-lg);
+  padding: 1.1rem 1.2rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  position: relative;
+  overflow: hidden;
+  transition: border-color var(--fin-speed), transform var(--fin-speed);
+}
+.fin-kpi::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+}
+.fin-kpi:hover { border-color: rgba(255,255,255,.12); transform: translateY(-1px); }
+
+.fin-kpi-cyan::before   { background: var(--fin-cyan);   }
+.fin-kpi-green::before  { background: var(--fin-green);  }
+.fin-kpi-orange::before { background: var(--fin-orange); }
+.fin-kpi-red::before    { background: var(--fin-red);    }
+.fin-kpi-yellow::before { background: var(--fin-yellow); }
+.fin-kpi-purple::before { background: var(--fin-purple); }
+
+.fin-kpi-icon {
+  width: 42px; height: 42px;
+  border-radius: var(--fin-radius);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+.fin-kpi-cyan   .fin-kpi-icon { background: var(--fin-cyan-dim);   color: var(--fin-cyan);   }
+.fin-kpi-green  .fin-kpi-icon { background: var(--fin-green-dim);  color: var(--fin-green);  }
+.fin-kpi-orange .fin-kpi-icon { background: var(--fin-orange-dim); color: var(--fin-orange); }
+.fin-kpi-red    .fin-kpi-icon { background: var(--fin-red-dim);    color: var(--fin-red);    }
+.fin-kpi-yellow .fin-kpi-icon { background: var(--fin-yellow-dim); color: var(--fin-yellow); }
+.fin-kpi-purple .fin-kpi-icon { background: var(--fin-purple-dim); color: var(--fin-purple); }
+
+.fin-kpi-body   { flex: 1; min-width: 0; }
+.fin-kpi-label  { font-size: .63rem; text-transform: uppercase; letter-spacing: .1em; color: var(--fin-text-soft); display: block; margin-bottom: .35rem; }
+.fin-kpi-value  { font-size: 1.55rem; font-weight: 800; line-height: 1; letter-spacing: -.03em; display: block; }
+.fin-kpi-sub    { font-size: .68rem; color: var(--fin-text-muted); display: block; margin-top: .3rem; }
+
+/* Trend helpers */
+.fin-kpi-sub.up   { color: var(--fin-green); }
+.fin-kpi-sub.down { color: var(--fin-red);   }
+
+.fin-kpi-cyan   .fin-kpi-value { color: var(--fin-cyan);   }
+.fin-kpi-green  .fin-kpi-value { color: var(--fin-green);  }
+.fin-kpi-orange .fin-kpi-value { color: var(--fin-orange); }
+.fin-kpi-red    .fin-kpi-value { color: var(--fin-red);    }
+.fin-kpi-yellow .fin-kpi-value { color: var(--fin-yellow); }
+.fin-kpi-purple .fin-kpi-value { color: var(--fin-purple); }
+
+/* Compact variant — no icon, tighter padding */
+.fin-kpi.fin-kpi-compact { padding: .75rem 1rem; }
+.fin-kpi.fin-kpi-compact .fin-kpi-value { font-size: 1.2rem; }
+
+
+/* ─────────────────────────────────────────────────────────────
+   7. TABLES
+   ───────────────────────────────────────────────────────────── */
+
+.table {
+  color: var(--fin-text);
+  border-color: var(--fin-border);
+  font-size: .8rem;
+}
+.table > thead > tr > th {
+  background: var(--fin-surface-2);
+  border-bottom: 1px solid var(--fin-border);
+  color: var(--fin-text-muted);
+  font-size: .63rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  padding: .7rem .9rem;
+  white-space: nowrap;
+}
+.table > tbody > tr > td {
+  border-bottom: 1px solid var(--fin-border-soft);
+  padding: .65rem .9rem;
+  vertical-align: middle;
+}
+.table > tbody > tr:last-child > td { border-bottom: none; }
+.table-hover > tbody > tr:hover > td {
+  background: rgba(0,212,255,.04);
+  color: var(--fin-text);
+}
+.table-striped > tbody > tr:nth-of-type(odd) > td {
+  background: rgba(255,255,255,.02);
+}
+
+/* Numeric cell — right-aligned, monospace */
+.table .num  { text-align: right; font-family: var(--fin-font-mono); font-size: .78rem; }
+.table .mono { font-family: var(--fin-font-mono); font-size: .78rem; }
+
+/* Status dot helper */
+.fin-dot {
+  display: inline-block;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  margin-right: 5px;
+  flex-shrink: 0;
+}
+.fin-dot-green  { background: var(--fin-green);  }
+.fin-dot-red    { background: var(--fin-red);    }
+.fin-dot-yellow { background: var(--fin-yellow); }
+.fin-dot-cyan   { background: var(--fin-cyan);   }
+.fin-dot-orange { background: var(--fin-orange); }
+
+
+/* ─────────────────────────────────────────────────────────────
+   8. BADGES & ALERTS
+   ───────────────────────────────────────────────────────────── */
+
+/* Semantic fin-badges */
+.badge.fin-badge-cyan   { background: var(--fin-cyan-dim);   color: var(--fin-cyan);   border: 1px solid rgba(0,212,255,.3);   }
+.badge.fin-badge-green  { background: var(--fin-green-dim);  color: var(--fin-green);  border: 1px solid rgba(0,229,160,.3);   }
+.badge.fin-badge-orange { background: var(--fin-orange-dim); color: var(--fin-orange); border: 1px solid rgba(255,140,66,.3);  }
+.badge.fin-badge-red    { background: var(--fin-red-dim);    color: var(--fin-red);    border: 1px solid rgba(255,71,87,.3);   }
+.badge.fin-badge-yellow { background: var(--fin-yellow-dim); color: var(--fin-yellow); border: 1px solid rgba(255,217,61,.3);  }
+.badge.fin-badge-purple { background: var(--fin-purple-dim); color: var(--fin-purple); border: 1px solid rgba(167,139,250,.3); }
+.badge.fin-badge-muted  { background: rgba(255,255,255,.06); color: var(--fin-text-soft); border: 1px solid var(--fin-border); }
+
+/* Soft alert box */
+.fin-alert {
+  border-radius: var(--fin-radius);
+  padding: .75rem 1rem;
+  font-size: .78rem;
+  display: flex;
+  align-items: flex-start;
+  gap: .65rem;
+  line-height: 1.5;
+}
+.fin-alert-icon { font-size: 1rem; flex-shrink: 0; margin-top: .05rem; }
+.fin-alert.fin-alert-warn   { background: var(--fin-yellow-dim); border-left: 3px solid var(--fin-yellow); color: var(--fin-text); }
+.fin-alert.fin-alert-danger { background: var(--fin-red-dim);    border-left: 3px solid var(--fin-red);    color: var(--fin-text); }
+.fin-alert.fin-alert-info   { background: var(--fin-cyan-dim);   border-left: 3px solid var(--fin-cyan);   color: var(--fin-text); }
+.fin-alert.fin-alert-ok     { background: var(--fin-green-dim);  border-left: 3px solid var(--fin-green);  color: var(--fin-text); }
+
+
+/* ─────────────────────────────────────────────────────────────
+   9. BUTTONS
+   ───────────────────────────────────────────────────────────── */
+
+/* Primary — cyan */
+.btn-primary,
+.btn-fin-primary {
+  background: var(--fin-cyan-dim);
+  border: 1px solid rgba(0,212,255,.4);
+  color: var(--fin-cyan);
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  border-radius: var(--fin-radius);
+  padding: .42rem .9rem;
+  transition: background var(--fin-speed), border-color var(--fin-speed), box-shadow var(--fin-speed);
+}
+.btn-primary:hover,
+.btn-fin-primary:hover {
+  background: rgba(0,212,255,.22);
+  border-color: var(--fin-cyan);
+  color: var(--fin-cyan);
+  box-shadow: 0 0 12px rgba(0,212,255,.25);
+}
+.btn-primary:focus,
+.btn-fin-primary:focus {
+  box-shadow: 0 0 0 .2rem var(--fin-cyan-dim);
+}
+
+/* Outline variants */
+.btn-outline-primary { border-color: rgba(0,212,255,.35); color: var(--fin-cyan); }
+.btn-outline-primary:hover { background: var(--fin-cyan-dim); color: var(--fin-cyan); border-color: var(--fin-cyan); }
+
+.btn-outline-success { border-color: rgba(0,229,160,.35); color: var(--fin-green); }
+.btn-outline-success:hover { background: var(--fin-green-dim); color: var(--fin-green); }
+
+.btn-outline-danger  { border-color: rgba(255,71,87,.35); color: var(--fin-red); }
+.btn-outline-danger:hover  { background: var(--fin-red-dim); color: var(--fin-red); }
+
+.btn-outline-warning { border-color: rgba(255,217,61,.35); color: var(--fin-yellow); }
+.btn-outline-warning:hover { background: var(--fin-yellow-dim); color: var(--fin-yellow); }
+
+/* Ghost secondary */
+.btn-secondary,
+.btn-fin-secondary {
+  background: var(--fin-surface-2);
+  border: 1px solid var(--fin-border);
+  color: var(--fin-text-soft);
+  font-size: .78rem;
+  border-radius: var(--fin-radius);
+  padding: .42rem .9rem;
+  transition: background var(--fin-speed), color var(--fin-speed);
+}
+.btn-secondary:hover,
+.btn-fin-secondary:hover { background: var(--fin-surface-3); color: var(--fin-text); }
+
+
+/* ─────────────────────────────────────────────────────────────
+   10. FORMS & INPUTS
+   ───────────────────────────────────────────────────────────── */
+
+.form-control,
+.form-select {
+  background-color: var(--fin-surface-2);
+  border: 1px solid var(--fin-border);
+  color: var(--fin-text);
+  font-size: .8rem;
+  border-radius: var(--fin-radius);
+  padding: .42rem .75rem;
+  transition: border-color var(--fin-speed), box-shadow var(--fin-speed);
+}
+.form-control::placeholder { color: var(--fin-text-muted); }
+.form-control:focus,
+.form-select:focus {
+  background-color: var(--fin-surface-2);
+  border-color: var(--fin-cyan);
+  color: var(--fin-text);
+  box-shadow: 0 0 0 .2rem var(--fin-cyan-dim);
+  outline: none;
+}
+.form-label {
+  font-size: .72rem;
+  color: var(--fin-text-soft);
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  margin-bottom: .35rem;
+  font-weight: 600;
+}
+.form-text { color: var(--fin-text-muted); font-size: .7rem; }
+
+/* Input groups */
+.input-group-text {
+  background: var(--fin-surface-3);
+  border-color: var(--fin-border);
+  color: var(--fin-text-soft);
+  font-size: .8rem;
+}
+
+/* Checkbox / Radio */
+.form-check-input {
+  background-color: var(--fin-surface-2);
+  border-color: var(--fin-border);
+}
+.form-check-input:checked {
+  background-color: var(--fin-cyan);
+  border-color: var(--fin-cyan);
+}
+.form-check-input:focus { box-shadow: 0 0 0 .2rem var(--fin-cyan-dim); }
+.form-check-label { color: var(--fin-text-soft); font-size: .8rem; }
+
+
+/* ─────────────────────────────────────────────────────────────
+   11. CHARTS WRAPPER
+   ───────────────────────────────────────────────────────────── */
+
+/* Wrap every Chart.js canvas in .fin-chart-container */
+.fin-chart-container {
+  position: relative;
+  width: 100%;
+}
+
+/* Chart.js global defaults are set via JS, but these wrappers
+   give a consistent background when needed */
+.fin-chart-container canvas { display: block; }
+
+
+/* ─────────────────────────────────────────────────────────────
+   12. PROGRESS BARS
+   ───────────────────────────────────────────────────────────── */
+
+.progress {
+  background: var(--fin-surface-3);
+  border-radius: 2px;
+  height: 6px;
+  overflow: hidden;
+}
+.progress-bar {
+  border-radius: 2px;
+  transition: width .6s var(--fin-ease);
+}
+/* Colour variants */
+.progress-bar.bg-fin-cyan   { background: var(--fin-cyan)   !important; }
+.progress-bar.bg-fin-green  { background: var(--fin-green)  !important; }
+.progress-bar.bg-fin-orange { background: var(--fin-orange) !important; }
+.progress-bar.bg-fin-red    { background: var(--fin-red)    !important; }
+.progress-bar.bg-fin-yellow { background: var(--fin-yellow) !important; }
+
+/* Label row above progress */
+.fin-progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: .68rem;
+  color: var(--fin-text-soft);
+  margin-bottom: .3rem;
+}
+.fin-progress-label span:last-child { color: var(--fin-cyan); font-family: var(--fin-font-mono); }
+
+
+/* ─────────────────────────────────────────────────────────────
+   13. PAGINATION
+   ───────────────────────────────────────────────────────────── */
+
+.pagination { gap: 3px; }
+.page-link {
+  background: var(--fin-surface);
+  border: 1px solid var(--fin-border);
+  color: var(--fin-text-soft);
+  font-size: .75rem;
+  padding: .35rem .65rem;
+  border-radius: var(--fin-radius) !important;
+  transition: background var(--fin-speed), color var(--fin-speed);
+}
+.page-link:hover {
+  background: var(--fin-surface-2);
+  border-color: var(--fin-border);
+  color: var(--fin-cyan);
+}
+.page-item.active .page-link {
+  background: var(--fin-cyan-dim);
+  border-color: rgba(0,212,255,.4);
+  color: var(--fin-cyan);
+}
+.page-item.disabled .page-link { color: var(--fin-text-muted); background: var(--fin-surface); }
+
+
+/* ─────────────────────────────────────────────────────────────
+   14. BREADCRUMB
+   ───────────────────────────────────────────────────────────── */
+
+.breadcrumb { font-size: .72rem; margin-bottom: 0; }
+.breadcrumb-item a { color: var(--fin-text-soft); text-decoration: none; transition: color var(--fin-speed); }
+.breadcrumb-item a:hover { color: var(--fin-cyan); }
+.breadcrumb-item.active { color: var(--fin-text-muted); }
+.breadcrumb-item + .breadcrumb-item::before { color: var(--fin-text-muted); }
+
+/* Page header containing title + breadcrumb */
+.app-content-header {
+  background: var(--fin-surface);
+  border-bottom: 1px solid var(--fin-border);
+  padding: .75rem 1.25rem;
+}
+.app-content-header h3 {
+  font-size: .95rem;
+  font-weight: 700;
+  letter-spacing: -.01em;
+  color: var(--fin-text);
+  margin: 0;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   15. MODALS
+   ───────────────────────────────────────────────────────────── */
+
+.modal-content {
+  background: var(--fin-surface);
+  border: 1px solid var(--fin-border);
+  border-radius: var(--fin-radius-lg);
+  box-shadow: 0 24px 64px rgba(0,0,0,.6);
+}
+.modal-header {
+  border-bottom: 1px solid var(--fin-border);
+  padding: 1rem 1.25rem;
+}
+.modal-title { font-size: .9rem; font-weight: 700; color: var(--fin-text); }
+.modal-footer { border-top: 1px solid var(--fin-border); }
+.btn-close { filter: invert(1) brightness(.7); }
+.modal-backdrop { background: rgba(4,8,20,.75) !important; }
+
+
+/* ─────────────────────────────────────────────────────────────
+   16. TOASTS / NOTIFICATIONS
+   ───────────────────────────────────────────────────────────── */
+
+.toast {
+  background: var(--fin-surface);
+  border: 1px solid var(--fin-border);
+  border-radius: var(--fin-radius-lg);
+  box-shadow: 0 8px 32px rgba(0,0,0,.5);
+  color: var(--fin-text);
+  font-size: .8rem;
+}
+.toast-header {
+  background: var(--fin-surface-2);
+  border-bottom: 1px solid var(--fin-border);
+  color: var(--fin-text);
+  font-weight: 600;
+  font-size: .78rem;
+}
+.toast-header .btn-close { filter: invert(1) brightness(.7); }
+
+
+/* ─────────────────────────────────────────────────────────────
+   17. PAGE HEADER (section titles inside content)
+   ───────────────────────────────────────────────────────────── */
+
+/* A styled section divider inside the content body */
+.fin-section-title {
+  font-size: .65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .16em;
+  color: var(--fin-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: .75rem;
+}
+.fin-section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--fin-border);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   18. UTILITY HELPERS
+   ───────────────────────────────────────────────────────────── */
+
+/* Text colours */
+.text-fin-cyan    { color: var(--fin-cyan)   !important; }
+.text-fin-green   { color: var(--fin-green)  !important; }
+.text-fin-orange  { color: var(--fin-orange) !important; }
+.text-fin-red     { color: var(--fin-red)    !important; }
+.text-fin-yellow  { color: var(--fin-yellow) !important; }
+.text-fin-purple  { color: var(--fin-purple) !important; }
+.text-fin-muted   { color: var(--fin-text-muted) !important; }
+.text-fin-soft    { color: var(--fin-text-soft)  !important; }
+
+/* Background fills */
+.bg-fin-surface   { background-color: var(--fin-surface)   !important; }
+.bg-fin-surface2  { background-color: var(--fin-surface-2) !important; }
+.bg-fin-cyan-dim  { background-color: var(--fin-cyan-dim)  !important; }
+.bg-fin-red-dim   { background-color: var(--fin-red-dim)   !important; }
+.bg-fin-green-dim { background-color: var(--fin-green-dim) !important; }
+
+/* Border accents */
+.border-fin       { border-color: var(--fin-border)  !important; }
+.border-fin-cyan  { border-color: var(--fin-cyan)    !important; }
+.border-fin-red   { border-color: var(--fin-red)     !important; }
+
+/* Monospace number display */
+.fin-mono { font-family: var(--fin-font-mono); }
+
+/* Separator line */
+.fin-hr {
+  border: none;
+  border-top: 1px solid var(--fin-border);
+  margin: 1rem 0;
+}
+
+/* Subtle info annotation block */
+.fin-annotation {
+  background: var(--fin-cyan-dim);
+  border-left: 2px solid var(--fin-cyan);
+  padding: .55rem .85rem;
+  font-size: .7rem;
+  color: var(--fin-text-soft);
+  line-height: 1.6;
+  border-radius: 0 var(--fin-radius) var(--fin-radius) 0;
+}
+.fin-annotation strong   { color: var(--fin-cyan); }
+.fin-annotation.warn     { background: var(--fin-red-dim); border-color: var(--fin-red); }
+.fin-annotation.warn strong { color: var(--fin-red); }
+
+
+/* ─────────────────────────────────────────────────────────────
+   19. ANIMATIONS
+   ───────────────────────────────────────────────────────────── */
+
+@keyframes fin-fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+.fin-fade-up { animation: fin-fade-up .45s var(--fin-ease) both; }
+
+/* Stagger helpers — add these classes to sibling elements */
+.fin-delay-1 { animation-delay: .05s; }
+.fin-delay-2 { animation-delay: .10s; }
+.fin-delay-3 { animation-delay: .15s; }
+.fin-delay-4 { animation-delay: .20s; }
+.fin-delay-5 { animation-delay: .25s; }
+
+/* Pulsing dot — use for live indicators */
+@keyframes fin-pulse {
+  0%, 100% { opacity: 1;   transform: scale(1);    }
+  50%       { opacity: .5; transform: scale(1.15); }
+}
+.fin-pulse { animation: fin-pulse 2s ease-in-out infinite; }
+
+
+/* ─────────────────────────────────────────────────────────────
+   20. SCROLLBAR
+   ───────────────────────────────────────────────────────────── */
+
+::-webkit-scrollbar               { width: 6px; height: 6px; }
+::-webkit-scrollbar-track         { background: var(--fin-bg); }
+::-webkit-scrollbar-thumb         { background: var(--fin-surface-3); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover   { background: var(--fin-border); }
+
+/* ─────────────────────────────────────────────────────────────
+   END OF FIN-THEME.CSS
+   ───────────────────────────────────────────────────────────── */

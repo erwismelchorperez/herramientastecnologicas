@@ -1,0 +1,121 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}
+Dashboard de Cartera
+{% endblock %}
+
+{% block content %}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-3">
+            <div class="col-sm-6">
+                <h1 class="fw-bold">Forecasting de Cartera</h1>
+                <p class="text-muted mb-0">Monitoreo financiero y análisis de cartera</p>
+
+            </div>
+            <div class="col-sm-6 text-end">
+                <div class="card-body">
+                    <form method="GET">
+                        <div class="row">
+                            <!-- AÑO -->
+                            <div class="col-md-3">
+                                <label class="form-label">
+                                    Año
+                                </label>
+                                <select id="anioSelect" name="anio" class="form-select">
+                                    {% for anio in anios %}
+                                        <option value="{{ anio }}" {% if anio == selected_anio %} selected {% endif %} >{{ anio }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <!-- MES -->
+                            <div class="col-md-3">
+                                <label class="form-label">Mes</label>
+                                <select id="mesSelect" name="mes" class="form-select" >
+                                    {% for mes in meses %}
+                                        <option value="{{ mes }}" 
+                                            {% if mes == selected_mes %} selected {% endif %} > {{ mes|upper }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content">
+
+    <div class="container-fluid">
+
+        <!-- ========================================= -->
+        <!-- FILA 1 -->
+        <!-- KPIs PRINCIPALES -->
+        <!-- ========================================= -->
+         <div class="row g-4 mb-4">
+            <div class="col-md-3">
+                <div class="card card-outline card-primary">
+                    <div class="card-body">
+                        <div class="kpi-label">Cartera Total</div>
+                        <div id="forecast_mes" class="kpi-value">$0</div>
+                        <div class="kpi-sub">Cartera Vig. + Cartera Ven.</div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+            <!-- /.card -->
+            </div>
+            <!-- /.col -->
+            <div class="col-md-3">
+                <div class="card card-outline card-success">
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="kpi-label">Capital Vigente</div>
+                        <div id="forecast_crecimiento" class="kpi-value">$0</div>
+                        <div id="subcapitalvigente" class="kpi-sub">% de la cartera total</div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+            </div>
+            <!-- /.col -->
+            <div class="col-md-3">
+            <div class="card card-outline card-warning">
+                <div class="card-body">
+                    <div class="kpi-label">Capital Vencido</div>
+                    <div id="forecast_error" class="kpi-value">$0</div>
+                    <div id="subcapitalvencido" class="kpi-sub">% de la cartera total</div>
+                </div>
+            </div>
+            <!-- /.card -->
+            </div>
+            <!-- /.col -->
+            <div class="col-md-3">
+                <div class="card card-outline card-danger">
+                    <div class="card-body">
+                        <div class="kpi-label">Índice de Morosidad</div>
+                        <div id="forecast_precision" class="kpi-value">0</div>
+                        <div class="kpi-sub">Cartera Ven. / Cartera total</div>
+                    </div>
+                </div>
+            <!-- /.card -->
+            </div>
+        </div>
+    </div>
+
+    
+</section>
+
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="{{ url_for('static',filename='js/dashboard/forecasting_cartera.js') }}"></script>
+<script>
+    window.chartLabels = {{ chart_labels | tojson }};
+
+    window.chartSeries = {{ chart_series | tojson }};
+</script>
+{% endblock %}

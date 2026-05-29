@@ -1,0 +1,153 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}
+Dashboard de Captación
+{% endblock %}
+
+{% block content %}
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-3">
+                <div class="col-sm-6">
+                    <h1 class="fw-bold">
+                        Dashboard de Captación
+                    </h1>
+                    <p class="text-muted mb-0">
+                        Monitoreo financiero y análisis de captación
+                    </p>
+                </div>
+                <div class="col-sm-6 text-end">
+                    <div class="card-body">
+                        <form method="GET">
+                            <div class="row">
+                                <!-- AÑO -->
+                                <div class="col-md-3">
+                                    <label class="form-label">
+                                        Año
+                                    </label>
+                                    <select id="anioSelect" name="anio" class="form-select">
+                                        {% for anio in anios %}
+                                            <option value="{{ anio }}" {% if anio == selected_anio %} selected {% endif %} >{{ anio }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <!-- MES -->
+                                <div class="col-md-3">
+                                    <label class="form-label">Mes</label>
+                                    <select id="mesSelect" name="mes" class="form-select" >
+                                        {% for mes in meses %}
+                                            <option value="{{ mes }}" 
+                                                {% if mes == selected_mes %} selected {% endif %} > {{ mes|upper }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row g-4 mb-4">
+                <div class="col-md-3">
+                    <div class="card card-outline card-primary">
+                        <div class="card-body">
+                            <div class="kpi-label">Captación Total</div>
+                            <div id="captacionTotal" class="kpi-value">$0</div>
+                            <div class="kpi-sub">Captación al cierre de mes</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card card-outline card-success">
+                        <div class="card-body">
+                            <div class="kpi-label">Captación captado</div>
+                            <div id="captacioncaptado" class="kpi-value">$0</div>
+                            <div id="subcapitalvigente" class="kpi-sub">Captación captado cierre de mes</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card card-outline card-warning">
+                        <div class="card-body">
+                            <div class="kpi-label">Depositos captación</div>
+                            <div id="captaciondeposito" class="kpi-value">$0</div>
+                            <div id="subcapitalvencido" class="kpi-sub">Depositos captación cierre de mes</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card card-outline card-danger">
+                        <div class="card-body">
+                            <div class="kpi-label">Retiros captación</div>
+                            <div id="captacionretiro" class="kpi-value">0</div>
+                            <div class="kpi-sub">Retiros captación cierre de mes</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header border-0">
+                        <h3 class="card-title">
+                            Evolución Captación
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="captacionEvolutionChart" style="height:250px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header border-0">
+                        <h3 class="card-title">
+                            Distribución Productos
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="captacionProductoChart" style="height:250px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header border-0">
+                        <h3 class="card-title">Captación por Sucursal</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="captacionSucursalChart" style="height:250px;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header border-0">
+                        <h3 class="card-title">
+                            Tipo de Socio
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="captacionTipoSocioChart" style="height:250px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="{{ url_for('static',filename='js/dashboard/captacion.js') }}"></script>
+{% endblock %}

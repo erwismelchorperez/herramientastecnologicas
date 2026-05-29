@@ -1,0 +1,141 @@
+.kpi-card{
+    border-radius:16px;
+    border:none;
+    overflow:hidden;
+    transition:all .2s ease;
+    position:relative;
+}
+
+.kpi-card:hover{
+    transform:translateY(-3px);
+}
+
+.kpi-card .card-body{
+    padding:20px;
+}
+
+.kpi-label{
+    font-size:13px;
+    font-weight:600;
+    text-transform:uppercase;
+    opacity:.85;
+    margin-bottom:10px;
+    letter-spacing:.5px;
+}
+
+.kpi-value{
+    font-size:32px;
+    font-weight:700;
+    line-height:1.1;
+    margin-bottom:8px;
+}
+
+.kpi-sub{
+    font-size:13px;
+    opacity:.8;
+}
+
+.kpi-blue{
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+    color:white;
+    box-shadow:0 10px 30px rgba(37,99,235,.35);
+}
+
+.kpi-green{
+    background:linear-gradient(135deg,#16a34a,#15803d);
+    color:white;
+    box-shadow:0 10px 30px rgba(22,163,74,.35);
+}
+
+.kpi-red{
+    background:linear-gradient(135deg,#dc2626,#b91c1c);
+    color:white;
+    box-shadow:0 10px 30px rgba(220,38,38,.35);
+}
+
+.kpi-yellow{
+    background:linear-gradient(135deg,#eab308,#ca8a04);
+    color:white;
+    box-shadow:0 10px 30px rgba(234,179,8,.35);
+}
+
+.kpi-orange{
+    background:linear-gradient(135deg,#f97316,#ea580c);
+    color:white;
+    box-shadow:0 10px 30px rgba(249,115,22,.35);
+}
+.section-label{
+    text-transform:uppercase;
+    letter-spacing:0.15em;
+    color:var(--muted);
+    margin-bottom:10px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.section-label::after{
+    content:'';
+    flex:1;
+    height:1px;
+    background:#475569;
+}
+
+/**********************************************/
+.mora-card{
+    background:#111827 !important;
+    border:1px solid #1e293b;
+    border-radius:16px;
+    box-shadow:none;
+}
+
+.mora-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:14px;
+}
+
+.mora-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:14px;
+    border:1px solid rgba(255,255,255,.05);
+    border-radius:14px;
+    background:rgba(255,255,255,.02);
+    transition:.2s;
+}
+
+.mora-item:hover{
+    background:rgba(255,255,255,.04);
+    transform:translateY(-2px);
+}
+
+.mora-range{
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:#94a3b8;
+    margin-bottom:4px;
+}
+
+.mora-count{
+    font-size:22px;
+    font-weight:700;
+    line-height:1;
+}
+
+.mora-percent{
+    font-size:12px;
+    color:#64748b;
+    margin-top:4px;
+}
+
+.mora-dot{
+    width:14px;
+    height:14px;
+    border-radius:50%;
+}
+.nav-arrow {
+    display: inline-block !important;
+}

@@ -1,0 +1,109 @@
+<nav class="app-header navbar navbar-expand bg-body">
+    <div class="container-fluid">
+        <!-- Sidebar Toggle -->
+        <ul class="navbar-nav">
+
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="sidebarToggle" role="button">
+                    <i class="fas fa-bars""></i>
+                </a>
+            </li>
+
+        </ul>
+
+        <!-- Right Navbar -->
+        <ul class="navbar-nav ms-auto align-items-center">
+            <!-- Notifications -->
+            <li class="nav-item dropdown">
+                <a class="nav-link" data-bs-toggle="dropdown" href="#" >
+                    <i class="far fa-bell"></i>
+                    <span class="navbar-badge badge text-bg-warning">
+                        3
+                    </span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+                    <span class="dropdown-item dropdown-header">
+                        3 Notificaciones
+                    </span>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item">
+                        <i class="fas fa-exclamation-circle me-2 text-danger"></i>
+                        Mora incrementó 2%
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item">
+                        <i class="fas fa-chart-line me-2 text-success"></i>
+                        Forecast positivo
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item">
+                        <i class="fas fa-users me-2 text-primary"></i>
+                        Nuevos socios registrados
+                    </a>
+                </div>
+            </li>
+
+            <!-- User Menu -->
+            <li class="nav-item dropdown ms-3">
+                <a class="nav-link d-flex align-items-center" data-bs-toggle="dropdown" href="#" >
+                    <img
+                        src="{{ url_for('static', filename='assets/img/users/user1-128x128.jpg') }}"
+                        alt="User Avatar"
+                        class="rounded-circle shadow"
+                        width="38"
+                        height="38"
+                    >
+                    <span class="ms-2 fw-semibold">
+                        {{ current_user.username }}
+                    </span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end">
+
+                    <a href="#" class="dropdown-item">
+
+                        <i class="fas fa-user me-2"></i>
+
+                        Perfil
+
+                    </a>
+
+                    <a href="#" class="dropdown-item">
+
+                        <i class="fas fa-cog me-2"></i>
+
+                        Configuración
+
+                    </a>
+
+                    <div class="dropdown-divider"></div>
+
+                    <a
+                        href="{{ url_for('auth.logout') }}"
+                        class="dropdown-item text-danger"
+                    >
+
+                        <i class="fas fa-sign-out-alt me-2"></i>
+
+                        Cerrar sesión
+
+                    </a>
+
+                </div>
+
+            </li>
+
+        </ul>
+
+    </div>
+
+</nav>
+<script>
+    $(document).ready(function(){
+        $('#sidebarToggle').on('click', function(e){
+            e.preventDefault();
+            $('body').toggleClass(
+                'sidebar-collapse'
+            );
+        });
+    });
+</script>

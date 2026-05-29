@@ -1,0 +1,151 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}
+Dashboard de Socios
+{% endblock %}
+
+{% block content %}
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-3">
+                <div class="col-sm-6">
+                    <h1 class="fw-bold">
+                        Dashboard de Socios
+                    </h1>
+                    <p class="text-muted mb-0">
+                        Monitoreo financiero y análisis de Socios
+                    </p>
+                </div>
+                <div class="col-sm-6 text-end">
+                    <div class="card-body">
+                        <form method="GET">
+                            <div class="row">
+                                <!-- AÑO -->
+                                <div class="col-md-3">
+                                    <label class="form-label">
+                                        Año
+                                    </label>
+                                    <select id="anioSelect" name="anio" class="form-select">
+                                        {% for anio in anios %}
+                                            <option value="{{ anio }}" {% if anio == selected_anio %} selected {% endif %} >{{ anio }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <!-- MES -->
+                                <div class="col-md-3">
+                                    <label class="form-label">Mes</label>
+                                    <select id="mesSelect" name="mes" class="form-select" >
+                                        {% for mes in meses %}
+                                            <option value="{{ mes }}" 
+                                                {% if mes == selected_mes %} selected {% endif %} > {{ mes|upper }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row g-4 mb-4">
+                <div class="col-md-3">
+                    <div class="card card-outline card-primary">
+                        <div class="card-body">
+                            <div class="kpi-label">Capital Social</div>
+                            <div id="capital_social" class="kpi-value">$0</div>
+                            <div class="kpi-sub">Capital Social al cierre de mes</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card card-outline card-success">
+                        <div class="card-body">
+                            <div class="kpi-label">Socios activos</div>
+                            <div id="socios_activos" class="kpi-value">0</div>
+                            <div id="subcapitalvigente" class="kpi-sub">Socios activos al cierre de mes</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card card-outline card-warning">
+                        <div class="card-body">
+                            <div class="kpi-label">Socios nuevos</div>
+                            <div id="altas_mes" class="kpi-value">$0</div>
+                            <div id="subcapitalvencido" class="kpi-sub">Socios nuevos al cierre de mes</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card card-outline card-danger">
+                        <div class="card-body">
+                            <div class="kpi-label">Socios baja</div>
+                            <div id="bajas_mes" class="kpi-value">0</div>
+                            <div class="kpi-sub">Socios dados de baja al cierre de mes</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="card">
+                    <div class="card-header border-0">
+                        <h3 class="card-title">
+                            Socios por Sucursal
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="sociosSucursalChart" style="height:250px;" ></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="card">
+                    <div class="card-header border-0">
+                        <h3 class="card-title">Distribución por Sexo   </h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="sociosSexoChart" style="height:265px;" ></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header border-0">
+                        <h3 class="card-title">
+                            Distribución por Edad
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="sociosEdadChart" style="height:250px;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header border-0">
+                        <h3 class="card-title">
+                            Antigüedad del Socio
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="sociosAntiguedadChart" style="height:250px;" ></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="{{ url_for('static',filename='js/dashboard/socios.js') }}"></script>
+{% endblock %}

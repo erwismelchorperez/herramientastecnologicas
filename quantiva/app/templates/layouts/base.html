@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es"  data-bs-theme="dark">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>
+        Quantiva
+    </title>
+
+    <!-- AdminLTE -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/adminlte.min.css') }}" >
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dark-theme.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fin-theme.css') }}">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='plugins/font-awesome/css/all.min.css') }}" >
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- ApexCharts -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+</head>
+
+<!--<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">-->
+<body class="layout-fixed sidebar-expand-lg fin-grid">
+<div class="app-wrapper">
+
+    {% include 'components/navbar.html' %}
+
+    {% include 'components/sidebar.html' %}
+
+    <main class="app-main">
+
+        <div class="app-content p-4">
+
+            {% block content %}
+            {% endblock %}
+
+        </div>
+
+    </main>
+
+</div>
+
+<!-- AdminLTE -->
+<script src="{{ url_for('static', filename='plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+<script src="{{ url_for('static', filename='js/adminlte.min.js') }}"></script>
+
+{% block scripts %}
+
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,74 @@
+<aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+    <div class="sidebar-brand">
+        <a href="/" class="brand-link">
+            <!--<img src="{{ url_for('static', filename='assets/img/quantiva_logo.png')  }}" type="image/png" class="brand-image opacity-75 shadow"/>-->
+            <i class="bi bi-bank2" style="color:var(--fin-cyan);font-size:1.2rem"></i> 
+            <span class="brand-text fw-light">
+                Quantiva AI
+                <small>Institución Financiera</small>
+            </span>
+        </a>
+    </div>
+
+    <div class="sidebar-wrapper">
+        <nav class="mt-2">
+            <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="navigation" data-accordion="false">
+                <li class="nav-item">
+                    <a href="{{ url_for('dashboard.index') }}" class="nav-link {% if request.endpoint == 'dashboard.index' %} active {% endif %}">
+                        <i class="nav-icon fas fa-chart-line"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('cartera.dashboard') }}" class="nav-link {% if request.endpoint == 'cartera.dashboard' %} active {% endif %}">
+                        <i class="nav-icon fas fa-wallet"></i>
+                        <p>Cartera</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('captacion.dashboard') }}" class="nav-link {% if request.endpoint == 'captacion.dashboard' %} active {% endif %}">
+                        <i class="nav-icon fas fa-piggy-bank"></i>
+                        <p>Captación</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ url_for('socios.dashboard') }}" class="nav-link {% if request.endpoint == 'socios.dashboard' %} active {% endif %}">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>Socios</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-brain"></i>
+                        <p>
+                            Forecast IA
+                            <i class="nav-arrow fa-solid fa-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ url_for('forecast_cartera.dashboard') }}" class="nav-link {% if request.endpoint == 'forecast_cartera.dashboard' %} active {% endif %}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Cartera</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="./widgets/info-box.html" class="nav-link">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Captación</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="./widgets/cards.html" class="nav-link">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Socios</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</aside>
