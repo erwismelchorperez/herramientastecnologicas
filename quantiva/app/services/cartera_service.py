@@ -406,13 +406,13 @@ class CarteraService:
             'chart_series': series
         }
     @staticmethod
-    def get_productos_table(anio=None,mes=None):
+    def get_productos_table(anio=None,mes=None, page=1, per_page=10):
         if not anio or not mes:
             ultimo_periodo = CarteraService.get_latest_period()
             anio = ultimo_periodo.anio
             mes = ultimo_periodo.mes
 
-        datos = db.session.query(
+        base_query = db.session.query(
             Credito.producto_credito.label('producto'),
             func.sum(
                 Credito.capital_vigente
@@ -428,9 +428,16 @@ class CarteraService:
             Credito.mes == mes
         ).group_by(
             Credito.producto_credito
-        ).order_by(
+        )
+        total=base_query.count()
+        datos=base_query.order_by(
             desc('capital_vigente')
-        ).limit(10).all()
+        ).offset(
+            (page-1)*per_page
+        ).limit(
+            per_page
+        ).all()
+        
         resultado = []
         for row in datos:
             resultado.append({
@@ -439,4 +446,12 @@ class CarteraService:
                 'capital_vencido': float(row.capital_vencido or 0),
                 'numero_creditos': int(row.numero_creditos or 0)
             })
-        return resultado
+        return {
+            'data':resultado,
+            'page':page,
+            'per_page':per_page,
+            'total':total,
+            'total_pages':(
+                total+per_page-1
+            )//per_page
+        }

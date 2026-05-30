@@ -7,6 +7,7 @@ let sucursalVigenteChart;
 let sucursalVencidoChart;
 let carteraDonutChart;
 let topProductosVigenteChart;
+let currentProductosPage=1;
 $(document).ready(function(){
     initChart();
     //initClasificacionChart()
@@ -1062,15 +1063,43 @@ function loadTopProductosVigenteChart(anio,mes){
         }
     });
 }
-function loadProductosTable(anio,mes){
+function loadProductosTable(anio,mes,page=1){
     $.ajax({
         url: '/api/cartera/productos-table',
         method: 'GET',
         data: {
             anio: anio,
-            mes: mes
+            mes: mes,
+            page:page
         },
         success: function(response){
+            let html='';
+
+            response.data.forEach(item=>{
+
+                html+=`
+                <tr>
+                    <td>${item.producto}</td>
+                    <td class="text-end">
+                        ${formatCurrencyShort(item.capital_vigente)}
+                    </td>
+                    <td class="text-end">
+                        ${formatCurrencyShort(item.capital_vencido)}
+                    </td>
+                    <td class="text-end">
+                        ${item.numero_creditos.toLocaleString()}
+                    </td>
+                </tr>
+                `;
+            });
+
+            $('#productosTableBody').html(html);
+
+            renderProductosPagination(
+                response.page,
+                response.total_pages
+            );
+            /*
             let tbody = $('#productosTableBody');
             tbody.empty();
             response.forEach(function(item){
@@ -1093,8 +1122,48 @@ function loadProductosTable(anio,mes){
                     </tr>
                 `);
             });
+            $('#productosTableBody').html(
+                html
+            );
+            renderProductosPagination(
+                response.page,
+                response.total_pages,
+                anio,
+                mes
+            );*/
+        },
+        error:function(xhr){
+            console.error(xhr);
         }
     });
+}
+function renderProductosPagination(page,totalPages){
+    let html='';
+    html+=`
+        <ul class="pagination pagination-sm justify-content-end mb-0">
+    `;
+    for(let i=1;i<=totalPages;i++){
+        html+=`
+            <li class="page-item ${i===page?'active':''}">
+                <button
+                    class="page-link"
+                    onclick="changeProductosPage(${i})"
+                >
+                    ${i}
+                </button>
+            </li>
+            `;
+    }
+    html+='</ul>';
+    $('#productosPagination').html(html);
+}
+function changeProductosPage(page){
+    currentProductosPage=page;
+    loadProductosTable(
+        $('#anioSelect').val(),
+        $('#mesSelect').val(),
+        page
+    );
 }
 function formatCurrencyShort(value){
     value = Number(value);

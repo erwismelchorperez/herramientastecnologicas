@@ -139,3 +139,8 @@
 .nav-arrow {
     display: inline-block !important;
 }
+.small-icon{
+    width:50px !important;
+    min-width:50px !important;
+    font-size:20px !important;
+}
