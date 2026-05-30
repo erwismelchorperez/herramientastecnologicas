@@ -11,7 +11,7 @@
     </div>
 
     <div class="sidebar-wrapper">
-        <nav class="mt-2">
+        <nav class="mt-1">
             <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="navigation" data-accordion="false">
                 <li class="nav-item">
                     <a href="{{ url_for('dashboard.index') }}" class="nav-link {% if request.endpoint == 'dashboard.index' %} active {% endif %}">
@@ -19,53 +19,48 @@
                         <p>Dashboard</p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="{{ url_for('cartera.dashboard') }}" class="nav-link {% if request.endpoint == 'cartera.dashboard' %} active {% endif %}">
-                        <i class="nav-icon fas fa-wallet"></i>
-                        <p>Cartera</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ url_for('captacion.dashboard') }}" class="nav-link {% if request.endpoint == 'captacion.dashboard' %} active {% endif %}">
-                        <i class="nav-icon fas fa-piggy-bank"></i>
-                        <p>Captación</p>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="{{ url_for('socios.dashboard') }}" class="nav-link {% if request.endpoint == 'socios.dashboard' %} active {% endif %}">
-                        <i class="nav-icon fas fa-users"></i>
-                        <p>Socios</p>
-                    </a>
-                </li>
-
-                <li class="nav-item">
+                <li class="nav-header">Cartera</li>
+                <li class="nav-item  {% if request.endpoint in ['cartera.dashboard'] %} menu-open {% endif %}">
                     <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-brain"></i>
-                        <p>
-                            Forecast IA
-                            <i class="nav-arrow fa-solid fa-chevron-right"></i>
-                        </p>
+                        <i class="nav-icon bi bi-wallet2"></i>
+                        <p>Análisis de Cartera<i class="nav-arrow bi bi-chevron-right"></i></p>
                     </a>
                     <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{{ url_for('forecast_cartera.dashboard') }}" class="nav-link {% if request.endpoint == 'forecast_cartera.dashboard' %} active {% endif %}">
-                                <i class="nav-icon bi bi-circle"></i>
-                                <p>Cartera</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="./widgets/info-box.html" class="nav-link">
-                                <i class="nav-icon bi bi-circle"></i>
-                                <p>Captación</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="./widgets/cards.html" class="nav-link">
-                                <i class="nav-icon bi bi-circle"></i>
-                                <p>Socios</p>
-                            </a>
-                        </li>
+                        <li class="nav-item"><a href="{{ url_for('cartera.dashboard') }}" class="nav-link  {% if request.endpoint == 'cartera.dashboard' %} active {% endif %}"><i class="nav-icon fas fa-wallet"></i><p>Cartera</p></a></li>
+                        <li class="nav-item"><a href="#" class="nav-link"><i class="nav-icon fas fa-arrow-trend-down"></i><p>Cartera Vencida</p></a></li>
+                        <li class="nav-item"><a href="#" class="nav-link"><i class="nav-icon fas fa-building"></i><p>Cartera Sucursal</p></a></li>
+                    </ul>
+                </li>
+                <li class="nav-header">Captación</li>
+                <li class="nav-item  {% if request.endpoint in ['captacion.dashboard'] %} menu-open {% endif %}">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon bi bi-wallet2"></i>
+                        <p>Análisis de Captación<i class="nav-arrow bi bi-chevron-right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item"><a href="{{ url_for('captacion.dashboard') }}" class="nav-link  {% if request.endpoint == 'captacion.dashboard' %} active {% endif %}"><i class="nav-icon fas fa-piggy-bank"></i><p>Captación</p></a></li>
+                    </ul>
+                </li>
+                <li class="nav-header">Socios</li>
+                <li class="nav-item  {% if request.endpoint in ['socios.dashboard'] %} menu-open {% endif %}">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon bi bi-wallet2"></i>
+                        <p>Análisis de Socios<i class="nav-arrow bi bi-chevron-right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item"><a href="{{ url_for('socios.dashboard') }}" class="nav-link  {% if request.endpoint == 'socios.dashboard' %} active {% endif %}"><i class="nav-icon fas fa-users"></i><p>Socios</p></a></li>
+                    </ul>
+                </li>
+                <li class="nav-header">Forecast</li>
+                <li class="nav-item {% if request.endpoint in ['forecast_cartera.dashboard'] %} menu-open {% endif %}">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon bi bi-wallet2"></i>
+                        <p>Forecast IA<i class="nav-arrow bi bi-chevron-right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item"><a href="{{ url_for('forecast_cartera.dashboard') }}" class="nav-link  {% if request.endpoint == 'forecast_cartera.dashboard' %} active {% endif %}"><i class="nav-icon fas fa-wallet"></i><p>Cartera</p></a></li>
+                        <li class="nav-item"><a href="#" class="nav-link"><i class="nav-icon fas fa-piggy-bank"></i><p>Captación</p></a></li>
+                        <li class="nav-item"><a href="#" class="nav-link"><i class="nav-icon fas fa-users"></i><p>Socios</p></a></li>
                     </ul>
                 </li>
             </ul>

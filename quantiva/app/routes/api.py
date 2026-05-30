@@ -84,7 +84,8 @@ def top_productos_vigente_chart():
 def productos_table():
     anio = request.args.get('anio',type=int)
     mes = request.args.get('mes')
-    data = CarteraService.get_productos_table(anio,mes)
+    page=request.args.get('page',1,type=int)
+    data = CarteraService.get_productos_table(anio,mes,page)
     return jsonify(data)
 """
     Captación
