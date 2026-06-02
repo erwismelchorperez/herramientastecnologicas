@@ -2,151 +2,45 @@
 
 {% block content %}
 
-<section class="content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="content-header">
-                <div class="container-fluid">
-                    <div class="row mb-3">
-                        <div class="col-sm-6">
-                            <h1 class="m-0 fw-bold">
-                                Dashboard Financiero
-                            </h1>
-                            <p class="text-muted mb-0">
-                                Información consolidada del último período disponible
-                            </p>
-                        </div>
-                        <div class="col-sm-6 text-end">
-                            <div class="card shadow-sm border-0 d-inline-block"style="border-radius: 14px;">
-                                <div class="card-body py-2 px-4">
-                                    <small class="text-muted">
-                                        Último corte financiero
-                                    </small>
-                                    <h5 class="mb-0 fw-bold text-primary">
-                                        {{ ultimo_mes|upper }}
-                                        {{ ultimo_anio }}
-                                    </h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<!--<section class="content">-->
+    <div class="page-header">
+        <div class="page-header-info">
+            <div class="page-title">
+                Dashboard Financiero General
+            </div>
+            <div class="page-subtitle">
+                Información consolidada del último período disponible
             </div>
         </div>
-
-        </div>
-        <div class="row">
-
-            <div class="col-lg-3 col-6">
-
-                <div class="small-box text-bg-success">
-
-                    <div class="inner">
-
-                        <h3>{{cartera_total}}</h3>
-
-                        <p>Cartera Total </p>
-                    </div>
-
-                    <div class="small-box-icon">
-
-                        <i class="fas fa-wallet"></i>
-
-                    </div>
-
-                </div>
-
+        <div class="page-period">
+            <div class="period-title">
+                {{ ultimo_mes|upper }} {{ ultimo_anio }}
             </div>
-
-            <div class="col-lg-3 col-6">
-
-                <div class="small-box text-bg-primary">
-
-                    <div class="inner">
-
-                        <h3>{{captacion_total}}</h3>
-
-                        <p>Captación</p>
-
-                    </div>
-
-                    <div class="small-box-icon">
-
-                        <i class="fas fa-piggy-bank"></i>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="col-lg-3 col-6">
-
-                <div class="small-box text-bg-warning">
-
-                    <div class="inner">
-
-                        <h3>12,892</h3>
-
-                        <p>Socios</p>
-
-                    </div>
-
-                    <div class="small-box-icon">
-
-                        <i class="fas fa-users"></i>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="col-lg-3 col-6">
-                <div class="small-box text-bg-danger">
-                    <div class="inner">
-                        <h3>{{ "{:,.2f}".format(morosidad) }}%</h3>
-                        <p>Mora</p>
-                    </div>
-                    <div class="small-box-icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">
-                    Evolución de Cartera {{ ultimo_anio }}
-                </h3>
-            </div>
-            <div class="card-body">
-                <!--<div id="carteraChart"></div>-->
-                <canvas id="carteraChart"></canvas>
+            <div class="period-subtitle">
+                Último corte financiero
             </div>
         </div>
     </div>
-</section>
-
-<!--<div class="card mt-4">
-    <div class="card-header">
-
-        <h3 class="card-title">
-
-            Evolución Financiera
-
-        </h3>
-
+    <div class="sec">Indicadores Generales</div>
+    <div class="g4">
+        <div class="kpi kc"><div class="kpi-top"><div><span class="kpi-lbl">Cartera Total</span><span class="kpi-val">{{cartera_total}}</span><span class="kpi-sub up"></span></div><div class="kpi-ico"><i class="bi bi-bank2"></i></div></div><div id="sp-home-1"></div></div>
+        <div class="kpi kg"><div class="kpi-top"><div><span class="kpi-lbl">Captación</span><span class="kpi-val">{{captacion_total}}</span><span class="kpi-sub"></span></div><div class="kpi-ico"><i class="bi bi-shield-check"></i></div></div><div id="sp-home-2"></div></div>
+        <div class="kpi kr"><div class="kpi-top"><div><span class="kpi-lbl">Mora</span><span class="kpi-val">{{ "{:,.2f}".format(morosidad) }}%</span><span class="kpi-sub down"></span></div><div class="kpi-ico"><i class="bi bi-exclamation-octagon"></i></div></div><div id="sp-home-3"></div></div>
+        <div class="kpi ky"><div class="kpi-top"><div><span class="kpi-lbl">Socios</span><span class="kpi-val">12,892</span><span class="kpi-sub"></span></div><div class="kpi-ico"><i class="bi bi-people"></i></div></div><div id="sp-home-4"></div></div>
     </div>
-    <div class="card-body">
-
-        <div id="financialChart"></div>
-
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">
+                Evolución de Cartera {{ ultimo_anio }}
+            </h3>
+        </div>
+        <div class="card-body">
+            <!--<div id="carteraChart"></div>-->
+            <canvas id="carteraChart"></canvas>
+        </div>
     </div>
-</div>-->
+<!--</section>-->
+
 
 {% endblock %}
 {% block scripts %}

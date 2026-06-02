@@ -1137,6 +1137,7 @@ function loadProductosTable(anio,mes,page=1){
         }
     });
 }
+/*
 function renderProductosPagination(page,totalPages){
     let html='';
     html+=`
@@ -1155,6 +1156,24 @@ function renderProductosPagination(page,totalPages){
             `;
     }
     html+='</ul>';
+    $('#productosPagination').html(html);
+}*/
+function renderProductosPagination(page,totalPages){
+
+    let html='';
+
+    for(let i=1;i<=totalPages;i++){
+
+        html += `
+            <button
+                class="page-btn ${i===page?'active':''}"
+                onclick="changeProductosPage(${i})"
+            >
+                ${i}
+            </button>
+        `;
+    }
+
     $('#productosPagination').html(html);
 }
 function changeProductosPage(page){

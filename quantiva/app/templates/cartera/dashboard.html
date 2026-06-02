@@ -6,330 +6,105 @@ Dashboard de Cartera
 
 {% block content %}
 
-<!-- ========================================= -->
-<!-- CONTENT HEADER -->
-<!-- ========================================= -->
-
-<section class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-3">
-            <div class="col-sm-6">
-
-                <h1 class="fw-bold">
-
-                    Dashboard de Cartera
-
-                </h1>
-
-                <p class="text-muted mb-0">
-
-                    Monitoreo financiero y análisis de cartera
-
-                </p>
-
+<div class="page-header">
+    <div class="page-header-info">
+        <div class="page-title">
+            Dashboard de Cartera
+        </div>
+        <div class="page-subtitle">
+            Monitoreo financiero y análisis de cartera
+        </div>
+    </div>
+    <div class="page-filters">
+        <form method="GET" class="filter-form">
+            <div class="filter-group">
+                <label>
+                    Año
+                </label>
+                <select id="anioSelect" name="anio">
+                    {% for anio in anios %}
+                        <option
+                            value="{{ anio }}"
+                            {% if anio == selected_anio %}selected{% endif %}
+                        >
+                            {{ anio }}
+                        </option>
+                    {% endfor %}
+                </select>
             </div>
-            <div class="col-sm-6 d-flex justify-content-end">
-                <div class="card-body">
-                    <form method="GET">
-                        <div class="row">
-                            <!-- AÑO -->
-                            <div class="col-md-3">
-                                <label class="form-label">
-                                    Año
-                                </label>
-                                <select id="anioSelect" name="anio" class="form-select">
-                                    {% for anio in anios %}
-                                        <option value="{{ anio }}" {% if anio == selected_anio %} selected {% endif %} >{{ anio }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <!-- MES -->
-                            <div class="col-md-3">
-                                <label class="form-label">Mes</label>
-                                <select id="mesSelect" name="mes" class="form-select" >
-                                    {% for mes in meses %}
-                                        <option value="{{ mes }}" 
-                                            {% if mes == selected_mes %} selected {% endif %} > {{ mes|upper }}
-                                        </option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                    </form>
+            <div class="filter-group">
+                <label>
+                    Mes
+                </label>
+                <select id="mesSelect" name="mes">
+                    {% for mes in meses %}
+                        <option
+                            value="{{ mes }}"
+                            {% if mes == selected_mes %}selected{% endif %}
+                        >
+                            {{ mes|upper }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="page active" id="page-cartera-suc">
+  <div class="g4">
+    <div class="kpi kc"><div class="kpi-top"><div><span class="kpi-lbl">Vigente</span><span id="creditos_vigentes" class="kpi-val">$2,285 M</span><span class="kpi-sub up"></span></div><div class="kpi-ico"><i class="bi bi-geo-alt"></i></div></div></div>
+    <div class="kpi kg"><div class="kpi-top"><div><span class="kpi-lbl">Vencidos</span><span id="creditos_vencidos" class="kpi-val">$1,287 M</span><span class="kpi-sub down"></span></div><div class="kpi-ico"><i class="bi bi-geo-alt"></i></div></div></div>
+    <div class="kpi ko"><div class="kpi-top"><div><span class="kpi-lbl">Reestructurados</span><span id="reestructurado" class="kpi-val">$1,131 M</span><span class="kpi-sub"></span></div><div class="kpi-ico"><i class="bi bi-geo-alt"></i></div></div></div>
+    <div class="kpi kr"><div class="kpi-top"><div><span class="kpi-lbl">Crédito Promedio</span><span id="credito_promedio" class="kpi-val">$143 M</span><span class="kpi-sub down"></span></div><div class="kpi-ico"><i class="bi bi-geo-alt"></i></div></div></div>
+  </div>
+</div>
+
+<div class="page active" id="page-cartera-suc">
+  <div class="g4">
+    <div class="kpi kc"><div class="kpi-top"><div><span class="kpi-lbl">Cartera Total</span><span id="carteraTotal" class="kpi-val">$2,285 M</span><span class="kpi-sub up">Cartera Vig. + Cartera Ven.</span></div><div class="kpi-ico"><i class="bi bi-geo-alt"></i></div></div></div>
+    <div class="kpi kg"><div class="kpi-top"><div><span class="kpi-lbl">Capital Vigente</span><span id="capitalvigente" class="kpi-val">$1,287 M</span><span id="subcapitalvigente" class="kpi-sub up">% de la cartera total</span></div><div class="kpi-ico"><i class="bi bi-geo-alt"></i></div></div></div>
+    <div class="kpi ko"><div class="kpi-top"><div><span class="kpi-lbl">Capital Vencido</span><span id="capitalvencido" class="kpi-val">$1,131 M</span><span id="subcapitalvencido" class="kpi-sub">% de la cartera total</span></div><div class="kpi-ico"><i class="bi bi-geo-alt"></i></div></div></div>
+    <div class="kpi kr"><div class="kpi-top"><div><span class="kpi-lbl">Índice de Morosidad</span><span id="morosidad" class="kpi-val">$143 M</span><span class="kpi-sub down">Cartera Ven. / Cartera total</span></div><div class="kpi-ico"><i class="bi bi-geo-alt"></i></div></div></div>
+  </div>
+</div>
+<div class="sec">Evolución Anual</div>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                    <h3 class="card-title">
+                    </h3>
                 </div>
+            <div class="card-body">
+                <div id="carteraEvolutionChart" style="height: 200px;"></div>
             </div>
         </div>
     </div>
-</section>
-
-<!-- ========================================= -->
-<!-- MAIN CONTENT -->
-<!-- ========================================= -->
-
-<section class="content">
-
-    <div class="container-fluid">
-
-        <!-- ========================================= -->
-        <!-- FILA 1 -->
-        <!-- KPIs PRINCIPALES -->
-        <!-- ========================================= -->
-        <div class="row g-4 mb-4">
-            <div class="col-md-3">
-                <div class="card card-outline card-primary">
-                    <div class="card-body">
-                        <div class="kpi-label">Cartera Total</div>
-                        <div id="carteraTotal" class="kpi-value">$0</div>
-                        <div class="kpi-sub">Cartera Vig. + Cartera Ven.</div>
-                    </div>
-                    <!-- /.card-body -->
-                </div>
-            <!-- /.card -->
-            </div>
-            <!-- /.col -->
-            <div class="col-md-3">
-                <div class="card card-outline card-success">
-                    <!-- /.card-header -->
-                    <div class="card-body">
-                        <div class="kpi-label">Capital Vigente</div>
-                        <div id="capitalvigente" class="kpi-value">$0</div>
-                        <div id="subcapitalvigente" class="kpi-sub">% de la cartera total</div>
-                    </div>
-                    <!-- /.card-body -->
-                </div>
-            </div>
-            <!-- /.col -->
-            <div class="col-md-3">
-            <div class="card card-outline card-warning">
-                <div class="card-body">
-                    <div class="kpi-label">Capital Vencido</div>
-                    <div id="capitalvencido" class="kpi-value">$0</div>
-                    <div id="subcapitalvencido" class="kpi-sub">% de la cartera total</div>
-                </div>
-            </div>
-            <!-- /.card -->
-            </div>
-            <!-- /.col -->
-            <div class="col-md-3">
-                <div class="card card-outline card-danger">
-                    <div class="card-body">
-                        <div class="kpi-label">Índice de Morosidad</div>
-                        <div id="morosidad" class="kpi-value">0</div>
-                        <div class="kpi-sub">Cartera Ven. / Cartera total</div>
-                    </div>
-                </div>
-            <!-- /.card -->
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-3 col-sm-6 col-12">
-                <div class="info-box">
-                    <span class="info-box-icon bg-success">
-                        <i class="fas fa-check fa-sm" ></i>
-                    </span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">Vigentes</span>
-                        <span id="creditos_vigentes" class="info-box-number"></span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3 col-sm-6 col-12">
-                <div class="info-box">
-                    <span class="info-box-icon bg-danger">
-                        <i class="fas fa-exclamation"></i>
-                    </span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">Vencidos</span>
-                        <span id="creditos_vencidos" class="info-box-number"></span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3 col-sm-6 col-12">
-                <div class="info-box">
-                    <span class="info-box-icon bg-warning">
-                        <i class="fas fa-sync"></i>
-                    </span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">Reestructurados</span>
-                        <span id="reestructurado" class="info-box-number"></span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3 col-sm-6 col-12">
-                <div class="info-box">
-                    <span class="info-box-icon bg-info">
-                        <i class="fas fa-chart-line"></i>
-                    </span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">Crédito Promedio</span>
-                        <span id="credito_promedio" class="info-box-number"></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ========================================= -->
-        <!-- FILA 2 -->
-        <!-- EVOLUCIÓN DE CARTERA -->
-        <!-- ========================================= -->
-        <div class="fin-section-title fin-fade-up fin-delay-1">Evolución de cartera</div>
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                            <h3 class="card-title">
-                                Evolución Anual
-                            </h3>
-                        </div>
-                    <div class="card-body">
-                        <div id="carteraEvolutionChart" style="height: 200px;"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ========================================= -->
-        <!-- FILA 3 -->
-        <!-- DISTRIBUCIÓN -->
-        <!-- ========================================= -->
-        <br>
-        <div class="fin-section-title fin-fade-up fin-delay-1">Cartera por Sucursal</div>
-        <div class="row">
-            <!-- DONUT -->
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            Cartera Vigente por Sucursal
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <div
-                            id="sucursalVigenteChart"
-                            style="height: 250px;"
-                        ></div>
-
-                    </div>
-
-                </div>
-
-            </div>
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            Cartera Vencida por Sucursal
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <div
-                            id="sucursalVencidoChart"
-                            style="height: 250px;"
-                        ></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <br>
-        <div class="fin-section-title fin-fade-up fin-delay-1">Calidad de Cartera</div>
-        <div class="row">
-            <div class="col-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            Créditos por clasificación
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <div
-                            id="clasificacion_statusChart"
-                            style="height: 250px;"
-                        ></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            Crétidos por Sucursal
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <div
-                            id="sucursalCountChart"
-                            style="height: 250px;"
-                        ></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            Distribución Días en Mora
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <div id="carteraDonutChart" style="height:250px;"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- ========================================= -->
-        <br>
-        <div class="fin-section-title fin-fade-up fin-delay-1">Portafolio de Productos</div>
-        <div class="row">
-            <div class="col">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            Top Productos · Capital Vigente
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <div
-                            id="topProductosVigenteChart"
-                            style="height: 250px;"
-                        ></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Productos de Crédito</h3>
-                    </div>
-                    <div class="card-body table-responsive p-0">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead>
-                                <tr>
-                                    <th>Producto</th>
-                                    <th class="text-end">Vigente</th>
-                                    <th class="text-end">Vencida</th>
-                                    <th class="text-end"># Créditos</th>
-                                </tr>
-                            </thead>
-                            <tbody id="productosTableBody">
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="card-footer">
-                        <nav>
-                            <ul class="pagination pagination-sm justify-content-end mb-0"
-                                id="productosPagination">
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </div>
+</div>
+<div class="sec">Comparativo por Sucursal</div>
+<div class="g2">
+    <div class="card a-c"><div class="card-hd"><span class="card-title">Cartera Anual por Sucursal</span><span class="ctag">Originación $M</span></div><div id="sucursalVigenteChart" style="min-height:240px"></div></div>
+    <div class="card a-g"><div class="card-hd"><span class="card-title">Capital Vigente vs Vencido</span><span class="ctag g">Stacked 100%</span></div><div id="sucursalVencidoChart" style="min-height:240px"></div></div>
+</div>
+<div class="sec">Calidad de Cartera</div>
+<div class="g3">
+    <div class="card a-p"><div class="card-hd"><span class="card-title">Tipo de Cuenta</span></div><div id="clasificacion_statusChart" style="min-height:190px"></div><div class="donut-legend"><div class="dl-item"><div class="dl-dot" style="background:var(--cyan)"></div><div class="dl-lbl">Ahorro Libre</div><div class="dl-val">61,308</div><div class="dl-pct">65.0%</div></div><div class="dl-item"><div class="dl-dot" style="background:var(--purple)"></div><div class="dl-lbl">Ahorro Programado</div><div class="dl-val">24,523</div><div class="dl-pct">26.0%</div></div><div class="dl-item"><div class="dl-dot" style="background:var(--green)"></div><div class="dl-lbl">Ahorro Infantil</div><div class="dl-val">8,489</div><div class="dl-pct">9.0%</div></div></div></div>
+    <div class="card a-y"><div class="card-hd"><span class="card-title">Saldo por Sucursal</span></div><div id="sucursalCountChart" style="min-height:190px"></div></div>
+    <div class="card"><div class="card-hd"><span class="card-title">Rango de Saldos</span></div><div id="carteraDonutChart" style="min-height:190px"></div></div>
+</div>
+<div class="sec">Portafolio de Productos</div>
+<div class="g2">
+    <div class="card a-g"><div class="card-hd"><span class="card-title">Top Productos · Capital Vigente</span><span class="ctag g">Saldo $M</span></div><div id="topProductosVigenteChart" style="min-height:200px"></div></div>
+    <div class="card"><div class="card-hd"><span class="card-title">Productos de Crédito</span><span class="ctag y"></span></div>
+        <table class="tbl">
+        <thead><tr><th>Producto</th><th class="num">Vigente</th><th class="num">Vencida</th><th class="num"># Créditos</th></tr></thead>
+        <tbody id="productosTableBody"></tbody>
+        </table>
+        <div class="tbl-footer">
+            <div id="productosPagination"></div>
         </div>
     </div>
-</section>
+</div>
 
 {% endblock %}
 
