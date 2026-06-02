@@ -2,17 +2,33 @@
 
 {% block content %}
 
-<div class="container vh-100 d-flex justify-content-center align-items-center">
+<div class="login-page">
 
-    <div class="card shadow p-5" style="width: 420px;">
+    <div class="login-card">
 
-        <h2 class="mb-4 text-center">
-            Quantiva
-        </h2>
+        <div class="login-brand">
+
+            <div class="brand-icon">
+                <i class="bi bi-graph-up-arrow"></i>
+            </div>
+
+            <div>
+
+                <div class="login-title">
+                    Quantiva
+                </div>
+
+                <div class="login-subtitle">
+                    Financial Intelligence Platform
+                </div>
+
+            </div>
+
+        </div>
 
         <form method="POST">
 
-            <div class="mb-3">
+            <div class="form-group">
 
                 <label>
                     Usuario
@@ -21,13 +37,12 @@
                 <input
                     type="text"
                     name="username"
-                    class="form-control"
                     required
                 >
 
             </div>
 
-            <div class="mb-3">
+            <div class="form-group">
 
                 <label>
                     Contraseña
@@ -36,15 +51,14 @@
                 <input
                     type="password"
                     name="password"
-                    class="form-control"
                     required
                 >
 
             </div>
 
             <button
-                class="btn btn-success w-100"
                 type="submit"
+                class="login-btn"
             >
                 Iniciar sesión
             </button>

@@ -1,16 +1,103 @@
-<aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
-    <div class="sidebar-brand">
-        <a href="/" class="brand-link">
-            <!--<img src="{{ url_for('static', filename='assets/img/quantiva_logo.png')  }}" type="image/png" class="brand-image opacity-75 shadow"/>-->
-            <i class="bi bi-bank2" style="color:var(--fin-cyan);font-size:1.2rem"></i> 
-            <span class="brand-text fw-light">
-                Quantiva AI
-                <small>Institución Financiera</small>
-            </span>
-        </a>
+<aside class="sidebar">
+    <div class="brand">
+        <div class="brand-icon"><i class="bi bi-bank2"></i></div>
+        <div>
+            <div class="brand-text">Quantiva AI</div>
+            <div class="brand-sub">Sistema Financiero</div>
+        </div>
     </div>
 
-    <div class="sidebar-wrapper">
+    <div class="nap-wrap">
+        <!-- Dashboard -->
+        <div class="nav-group">
+            <span class="nav-label">Principal</span>
+            <div class="nav-item">
+                <a href="{{ url_for('dashboard.index') }}" class="nav-link {% if request.endpoint == 'dashboard.index' %}active{% endif %}">
+                <i class="nav-icon bi bi-speedometer2"></i>
+                <span>Dashboard General</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Cartera -->
+        <div class="nav-group">
+            <span class="nav-label">Cartera</span>
+            <div class="nav-item {% if request.endpoint in ['cartera.dashboard', 'cartera.sucursales'] %} open {% endif %}" id="grp-cartera">
+                <a class="nav-link" onclick="toggle('grp-cartera')">
+                    <i class="nav-icon bi bi-wallet2"></i>
+                    <span>Cartera</span>
+                    <i class="nav-arrow bi bi-chevron-right"></i>
+                </a>
+                <div class="sub-menu">
+                    <a href="{{ url_for('cartera.dashboard') }}" class="sub-link {% if request.endpoint == 'cartera.dashboard' %}active{% endif %}" >
+                        <span class="sub-dot"></span>Cartera
+                    </a>
+                    <a href="{{ url_for('cartera.sucursales') }}" class="sub-link {% if request.endpoint == 'cartera.sucursales' %}active{% endif %}" >
+                        <span class="sub-dot"></span>Cartera por sucursal
+                        <span class="n-badge" style="margin-left:auto">!</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Captación -->
+        <div class="nav-group">
+            <span class="nav-label">Captación</span>
+            <div class="nav-item" id="grp-captacion">
+                <a class="nav-link" onclick="toggle('grp-captacion')">
+                <i class="nav-icon bi bi-piggy-bank"></i>
+                <span>Captación</span>
+                <i class="nav-arrow bi bi-chevron-right"></i>
+                </a>
+                <div class="sub-menu">
+                <a href="{{ url_for('captacion.dashboard') }}" class="sub-link" onclick="nav('cap-plazo',this)">
+                    <span class="sub-dot"></span>Depósitos a Plazo
+                </a>
+                <a class="sub-link" onclick="nav('cap-ahorro',this)">
+                    <span class="sub-dot"></span>Ahorro / Vista
+                </a>
+                </div>
+            </div>
+        </div>
+        <!-- Socios -->
+        <div class="nav-group">
+            <span class="nav-label">Socios</span>
+            <div class="nav-item" id="grp-socios">
+                <a class="nav-link" onclick="toggle('grp-socios')">
+                <i class="nav-icon bi bi-people"></i>
+                <span>Socios</span>
+                <i class="nav-arrow bi bi-chevron-right"></i>
+                </a>
+                <div class="sub-menu">
+                <a href="{{ url_for('socios.dashboard') }}" class="sub-link" onclick="nav('socios-altas',this)">
+                    <span class="sub-dot"></span>Altas y Bajas
+                </a>
+                <a class="sub-link" onclick="nav('socios-demo',this)">
+                    <span class="sub-dot"></span>Demografía / Perfil
+                </a>
+                <a class="sub-link" onclick="nav('socios-fid',this)">
+                    <span class="sub-dot"></span>Antigüedad / Fidelización
+                </a>
+                </div>
+            </div>
+        </div>
+        <!-- Reportes -->
+        <div class="nav-group">
+            <span class="nav-label">Reportes</span>
+            <div class="nav-item">
+                <a href="{{ url_for('forecast_cartera.dashboard') }}" class="nav-link" onclick="nav('home',this)">
+                <i class="nav-icon bi bi-file-earmark-bar-graph"></i>
+                <span>Regulatorios</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a  class="nav-link">
+                <i class="nav-icon bi bi-sliders"></i>
+                <span>Configuración</span>
+                </a>
+            </div>
+        </div>
+    <!--
         <nav class="mt-1">
             <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="navigation" data-accordion="false">
                 <li class="nav-item">
@@ -65,5 +152,49 @@
                 </li>
             </ul>
         </nav>
+    -->
+    </div>
+    <div class="sidebar-foot">
+        <div class="ava">JR</div>
+        <div>
+            <div class="foot-name">{{ current_user.username }}</div>
+            <div class="foot-role"></div>
+        </div>
     </div>
 </aside>
+<script>
+    const titles = {
+    home:         ['Dashboard General',       'Institución Financiera · Vista consolidada 2020–2025'],
+    'cartera-suc':['Cartera × Sucursal',      'Análisis comparativo de cartera por punto de operación'],
+    'cartera-venc':['Cartera Vencida',        'Morosidad · Días en mora · Créditos en riesgo'],
+    'cap-plazo':  ['Depósitos a Plazo (DAP)', 'Captación · Vencimientos · Tasas · Distribución'],
+    'cap-ahorro': ['Ahorro / Vista',          'Cuentas activas · Flujos de captación y retiros'],
+    'socios-altas':['Altas y Bajas de Socios','Movimiento anual · Crecimiento neto · Deserción'],
+    'socios-demo':['Demografía de Socios',    'Perfil · Edad · Género · Ocupación · Geografía'],
+    'socios-fid': ['Antigüedad y Fidelización','Segmentación · Score · Cross-selling · Retención'],
+    };
+    function nav(id, el) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        document.querySelectorAll('.sub-link').forEach(l => l.classList.remove('active'));
+
+        const page = document.getElementById('page-' + id);
+        if (page) { page.classList.add('active'); renderPage(id); }
+
+        if (el) {
+            if (el.classList.contains('nav-link')) el.classList.add('active');
+            else { el.classList.add('active'); }
+        }
+
+        const t = titles[id];
+        if (t) {
+            document.getElementById('tb-title').textContent = t[0];
+            document.getElementById('tb-sub').textContent   = t[1];
+        }
+    }
+    function toggle(groupId) {
+        const el = document.getElementById(groupId);
+        el.classList.toggle('open');
+    }
+
+</script>
