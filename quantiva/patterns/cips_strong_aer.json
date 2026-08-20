@@ -1,0 +1,30 @@
+[
+    {
+        "Pattern": "[share <= 0.0006936095089956161]",
+        "negative Count": 728,
+        "negative Support": 0.8899755501222494,
+        "positive Count": 17,
+        "positive Support": 0.02078239608801956
+    },
+    {
+        "Pattern": "[share > 0.0006936095089956161]",
+        "negative Count": 90,
+        "negative Support": 0.1100244498777506,
+        "positive Count": 801,
+        "positive Support": 0.9792176039119804
+    },
+    {
+        "Pattern": "[share > 0.0006936095089956161] \u2227 [share <= 0.000893153487963804]",
+        "negative Count": 85,
+        "negative Support": 0.1039119804400978,
+        "positive Count": 5,
+        "positive Support": 0.006112469437652812
+    },
+    {
+        "Pattern": "[share > 0.0006936095089956161] \u2227 [share > 0.000893153487963804]",
+        "negative Count": 5,
+        "negative Support": 0.006112469437652812,
+        "positive Count": 796,
+        "positive Support": 0.9731051344743277
+    }
+]

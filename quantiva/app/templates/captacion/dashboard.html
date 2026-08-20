@@ -5,146 +5,111 @@ Dashboard de Captación
 {% endblock %}
 
 {% block content %}
-    <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-3">
-                <div class="col-sm-6">
-                    <h1 class="fw-bold">
-                        Dashboard de Captación
-                    </h1>
-                    <p class="text-muted mb-0">
-                        Monitoreo financiero y análisis de captación
-                    </p>
+    <div class="page-header">
+        <div class="page-header-info">
+            <div class="page-title">
+                Dashboard de Captación
+            </div>
+            <div class="page-subtitle">
+                Monitoreo financiero y análisis de captación
+            </div>
+        </div>
+        <div class="page-filters">
+            <form method="GET" class="filter-form">
+                <div class="filter-group">
+                    <label>
+                        Año
+                    </label>
+                    <select id="anioSelect" name="anio">
+                        {% for anio in anios %}
+                            <option
+                                value="{{ anio }}"
+                                {% if anio == selected_anio %}selected{% endif %}
+                            >
+                                {{ anio }}
+                            </option>
+                        {% endfor %}
+                    </select>
                 </div>
-                <div class="col-sm-6 text-end">
-                    <div class="card-body">
-                        <form method="GET">
-                            <div class="row">
-                                <!-- AÑO -->
-                                <div class="col-md-3">
-                                    <label class="form-label">
-                                        Año
-                                    </label>
-                                    <select id="anioSelect" name="anio" class="form-select">
-                                        {% for anio in anios %}
-                                            <option value="{{ anio }}" {% if anio == selected_anio %} selected {% endif %} >{{ anio }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                <!-- MES -->
-                                <div class="col-md-3">
-                                    <label class="form-label">Mes</label>
-                                    <select id="mesSelect" name="mes" class="form-select" >
-                                        {% for mes in meses %}
-                                            <option value="{{ mes }}" 
-                                                {% if mes == selected_mes %} selected {% endif %} > {{ mes|upper }}
-                                            </option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                        </form>
+                <div class="filter-group">
+                    <label>
+                        Mes
+                    </label>
+                    <select id="mesSelect" name="mes">
+                        {% for mes in meses %}
+                            <option
+                                value="{{ mes }}"
+                                {% if mes == selected_mes %}selected{% endif %}
+                            >
+                                {{ mes|upper }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- -->
+    <div class="page active" id="page-cartera-suc">
+        <div class="g4">
+            <div class="kpi kc">
+                <div class="kpi-top">
+                    <div>
+                        <span class="kpi-lbl">Captación Total</span>
+                        <span id="captacionTotal" class="kpi-val"></span>
+                        <span class="kpi-sub">Captación al cierre de mes</span>
+                    </div>
+                    <div class="kpi-ico">
+                        <i class="bi bi-piggy-bank"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="kpi kg">
+                <div class="kpi-top">
+                    <div>
+                        <span class="kpi-lbl">Captación Captado</span>
+                        <span id="captacioncaptado" class="kpi-val"></span>
+                        <span class="kpi-sub">Captación captado cierre de mes</span>
+                    </div>
+                    <div class="kpi-ico"><i class="bi bi-wallet2"></i></div>
+                </div>
+            </div>
+            <div class="kpi ko">
+                <div class="kpi-top">
+                    <div>
+                        <span class="kpi-lbl">Depositos captación</span>
+                        <span id="captaciondeposito" class="kpi-val"></span>
+                        <span class="kpi-sub">Depositos captación cierre de mes</span>
+                    </div>
+                    <div class="kpi-ico"><i class="bi bi-arrow-down-circle-fill"></i></div>
+                </div>
+            </div>
+            <div class="kpi kr">
+                <div class="kpi-top">
+                    <div>
+                        <span class="kpi-lbl">Retiros captación</span>
+                        <span id="captacionretiro" class="kpi-val"></span>
+                        <span class="kpi-sub down">Retiros captación cierre de mes</span>
+                    </div>
+                    <div class="kpi-ico">
+                        <i class="bi bi-arrow-up-circle-fill"></i>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-    <section class="content">
-        <div class="container-fluid">
-            <div class="row g-4 mb-4">
-                <div class="col-md-3">
-                    <div class="card card-outline card-primary">
-                        <div class="card-body">
-                            <div class="kpi-label">Captación Total</div>
-                            <div id="captacionTotal" class="kpi-value">$0</div>
-                            <div class="kpi-sub">Captación al cierre de mes</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card card-outline card-success">
-                        <div class="card-body">
-                            <div class="kpi-label">Captación captado</div>
-                            <div id="captacioncaptado" class="kpi-value">$0</div>
-                            <div id="subcapitalvigente" class="kpi-sub">Captación captado cierre de mes</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card card-outline card-warning">
-                        <div class="card-body">
-                            <div class="kpi-label">Depositos captación</div>
-                            <div id="captaciondeposito" class="kpi-value">$0</div>
-                            <div id="subcapitalvencido" class="kpi-sub">Depositos captación cierre de mes</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card card-outline card-danger">
-                        <div class="card-body">
-                            <div class="kpi-label">Retiros captación</div>
-                            <div id="captacionretiro" class="kpi-value">0</div>
-                            <div class="kpi-sub">Retiros captación cierre de mes</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <div class="card">
-                    <div class="card-header border-0">
-                        <h3 class="card-title">
-                            Evolución Captación
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <div id="captacionEvolutionChart" style="height:250px;"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <br>
-        <div class="row">
-            <div class="col">
-                <div class="card">
-                    <div class="card-header border-0">
-                        <h3 class="card-title">
-                            Distribución Productos
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <div id="captacionProductoChart" style="height:250px;"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <br>
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header border-0">
-                        <h3 class="card-title">Captación por Sucursal</h3>
-                    </div>
-                    <div class="card-body">
-                        <div id="captacionSucursalChart" style="height:250px;"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header border-0">
-                        <h3 class="card-title">
-                            Tipo de Socio
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <div id="captacionTipoSocioChart" style="height:250px;"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    </div>
+    <!-- -->
+    <!-- -->
+    <div class="sec">Análisis de Depósitos a Plazo</div>
+    <div class="g2">
+        <div class="card a-c"><div class="card-hd"><span class="card-title">Evolución Captación</span><span class="ctag">$M</span></div><div id="captacionEvolutionChart" style="min-height:220px"></div></div>
+        <div class="card a-y"><div class="card-hd"><span class="card-title">Distribución por Producto</span></div><div id="captacionProductoChart" style="min-height:220px"></div></div>
+    </div>
+    <div class="g2">
+        <div class="card a-c"><div class="card-hd"><span class="card-title">Captación por Sucursal</span><span class="ctag">$M</span></div><div id="captacionSucursalChart" style="min-height:220px"></div></div>
+        <div class="card a-y"><div class="card-hd"><span class="card-title">Tipo de Socio</span></div><div id="captacionTipoSocioChart" style="min-height:220px"></div></div>
+    </div>
+    <!-- -->
 {% endblock %}
 
 {% block scripts %}

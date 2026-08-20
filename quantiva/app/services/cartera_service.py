@@ -3,6 +3,7 @@ from app import db
 from app.models.creditos import Credito
 from app.utils.months import month_case
 from app.utils.formatters import format_currency_short
+from collections import defaultdict
 class CarteraService:
 
     @staticmethod
@@ -346,6 +347,61 @@ class CarteraService:
             'chart_series': series
         }
     @staticmethod
+    def get_sucursal_vigente_anual_chart(mes=None):
+        if not mes:
+            ultimo_periodo = CarteraService.get_latest_period()
+            mes = ultimo_periodo.mes
+        datos = db.session.query(
+            Credito.anio,
+            Credito.sucursal,
+            func.sum(Credito.capital_vigente).label('total')
+        ).filter(
+            Credito.mes == mes,
+            Credito.vigente_vencido == 'VIGENTE'
+        ).group_by(
+            Credito.anio,
+            Credito.sucursal
+        ).order_by(
+            Credito.anio
+        ).all()
+
+        # años existentes
+        anios = sorted(list({
+            row.anio for row in datos
+        }))
+
+        # sucursales existentes
+        sucursales = sorted(list({
+            row.sucursal for row in datos
+        }))
+
+        # estructura temporal
+        valores = defaultdict(dict)
+
+        for row in datos:
+            valores[row.sucursal][row.anio] = float(row.total or 0)
+
+        series = []
+
+        for sucursal in sucursales:
+
+            data = []
+
+            for anio in anios:
+                data.append(
+                    valores[sucursal].get(anio, 0)
+                )
+
+            series.append({
+                "name": sucursal,
+                "data": data
+            })
+
+        return {
+            "categories": anios,
+            "series": series
+        }
+    @staticmethod
     def get_sucursal_vencido_chart(anio=None,mes=None):
 
         if not anio or not mes:
@@ -454,4 +510,48 @@ class CarteraService:
             'total_pages':(
                 total+per_page-1
             )//per_page
+        }
+    @staticmethod
+    def get_sucursal_vigente_vencido_chart(anio=None, mes=None):
+
+        if not anio or not mes:
+            ultimo_periodo = CarteraService.get_latest_period()
+            anio = ultimo_periodo.anio
+            mes = ultimo_periodo.mes
+
+        datos = db.session.query(
+            Credito.sucursal,
+            func.sum(Credito.capital_vigente).label('vigente'),
+            func.sum(Credito.capital_vencido).label('vencido')
+        ).filter(
+            Credito.anio == anio,
+            Credito.mes == mes
+        ).group_by(
+            Credito.sucursal
+        ).order_by(
+            Credito.sucursal
+        ).all()
+
+        categorias = []
+        vigente = []
+        vencido = []
+
+        for row in datos:
+            categorias.append(row.sucursal)
+
+            vigente.append(float(row.vigente or 0))
+            vencido.append(float(row.vencido or 0))
+
+        return {
+            "categories": categorias,
+            "series": [
+                {
+                    "name": "Capital Vigente",
+                    "data": vigente
+                },
+                {
+                    "name": "Capital Vencido",
+                    "data": vencido
+                }
+            ]
         }

@@ -68,6 +68,10 @@ def sucursal_vigente_chart():
 
     data = CarteraService.get_sucursal_vigente_chart(anio,mes)
     return jsonify(data)
+@api.route('/cartera/sucursal-vigente-anual-chart')
+def sucursal_vigente_anual_chart():
+    mes = request.args.get('mes')
+    return jsonify(CarteraService.get_sucursal_vigente_anual_chart(mes))
 @api.route('/cartera/sucursal-vencido-chart')
 def sucursal_vencido_chart():
     anio = request.args.get('anio',type=int)
@@ -87,6 +91,13 @@ def productos_table():
     page=request.args.get('page',1,type=int)
     data = CarteraService.get_productos_table(anio,mes,page)
     return jsonify(data)
+@api.route('/cartera/sucursal-vigente-vencido-chart')
+def sucursal_vigente_vencido_chart():
+
+    anio = request.args.get('anio', type=int)
+    mes = request.args.get('mes')
+
+    return jsonify(CarteraService.get_sucursal_vigente_vencido_chart(anio,mes))
 """
     Captación
 """
@@ -177,6 +188,7 @@ def get_cards():
     modelo=request.args.get('modelo','xgboost')
     print("     forecast_cartera        ", modelo)
     return jsonify(ForecastService.get_resume_cards(modelo))
+
 """
     Dashboard inicial
 """
