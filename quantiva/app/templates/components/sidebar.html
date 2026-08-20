@@ -43,14 +43,14 @@
         <!-- Captación -->
         <div class="nav-group">
             <span class="nav-label">Captación</span>
-            <div class="nav-item" id="grp-captacion">
+            <div class="nav-item  {% if request.endpoint in ['captacion.dashboard'] %} open {% endif %}" id="grp-captacion">
                 <a class="nav-link" onclick="toggle('grp-captacion')">
                 <i class="nav-icon bi bi-piggy-bank"></i>
                 <span>Captación</span>
                 <i class="nav-arrow bi bi-chevron-right"></i>
                 </a>
                 <div class="sub-menu">
-                <a href="{{ url_for('captacion.dashboard') }}" class="sub-link" onclick="nav('cap-plazo',this)">
+                <a href="{{ url_for('captacion.dashboard') }}" class="sub-link {% if request.endpoint == 'captacion.dashboard' %}active{% endif %}" onclick="nav('cap-plazo',this)">
                     <span class="sub-dot"></span>Depósitos a Plazo
                 </a>
                 <a class="sub-link" onclick="nav('cap-ahorro',this)">
@@ -62,39 +62,89 @@
         <!-- Socios -->
         <div class="nav-group">
             <span class="nav-label">Socios</span>
-            <div class="nav-item" id="grp-socios">
+            <div class="nav-item {% if request.endpoint in ['socios.dashboard'] %} open {% endif %}" id="grp-socios">
                 <a class="nav-link" onclick="toggle('grp-socios')">
                 <i class="nav-icon bi bi-people"></i>
                 <span>Socios</span>
                 <i class="nav-arrow bi bi-chevron-right"></i>
                 </a>
                 <div class="sub-menu">
-                <a href="{{ url_for('socios.dashboard') }}" class="sub-link" onclick="nav('socios-altas',this)">
-                    <span class="sub-dot"></span>Altas y Bajas
-                </a>
-                <a class="sub-link" onclick="nav('socios-demo',this)">
-                    <span class="sub-dot"></span>Demografía / Perfil
-                </a>
-                <a class="sub-link" onclick="nav('socios-fid',this)">
-                    <span class="sub-dot"></span>Antigüedad / Fidelización
-                </a>
+                    <a href="{{ url_for('socios.dashboard') }}" class="sub-link  {% if request.endpoint == 'socios.dashboard' %}active{% endif %}" onclick="nav('socios-altas',this)">
+                        <span class="sub-dot"></span>Socios
+                    </a>
+                    <a class="sub-link" onclick="nav('socios-demo',this)">
+                        <span class="sub-dot"></span>Demografía / Perfil
+                    </a>
+                    <a class="sub-link" onclick="nav('socios-fid',this)">
+                        <span class="sub-dot"></span>Antigüedad / Fidelización
+                    </a>
                 </div>
             </div>
         </div>
         <!-- Reportes -->
         <div class="nav-group">
-            <span class="nav-label">Reportes</span>
-            <div class="nav-item">
-                <a href="{{ url_for('forecast_cartera.dashboard') }}" class="nav-link" onclick="nav('home',this)">
-                <i class="nav-icon bi bi-file-earmark-bar-graph"></i>
-                <span>Regulatorios</span>
+            <span class="nav-label">Forecasting</span>
+            <div class="nav-item {% if request.endpoint in ['forecast_cartera.dashboard'] %} open {% endif %}" id="grp-forecasting">
+                <a class="nav-link" onclick="toggle('grp-grp-forecasting')">
+                    <i class="nav-icon bi bi-people"></i>
+                    <span>Forecasting</span>
+                    <i class="nav-arrow bi bi-chevron-right"></i>
                 </a>
+                <div class="sub-menu">
+                    <a href="{{ url_for('forecast_cartera.dashboard') }}" class="sub-link  {% if request.endpoint == 'forecast_cartera.dashboard' %}active{% endif %}" onclick="nav('forecast-dashboard',this)">
+                        <span class="sub-dot"></span>Dashboard
+                    </a>
+                </div>
             </div>
             <div class="nav-item">
                 <a  class="nav-link">
                 <i class="nav-icon bi bi-sliders"></i>
                 <span>Configuración</span>
                 </a>
+            </div>
+        </div>
+        <!-- Configuraciones -->
+        <div class="nav-group">
+            <span class="nav-label">Configuración</span>
+            <div class="nav-item {% if request.endpoint in ['configuracion.confcartera'] %} open {% endif %}" id="grp-configuracion">
+                <a class="nav-link" onclick="toggle('grp-configuracion')">
+                <i class="nav-icon bi bi-people"></i>
+                <span>Configuración</span>
+                <i class="nav-arrow bi bi-chevron-right"></i>
+                </a>
+                <div class="sub-menu">
+                    <a href="{{ url_for('configuracion.confcartera') }}" class="sub-link  {% if request.endpoint == 'configuracion.confcartera' %}active{% endif %}" onclick="nav('conf-cartera',this)">
+                        <span class="sub-dot"></span>Cartera
+                    </a>
+                    <a class="sub-link" onclick="nav('socios-demo',this)">
+                        <span class="sub-dot"></span>Demografía / Perfil
+                    </a>
+                    <a class="sub-link" onclick="nav('socios-fid',this)">
+                        <span class="sub-dot"></span>Antigüedad / Fidelización
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- Credit risk -->
+        <div class="nav-group">
+            <span class="nav-label">Riesgo de crédito</span>
+            <div class="nav-item {% if request.endpoint in ['credit_risk.dashboard', 'credit_risk.evaluation'] %} open {% endif %}" id="grp-credit-risk">
+                <a class="nav-link" onclick="toggle('grp-credit-risk')">
+                    <i class="nav-icon bi bi-people"></i>
+                    <span>Dashboard</span>
+                    <i class="nav-arrow bi bi-chevron-right"></i>
+                </a>
+                <div class="sub-menu">
+                    <a href="{{ url_for('credit_risk.dashboard') }}" class="sub-link  {% if request.endpoint == 'credit_risk.dashboard' %}active{% endif %}">
+                        <span class="sub-dot"></span>Dashboard
+                    </a>
+                    <a href="{{ url_for('credit_risk.evaluation') }}" class="sub-link  {% if request.endpoint == 'credit_risk.evaluation' %}active{% endif %}" >
+                        <span class="sub-dot"></span>Evaluación
+                    </a>
+                    <a class="sub-link" onclick="nav('socios-fid',this)">
+                        <span class="sub-dot"></span>Antigüedad / Fidelización
+                    </a>
+                </div>
             </div>
         </div>
     <!--
@@ -193,6 +243,8 @@
         }
     }
     function toggle(groupId) {
+
+        console.log(groupId)
         const el = document.getElementById(groupId);
         el.classList.toggle('open');
     }

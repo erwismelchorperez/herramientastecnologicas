@@ -30,6 +30,7 @@ function initFilters(){
                 anio: anio
             },
             success: function (response) {
+
                 let mesSelect = $('#mesSelect');
                 mesSelect.empty();
                 response.forEach(function (mes) {
@@ -39,6 +40,11 @@ function initFilters(){
                         </option>`
                     );
                 });
+                loadSaldos(anio, mes);
+                loadSociosSexoChart(anio, mes);
+                loadSociosSucursalChart(anio, mes);
+                loadSociosEdadChart(anio,mes);
+                loadSociosAntiguedadChart(anio,mes);
             },
             error: function (xhr) {
                 console.error(xhr);
@@ -49,6 +55,11 @@ function initFilters(){
         let anio = $('#anioSelect').val();
         let mes = $(this).val();
         console.log(anio, mes);
+        loadSaldos(anio, mes);
+        loadSociosSexoChart(anio, mes);
+        loadSociosSucursalChart(anio, mes);
+        loadSociosEdadChart(anio,mes);
+        loadSociosAntiguedadChart(anio,mes);
     });
 }
 function initSociosSucursalChart(){

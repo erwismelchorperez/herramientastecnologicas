@@ -33,6 +33,8 @@ def create_app():
     from app.routes.api import api
     from app.routes.socios import socios
     from app.routes.forecast_cartera import forecast_cartera
+    from app.routes.credit_risk import credit_risk
+    from app.routes.configuracion import configuracion
 
     # BLUEPRINTS
     app.register_blueprint(auth)
@@ -42,5 +44,7 @@ def create_app():
     app.register_blueprint(api)
     app.register_blueprint(socios)
     app.register_blueprint(forecast_cartera)
+    app.register_blueprint(credit_risk)
+    app.register_blueprint(configuracion)
 
     return app

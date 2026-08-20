@@ -1,0 +1,80 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}
+Dashboard de Captación
+{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <div class="page-header-info">
+            <div class="page-title">
+                Importar Cartera
+            </div>
+            <div class="page-subtitle">
+                Carga de cierre mensual de cartera
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-hd">
+            <span class="card-title">
+                Nuevo cierre de cartera
+            </span>
+            <span class="ctag">IMPORTACIÓN</span>
+        </div>
+        <div class="content">
+            <form id="formImportarCartera" enctype="multipart/form-data">
+                <div class="g3">
+                    <!-- FECHA DE CIERRE -->
+                    <div>
+                        <label class="form-label">Fecha de cierre</label>
+                        <input type="date" id="fechaCierre" name="fecha_cierre" class="form-control" required>
+                        <small class="text-muted">
+                            El año y mes se generarán automáticamente.
+                        </small>
+                    </div>
+                    <!-- ARCHIVO -->
+                    <div>
+                        <label class="form-label">Archivo de cartera</label>
+                        <input type="file" id="archivoCartera" name="archivo" class="form-control" accept=".csv,.xlsx" required>
+                        <small class="text-muted">
+                            Formatos permitidos: CSV o Excel.
+                        </small>
+                    </div>
+                    <!-- TIPO -->
+                    <div>
+                        <label class="form-label">
+                            Tipo de archivo
+                        </label>
+                        <div id="archivoInfo" class="text-muted">
+                            Ningún archivo seleccionado
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 text-end">
+                    <button type="button" id="btnCancelarImportacion" class="tb-btn secondary">
+                        <i class="bi bi-x-lg"></i>
+                        Cancelar
+                    </button>
+                    <button type="submit" id="btnImportar" class="tb-btn primary tb-btn-lg">
+                        <i class="bi bi-upload"></i>Importar cartera
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- RESULTADO -->
+    <div id="resultadoImportacion" class="card mt-4" style="display:none;">
+        <div class="card-hd">
+            <span class="card-title">
+                Resultado de la importación
+            </span>
+        </div>
+        <div id="resultadoImportacionBody" class="content"></div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="{{ url_for('static',filename='js/dashboard/confcartera.js') }}"></script>
+{% endblock %}

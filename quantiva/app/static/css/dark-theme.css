@@ -1048,3 +1048,47 @@ body::before {
 @media(max-width:900px)  { .g2,.g3,.g3-1,.g1-2{grid-template-columns:1fr;} .sidebar{transform:translateX(-100%);} .main{margin-left:0;} }
 
 
+.tb-btn-lg{
+    width:auto;
+    min-height:40px;
+
+    padding:0 18px;
+
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+
+    white-space:nowrap;
+
+    font-size:.82rem;
+    font-weight:600;
+}
+#historialPredicciones table th,
+#historialPredicciones table td{
+    text-align: center;
+    vertical-align: middle;
+}
+/* ===========================
+   MODAL
+=========================== */
+
+.q-modal{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,.65);
+    z-index:9999;
+    overflow:auto;
+    padding:40px;
+}
+.q-modal-content{
+    max-width:1100px;
+    margin:auto;
+}
+.q-modal.show{
+    display:block;
+}

@@ -1,0 +1,592 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}
+    Predicción de Riesgo Crediticio
+{% endblock %}
+
+{% block content %}
+
+    <div class="page-header">
+        <div class="page-header-info">
+            <div class="page-title">
+                Predicción de Riesgo Crediticio
+            </div>
+            <div class="page-subtitle">
+                Predicción de Riesgo Crediticio - IA 
+            </div>
+        </div>
+    </div>
+    <div class="card" id="historialPredicciones">
+        <div class="card-hd">
+            <span class="card-title">Historial de Predicciones</span>
+            <button id="btnNuevaEvaluacion" class="tb-btn primary tb-btn-lg">
+                <i class="bi bi-plus-circle"></i>
+                Nueva evaluación
+            </button>
+        </div>
+        <div class="card-body">
+            <table class="tbl">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Probabilidad</th>
+                        <th>Resultado</th>
+                        <th>Usuario</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="predictionHistoryBody"></tbody>
+            </table>
+        </div>
+    </div>
+    <div id="predictionFormContainer" class="card mt-4" style="display:none;" >
+        <div class="card-hd">
+            <span class="card-title">Nueva evaluación</span>
+        </div>
+        <form id="creditRiskForm">
+
+            <div class="g3">
+
+                <div>
+                    <label class="form-label">
+                        Número de reportes
+                    </label>
+
+                    <input
+                        type="number"
+                        name="reports"
+                        class="form-control"
+                        min="0"
+                        required
+                    >
+                </div>
+
+                <div>
+
+                    <label class="form-label">
+                        Edad (años)
+                    </label>
+
+                    <input
+                        type="number"
+                        step="0.01"
+                        name="age"
+                        class="form-control"
+                        required
+                    >
+
+                </div>
+
+                <div>
+
+                    <label class="form-label">
+                        Ingreso mensual
+                    </label>
+
+                    <input
+                        type="number"
+                        step="0.01"
+                        name="income"
+                        class="form-control"
+                        required
+                    >
+
+                </div>
+
+                <div>
+
+                    <label class="form-label">
+                        Share
+                    </label>
+
+                    <input
+                        type="number"
+                        step="0.00000001"
+                        name="share"
+                        class="form-control"
+                        required
+                    >
+
+                </div>
+
+                <div>
+
+                    <label class="form-label">
+                        Gasto mensual
+                    </label>
+
+                    <input
+                        type="number"
+                        step="0.01"
+                        name="expenditure"
+                        class="form-control"
+                        required
+                    >
+
+                </div>
+
+                <div>
+
+                    <label class="form-label">
+                        Propietario
+                    </label>
+
+                    <select
+                        name="owner"
+                        class="form-select"
+                    >
+                        <option value="1">Sí</option>
+                        <option value="0">No</option>
+                    </select>
+
+                </div>
+
+                <div>
+
+                    <label class="form-label">
+                        Trabajador independiente
+                    </label>
+
+                    <select
+                        name="selfemp"
+                        class="form-select"
+                    >
+                        <option value="1">Sí</option>
+                        <option value="0">No</option>
+                    </select>
+
+                </div>
+
+                <div>
+
+                    <label class="form-label">
+                        Dependientes
+                    </label>
+
+                    <input
+                        type="number"
+                        name="dependents"
+                        class="form-control"
+                    >
+
+                </div>
+
+                <div>
+
+                    <label class="form-label">
+                        Meses como cliente
+                    </label>
+
+                    <input
+                        type="number"
+                        name="months"
+                        class="form-control"
+                    >
+
+                </div>
+
+                <div>
+
+                    <label class="form-label">
+                        Tarjetas principales
+                    </label>
+
+                    <input
+                        type="number"
+                        name="majorcards"
+                        class="form-control"
+                    >
+
+                </div>
+
+                <div>
+
+                    <label class="form-label">
+                        Cuentas activas
+                    </label>
+
+                    <input
+                        type="number"
+                        name="active"
+                        class="form-control"
+                    >
+
+                </div>
+
+            </div>
+
+            <div class="mt-4 d-flex justify-content-end gap-2">
+                <button type="button" id="btnCancelarEvaluacion" class="tb-btn secondary tb-btn-lg">
+                    <i class="bi bi-x-circle"></i>
+                    Cancelar
+                </button>
+
+                <button type="submit" class="tb-btn primary tb-btn-lg">
+                    <i class="bi bi-cpu"></i>
+                    Ejecutar Riesgo
+                </button>
+            </div>
+        </form>
+    </div>
+    <!--- -->
+    <!-- ==========================================
+     MODAL DETALLE PREDICCIÓN
+    ========================================== -->
+
+    <div id="predictionModal" class="q-modal">
+        <div class="q-modal-content">
+            <div class="card">
+                <div class="card-hd">
+                    <span class="card-title">
+                        Explicación de la Predicción
+                    </span>
+                    <button id="btnCerrarModal" class="tb-btn danger tb-btn-lg">
+                        <i class="bi bi-x-lg"></i>Cerrar
+                    </button>
+                </div>
+                <div class="content">
+                    <!-- Resultado -->
+                    <div class="g4">
+                        <div class="kpi kc">
+                            <div class="kpi-top">
+                                <div>
+                                    <span class="kpi-lbl">Predicción</span>
+                                    <span id="modalPrediction" class="kpi-val"></span>
+                                </div>
+                                <div class="kpi-ico">
+                                    <i class="bi bi-cpu"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="kpi kg">
+                            <div class="kpi-top">
+                                <div>
+                                    <span class="kpi-lbl">Probabilidad</span>
+                                    <span id="modalProbability" class="kpi-val"></span>
+                                </div>
+                                <div class="kpi-ico">
+                                    <i class="bi bi-percent"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="card">
+                        <div class="card-hd">
+                            <span class="card-title">Patrones que cubren esta instancia</span>
+                        </div>
+                        <table class="tbl">
+                            <thead>
+                                <tr>
+                                    <th>Patrón</th>
+                                    <th>Confianza</th>
+                                    <th>Soporte</th>
+                                </tr>
+                            </thead>
+                            <tbody id="modalPatterns"></tbody>
+                        </table>
+                    </div>
+                    <br>
+                    <div class="card">
+                        <div class="card-hd">
+                            <span class="card-title">Explicación en lenguaje natural</span>
+                        </div>
+                        <div id="modalExplanation" class="p-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).on(
+        "click",
+        ".btnDetalle",
+        function(){
+            let id=$(this).data("id");
+            //alert(id)
+            $("#predictionModal").show();
+            loadPredictionDetail(id);
+        }
+    );
+    $("#btnNuevaEvaluacion").on("click", function () {
+        // Mostrar formulario
+        $("#predictionFormContainer").show();
+        // Ocultar historial
+        $("#historialPredicciones").hide();
+        // Desplazarse al formulario
+        $("html, body").animate({
+            scrollTop: $("#predictionFormContainer").offset().top - 20
+        }, 400);
+    });
+    $("#btnCancelarEvaluacion").on("click", function () {
+        // Limpiar el formulario
+        $("#creditRiskForm")[0].reset();
+        // Ocultar formulario
+        $("#predictionFormContainer").hide();
+        // Mostrar historial
+        $("#historialPredicciones").show();
+    });
+    $("#creditRiskForm").on("submit", function(e){
+
+        e.preventDefault();
+
+        let form = $(this);
+
+        $("#btnPredict")
+            .prop("disabled",true)
+            .html(
+                '<span class="spinner-border spinner-border-sm"></span> Evaluando...'
+            );
+
+        $.ajax({
+
+            url:"/credit_risk/predict",
+
+            type:"POST",
+
+            data:form.serialize(),
+
+            success:function(response){
+
+                $("#predictionAlert").html(
+
+                    `
+                    <div class="alert alert-success">
+
+                        Predicción realizada correctamente.
+
+                    </div>
+                    `
+
+                );
+
+                form[0].reset();
+
+                $("#predictionFormContainer").hide();
+
+                $("#historialPredicciones").show();
+
+                loadPredictionHistory();
+
+            },
+
+            error:function(xhr){
+
+                let mensaje="Ocurrió un error.";
+
+                if(xhr.responseJSON){
+
+                    mensaje=xhr.responseJSON.message;
+
+                }
+
+                $("#predictionAlert").html(
+
+                    `
+                    <div class="alert alert-danger">
+
+                        ${mensaje}
+
+                    </div>
+                    `
+
+                );
+
+            },
+            complete:function(){
+                $("#btnPredict")
+                    .prop("disabled",false)
+                    .html(
+                        '<i class="bi bi-cpu"></i> Evaluar Riesgo'
+                    );
+            }
+        });
+        });
+    $(function(){
+        loadPredictionHistory();
+    });
+    function loadPredictionHistory(){
+        $.ajax({
+            url:"/credit_risk/api/history",
+            type:"GET",
+            success:function(data){
+                let html="";
+                data.forEach(function(item){
+                    html+=`
+                    <tr>
+                        <td class="text-center">${item.created_at}</td>
+                        <td class="text-center">${item.prediction}</td>
+                        <td class="text-center">${item.probability}%</td>
+                        <td class="text-center">${item.created_by}</td>
+                        <td class="text-center">
+                            <button
+                                class="tb-btn secondary btnDetalle"
+                                data-id="${item.id}">
+                                Ver
+                            </button>
+                        </td>
+                    </tr>
+                    `;
+                });
+                $("#predictionHistoryBody").html(html);
+            }
+        });
+    }
+    function loadPredictionDetail(id){
+
+        $.ajax({
+
+            url: "/credit_risk/api/evaluation/" + id,
+
+            type: "GET",
+
+            success: function(response){
+
+                console.log(response);
+
+                //---------------------------------------
+                // Resultado general
+                //---------------------------------------
+
+                $("#modalPrediction").text(response.prediction);
+
+                $("#modalProbability").text(
+                    (response.probability * 100).toFixed(2) + "%"
+                );
+
+                //---------------------------------------
+                // Patrones que cubren la instancia
+                //---------------------------------------
+
+                let htmlPatterns = "";
+
+                response.patterns.forEach(function(p){
+
+                    htmlPatterns += `
+                        <tr>
+                            <td>${p.pattern}</td>
+                            <td class="text-center">
+                                ${(p.confidence * 100).toFixed(2)}%
+                            </td>
+                            <td class="text-center">
+                                ${p.support}
+                            </td>
+                        </tr>
+                    `;
+
+                });
+
+                $("#modalPatterns").html(htmlPatterns);
+
+                //---------------------------------------
+                // Explicaciones
+                //---------------------------------------
+
+                let htmlExplanation = "";
+
+                response.patterns.forEach(function(p){
+
+                    htmlExplanation += `
+
+                        <div class="rule-card mb-3">
+
+                            <div class="rule-pattern">
+
+                                <strong>${p.pattern}</strong>
+
+                            </div>
+
+                            <ul class="mt-2">
+
+                                ${
+                                    Array.isArray(p.explanations)
+                                        ? p.explanations
+                                            .map(e => `<li>${e}</li>`)
+                                            .join("")
+                                        : `<li>${p.explanations}</li>`
+                                }
+
+                            </ul>
+
+                        </div>
+
+                    `;
+
+                });
+
+                $("#modalExplanation").html(htmlExplanation);
+
+                //---------------------------------------
+                // Mostrar modal
+                //---------------------------------------
+
+                $("#historialPredicciones").hide();
+
+                $("#predictionModal").fadeIn(200);
+
+            },
+
+            error:function(xhr){
+
+                console.error(xhr);
+
+                alert("No fue posible cargar el detalle de la predicción.");
+
+            }
+
+        });
+}
+    function viewPrediction(id){
+        $.get("/credit_risk/prediction/"+id,
+            function(response){
+                $("#predictionModal").show();
+                $("#historialPredicciones").show();
+                $("#modalPrediction").text(
+                    response.prediction
+                );
+                $("#modalProbability").text(
+                    (response.probability*100).toFixed(2)+" %"
+                );
+                //------------------------
+                // patrones
+                //------------------------
+                let html="";
+                response.patterns.forEach(function(p){
+                    html+=`
+                    <tr>
+                        <td>${p.pattern}</td>
+                        <td>${(p.confidence*100).toFixed(2)}%</td>
+                        <td>${p.support}</td>
+                    </tr>
+                    `;
+                });
+                $("#modalPatterns").html(html);
+                //------------------------
+                // explicación
+                //------------------------
+                let exp="";
+                response.explanations.forEach(function(e){
+                    exp+=`
+                        <p>
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            ${e}
+                        </p>
+                    `;
+                });
+                $("#modalExplanation").html(exp);
+            }
+        );
+    }
+    /*$(".btnDetalle").on("click", function(){
+        let id = $(this).data("id");
+        loadPredictionDetail(id);
+    });*/
+    $("#btnCerrarModal").click(function(){
+        $("#predictionModal").hide();
+        $("#historialPredicciones").show();
+    });
+</script>
+{% endblock %}
