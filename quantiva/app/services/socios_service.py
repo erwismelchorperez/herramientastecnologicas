@@ -199,7 +199,6 @@ class SociosService:
             'chart_labels':[x[0] for x in datos],
             'chart_series':[int(x[2]) for x in datos]
         }
-
     @staticmethod
     def get_antiguedad_chart(anio=None,mes=None):
 

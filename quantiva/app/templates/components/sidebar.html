@@ -22,7 +22,7 @@
         <!-- Cartera -->
         <div class="nav-group">
             <span class="nav-label">Cartera</span>
-            <div class="nav-item {% if request.endpoint in ['cartera.dashboard', 'cartera.sucursales'] %} open {% endif %}" id="grp-cartera">
+            <div class="nav-item {% if request.endpoint in ['cartera.dashboard', 'cartera.sucursales', 'cartera.calidad'] %} open {% endif %}" id="grp-cartera">
                 <a class="nav-link" onclick="toggle('grp-cartera')">
                     <i class="nav-icon bi bi-wallet2"></i>
                     <span>Cartera</span>
@@ -34,6 +34,10 @@
                     </a>
                     <a href="{{ url_for('cartera.sucursales') }}" class="sub-link {% if request.endpoint == 'cartera.sucursales' %}active{% endif %}" >
                         <span class="sub-dot"></span>Cartera por sucursal
+                        <span class="n-badge" style="margin-left:auto">!</span>
+                    </a>
+                    <a href="{{ url_for('cartera.calidad') }}" class="sub-link {% if request.endpoint == 'cartera.calidad' %}active{% endif %}" >
+                        <span class="sub-dot"></span>Calidad Cartera
                         <span class="n-badge" style="margin-left:auto">!</span>
                     </a>
                 </div>

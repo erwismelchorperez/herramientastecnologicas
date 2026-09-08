@@ -195,3 +195,6 @@ def get_cards():
 @api.route('/dashboard/cartera')
 def get_evolution_cartera(anio=None):
     return jsonify(DashboardService.get_evolution_cartera(anio))
+@api.route('/cartera/get_morosidad_por_sucursal')
+def get_morosidad_por_sucursal(anio=None, mes=None):
+    return jsonify(CarteraService.get_morosidad_por_sucursal(anio, mes))

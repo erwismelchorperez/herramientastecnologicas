@@ -10,7 +10,6 @@ class CarteraService:
     def get_latest_period():
         mes_orden = month_case(Credito.mes)
         return db.session.query(Credito.anio,Credito.mes).order_by(Credito.anio.desc(),mes_orden.desc()).first()
-    
     @staticmethod
     def get_general_kpis(anio=None, mes=None):
 
@@ -330,7 +329,7 @@ class CarteraService:
         ).filter(
             Credito.anio == anio,
             Credito.mes == mes,
-            Credito.vigente_vencido == 'VIGENTE'
+            func.upper(func.trim(Credito.vigente_vencido)) == 'VIGENTE'
         ).group_by(
             Credito.sucursal
         ).all()
@@ -357,7 +356,7 @@ class CarteraService:
             func.sum(Credito.capital_vigente).label('total')
         ).filter(
             Credito.mes == mes,
-            Credito.vigente_vencido == 'VIGENTE'
+            func.upper(func.trim(Credito.vigente_vencido)) == 'VIGENTE'
         ).group_by(
             Credito.anio,
             Credito.sucursal
@@ -415,7 +414,7 @@ class CarteraService:
         ).filter(
             Credito.anio == anio,
             Credito.mes == mes,
-            Credito.vigente_vencido == 'VENCIDO'
+            func.upper(func.trim(Credito.vigente_vencido)) == 'VENCIDO'
         ).group_by(
             Credito.sucursal
         ).all()
@@ -554,4 +553,59 @@ class CarteraService:
                     "data": vencido
                 }
             ]
+        }
+    @staticmethod
+    def get_morosidad_por_sucursal(anio=None, mes=None):
+        # ==========================
+        # calculando el índide de morosidad por sucursal
+        # OBTENER ÚLTIMO PERIODO
+        # ==========================
+        if not anio or not mes:
+            ultimo_periodo = CarteraService.get_latest_period()
+
+            anio = ultimo_periodo.anio
+            mes = ultimo_periodo.mes
+
+        # ==========================
+        # MOROSIDAD POR SUCURSAL
+        # ==========================
+        morosidad_data = db.session.query(
+            Credito.sucursal.label('sucursal'),
+            func.sum(Credito.capital_vigente).label('vigente'),
+            func.sum(Credito.capital_vencido).label('vencido')
+        ).filter(
+            Credito.anio == anio,
+            Credito.mes == mes
+        ).group_by(
+            Credito.sucursal
+        ).order_by(
+            Credito.sucursal
+        ).all()
+
+        resultados = []
+
+        for dato in morosidad_data:
+
+            capital_vigente = float(dato.vigente or 0)
+            capital_vencido = float(dato.vencido or 0)
+
+            total_cartera = capital_vigente + capital_vencido
+
+            if total_cartera > 0:
+                morosidad = (capital_vencido / total_cartera) * 100
+            else:
+                morosidad = 0
+
+            resultados.append({
+                'sucursal': dato.sucursal,
+                'capital_vigente': capital_vigente,
+                'capital_vencido': capital_vencido,
+                'total_cartera': total_cartera,
+                'morosidad': morosidad
+            })
+
+        return {
+            'anio': anio,
+            'mes': mes,
+            'data': resultados
         }

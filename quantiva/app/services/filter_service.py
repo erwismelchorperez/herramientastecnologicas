@@ -15,7 +15,6 @@ class FilterService:
         return [
             row.anio for row in anios
         ]
-
     @staticmethod
     def get_available_months(anio=None):
         mes_orden = month_case(Credito.mes)
