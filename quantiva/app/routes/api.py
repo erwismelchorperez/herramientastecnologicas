@@ -195,3 +195,15 @@ def get_cards():
 @api.route('/dashboard/cartera')
 def get_evolution_cartera(anio=None):
     return jsonify(DashboardService.get_evolution_cartera(anio))
+@api.route('/cartera/get_morosidad_por_sucursal')
+def get_morosidad_por_sucursal(anio=None, mes=None):
+    return jsonify(CarteraService.get_morosidad_por_sucursal(anio, mes))
+@api.route('/cartera/get_morosidad_por_producto')
+def get_morosidad_por_producto(anio=None, mes=None):
+    return jsonify(CarteraService.get_morosidad_por_producto(anio,mes))
+@api.route('/cartera/get_distribucion_dias_mora')
+def get_distribucion_dias_mora(anio=None, mes=None):
+    return jsonify(CarteraService.get_distribucion_dias_mora(anio,mes))
+@api.route('/cartera/get_cantidad_creditos_por_dias_mora')
+def get_cantidad_creditos_por_dias_mora(anio=None, mes=None):
+    return jsonify(CarteraService.get_cantidad_creditos_por_dias_mora(anio,mes))    

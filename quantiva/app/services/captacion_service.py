@@ -11,11 +11,12 @@ class CaptacionService:
         return db.session.query(Captacion.anio,Captacion.mes).order_by(Captacion.anio.desc(),mes_orden.desc()).first()
     @staticmethod
     def get_general_kpis(anio=None, mes=None):
+        #print("Mes          ", mes)
         if not anio or not mes:
             ultimo_periodo = CaptacionService.get_latest_period()
             anio = ultimo_periodo.anio
             mes = ultimo_periodo.mes
-
+        #print("Mes          ", mes)
         mes_orden = month_case(Captacion.mes)
         ultimo_periodo = db.session.query(Captacion.anio,Captacion.mes
             ).order_by(
