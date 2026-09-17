@@ -1,16 +1,22 @@
 sucursales = []
 let sucursalVigenteChart;
-let sucursalVigenteVencidoChart;
+let indiceMorosidadProductoChart;
+let distribucionDiasMoraChart = null;
+let cantidadCreditosDiasMoraChart = null;
 $(document).ready(function(){
     initChart();
     initIndiceMorosidadSucursalChart();
-    initSucursalVigenteVencidoChart();
+    initIndiceMorosidadProductoChart();
+    initDistribucionDiasMoraChart()
+    initCantidadCreditosDiasMoraChartOptions()
     initFilters();
     let anio = $('#anioSelect').val();
     let mes = $('#mesSelect').val();
     loadSaldos(anio, mes);
     loadIndiceMorosidadSucursalChart(anio, mes);
-    loadSucursalVigenteVencidoChart(anio, mes);
+    loadIndiceMorosidadProductoChart(anio, mes);
+    loadDistribucionDiasMoraChart(anio, mes)
+    loadCantidadCreditosDiasMoraChart(anio, mes)
 });
 function initFilters(){
    $('#anioSelect').on('change', function () {
@@ -25,7 +31,10 @@ function initFilters(){
             },
             success: function (response) {
                 loadSaldos(anio,mes)
-                loadSucursalVigenteVencidoChart(anio, mes);
+                loadIndiceMorosidadProductoChart(anio, mes);
+                loadIndiceMorosidadSucursalChart(anio, mes);
+                loadDistribucionDiasMoraChart(anio, mes);
+                loadCantidadCreditosDiasMoraChart(anio, mes);
                 let mesSelect = $('#mesSelect');
                 mesSelect.empty();
                 response.forEach(function (mes) {
@@ -47,7 +56,9 @@ function initFilters(){
         console.log(anio, mes);
         loadSaldos(anio,mes);
         loadIndiceMorosidadSucursalChart(anio, mes);
-        loadSucursalVigenteVencidoChart(anio, mes);
+        loadIndiceMorosidadProductoChart(anio, mes);
+        loadDistribucionDiasMoraChart(anio, mes);
+        loadCantidadCreditosDiasMoraChart(anio, mes);
     });  
 }
 function formatMoney(value){
@@ -216,41 +227,130 @@ function loadIndiceMorosidadSucursalChart(anio, mes){
         }
     });
 }
-function loadSucursalVigenteVencidoChart(anio, mes){
+function loadIndiceMorosidadProductoChart(anio, mes) {
     $.ajax({
-        url:'/api/cartera/sucursal-vigente-vencido-chart',
-        method:'GET',
-        data:{
+        url: '/api/cartera/get_morosidad_por_producto',
+        method: 'GET',
+        data: {
             anio:anio,
-            mes:mes
+            mes: mes
         },
-        success:function(response){
-            sucursalVigenteVencidoChart.destroy();
-
-            sucursalVigenteVencidoChart =
-                new ApexCharts(
-                    document.querySelector(
-                        "#ch-suc-stack"
-                    ),
-                    getSucursalVigenteVencidoOptions(
-                        response.categories,
-                        response.series
+        success: function(response) {
+            console.log(response);
+            // ==========================
+            // CATEGORÍAS
+            // ==========================
+            const categories = response.data.map(
+                item => item.producto
+            );
+            // ==========================
+            // SERIES
+            // ==========================
+            const series = [
+                {
+                    name: 'Morosidad',
+                    data: response.data.map(
+                        item => item.morosidad
                     )
+                }
+            ];
+            // ==========================
+            // DESTRUIR GRÁFICA ANTERIOR
+            // ==========================
+            indiceMorosidadProductoChart.destroy();
+            // ==========================
+            // CREAR GRÁFICA
+            // ==========================
+            indiceMorosidadProductoChart = new ApexCharts(
+                document.querySelector("#ch-prod-morosidad"),
+                getIndiceMorosidadProductoChartOptions(categories,series)
+            );
+            indiceMorosidadProductoChart.render();
+        },
+        error: function(xhr, status, error) {
+            console.error('Error al cargar índice de morosidad por producto:',error);
+        }
+    });
+}
+function loadDistribucionDiasMoraChart(anio, mes) {
+    $.ajax({
+        url: '/api/cartera/get_distribucion_dias_mora',
+        method: 'GET',
+        data: {anio:anio, mes: mes},
+        success: function(response) {
+            console.log('Distribución por días de mora:',response);
+            const categories = response.data.map(
+                item => item.rango
+            );
+            const series = [
+                {
+                    name: 'Capital vencido',
+                    data: response.data.map(
+                        item => Number(item.capital_vencido)
+                    )
+                }
+            ];
+            if (!distribucionDiasMoraChart) {
+                distribucionDiasMoraChart = new ApexCharts(
+                    document.querySelector('#ch-dias-mora'),
+                    getDistribucionDiasMoraChartOptions(categories,series)
                 );
-            sucursalVigenteVencidoChart.render();
+                distribucionDiasMoraChart.render();
+            } else {
+                distribucionDiasMoraChart.updateOptions({
+                    xaxis: {categories: categories}
+                });
+                distribucionDiasMoraChart.updateSeries(series);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error al cargar distribución por días de mora:',error);
+        }
+    });
+}
+function loadCantidadCreditosDiasMoraChart(mes) {
+    $.ajax({
+        url: '/api/cartera/get_cantidad_creditos_por_dias_mora',
+        method: 'GET',
+        data: { mes: mes },
+        success: function(response) {
+            const categories = response.data.map(item => item.rango);
+            const series = [{
+                name: 'Créditos',
+                data: response.data.map(item => Number(item.cantidad_creditos))
+            }];
+
+            if (!cantidadCreditosDiasMoraChart) {
+                cantidadCreditosDiasMoraChart = new ApexCharts(
+                    document.querySelector('#ch-cantidad-dias-mora'),
+                    getCantidadCreditosDiasMoraChartOptions(categories, series)
+                );
+                cantidadCreditosDiasMoraChart.render();
+            } else {
+                cantidadCreditosDiasMoraChart.updateOptions({
+                    xaxis: { categories: categories }
+                });
+                cantidadCreditosDiasMoraChart.updateSeries(series);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error(
+                'Error al cargar cantidad de créditos por días de mora:',
+                error
+            );
         }
     });
 }
 /* Fin Load Chart */
 /* Init charts */
-function initSucursalVigenteVencidoChart(){
-    sucursalVigenteVencidoChart = new ApexCharts(
+function initIndiceMorosidadProductoChart(){
+    indiceMorosidadProductoChart = new ApexCharts(
         document.querySelector(
-            "#ch-suc-stack"
+            "#ch-prod-morosidad"
         ),
-        getSucursalVigenteVencidoOptions([],[])
+        getIndiceMorosidadProductoChartOptions([],[])
     );
-    sucursalVigenteVencidoChart.render();
+    indiceMorosidadProductoChart.render();
 }
 function initIndiceMorosidadSucursalChart(){
     sucursalVigenteChart = new ApexCharts(
@@ -272,6 +372,24 @@ function initChart(){
             )
     );
     carteraChart.render();*/
+}
+function initDistribucionDiasMoraChart(){
+    distribucionDiasMoraChart = new ApexCharts(
+        document.querySelector(
+            "#ch-dias-mora"
+        ),
+        getDistribucionDiasMoraChartOptions([],[])
+    );
+    distribucionDiasMoraChart.render();
+}
+function initCantidadCreditosDiasMoraChartOptions(){
+    cantidadCreditosDiasMoraChart = new ApexCharts(
+        document.querySelector(
+            "#ch-cantidad-dias-mora"
+        ),
+        getCantidadCreditosDiasMoraChartOptions([],[])
+    );
+    cantidadCreditosDiasMoraChart.render();
 }
 /* Fin charts */
 /* Init GetCharts */
@@ -348,93 +466,295 @@ function getIndiceMorosidadSucursalChartOptions(categories, series) {
         }
     };
 
-}function getSucursalVigenteVencidoOptions(categories,series){
-
+}
+function getIndiceMorosidadProductoChartOptions(categories,series) {
     return {
 
-        chart:{
-            type:'bar',
-            height:350,
-            stacked:false,
-            toolbar:{
-                show:false
+        chart: {
+
+            type: 'bar',
+
+            height: 350,
+
+            background: 'transparent',
+
+            toolbar: {
+                show: false
             }
+
         },
 
-        series:series,
+        series: series,
 
-        colors:[
-            '#00E5A0',
-            '#FF4757'
+        colors: [
+            '#00d4ff'
         ],
 
-        plotOptions:{
-            bar:{
-                horizontal:false,
-                columnWidth:'50%',
-                borderRadius:4
+        plotOptions: {
+
+            bar: {
+
+                horizontal: false,
+
+                borderRadius: 6,
+
+                columnWidth: '65%'
+
             }
+
         },
 
-        dataLabels:{
-            enabled:false
+        dataLabels: {
+
+            enabled: false
+
         },
 
-        stroke:{
-            width:0
+        grid: {
+
+            borderColor: 'rgba(255,255,255,0.05)',
+
+            strokeDashArray: 4
+
         },
 
-        grid:{
-            borderColor:'rgba(255,255,255,.05)'
+        legend: {
+
+            position: 'top',
+
+            labels: {
+                colors: '#d8e4f5'
+            }
+
         },
 
-        xaxis:{
-            categories:categories,
-            labels:{
-                style:{
-                    colors:'#8ca3c8'
+        xaxis: {
+
+            categories: categories,
+
+            title: {
+
+                text: 'Producto',
+
+                style: {
+                    color: '#8ca3c8'
                 }
+
+            },
+
+            labels: {
+
+                style: {
+
+                    colors: '#8ca3c8',
+
+                    fontSize: '11px'
+
+                }
+
             }
+
         },
 
-        yaxis:{
-            labels:{
-                style:{
-                    colors:'#8ca3c8'
+        yaxis: {
+
+            title: {
+
+                text: 'Índice de morosidad (%)',
+
+                style: {
+                    color: '#8ca3c8'
+                }
+
+            },
+
+            labels: {
+
+                style: {
+                    colors: '#8ca3c8'
                 },
-                formatter:function(val){
 
-                    if(val >= 1000000){
-                        return (
-                            val / 1000000
-                        ).toFixed(1) + 'M';
-                    }
+                formatter: function(value) {
 
-                    return val.toLocaleString();
+                    return Number(value).toFixed(2) + '%';
+
+                }
+
+            }
+
+        },
+
+        tooltip: {
+
+            theme: 'dark',
+
+            y: {
+
+                formatter: function(value) {
+
+                    return Number(value).toLocaleString(
+                        'es-MX',
+                        {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        }
+                    ) + '%';
+
+                }
+
+            }
+
+        }
+
+    };
+
+}
+function getDistribucionDiasMoraChartOptions(categories, series) {
+    return {
+        chart: {
+            type: 'bar',
+            height: 350,
+            background: 'transparent',
+            toolbar: {show: false}
+        },
+        series: series,
+        colors: ['#00d4ff'],
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                borderRadius: 6,
+                columnWidth: '65%'
+            }
+        },
+        dataLabels: {enabled: false},
+        grid: {
+            borderColor: 'rgba(255,255,255,0.05)',
+            strokeDashArray: 4
+        },
+        legend: {
+            position: 'top',
+            labels: {colors: '#d8e4f5'}
+        },
+        xaxis: {
+            categories: categories,
+            title: {
+                text: 'Días de mora',
+                style: {color: '#8ca3c8'}
+            },
+            labels: {
+                style: {
+                    colors: '#8ca3c8',
+                    fontSize: '11px'
                 }
             }
         },
-
-        tooltip:{
-            theme:'dark',
-            y:{
-                formatter:function(val){
-                    return '$' +
-                        Number(val)
-                        .toLocaleString(
-                            'es-MX',
-                            {
-                                minimumFractionDigits:2
-                            }
-                        );
+        yaxis: {
+            title: {
+                text: 'Capital vencido',
+                style: {color: '#8ca3c8'}
+            },
+            labels: {
+                style: {colors: '#8ca3c8'},
+                formatter: function(value) {
+                    return Number(value).toLocaleString(
+                        'es-MX',
+                        {
+                            notation: 'compact',
+                            maximumFractionDigits: 1
+                        }
+                    );
                 }
             }
         },
-
-        legend:{
-            position:'top',
-            labels:{
-                colors:'#d8e4f5'
+        tooltip: {
+            theme: 'dark',
+            y: {
+                formatter: function(value) {
+                    return Number(value).toLocaleString(
+                        'es-MX',
+                        {
+                            style: 'currency',
+                            currency: 'MXN',
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        }
+                    );
+                }
+            }
+        }
+    };
+}
+function getCantidadCreditosDiasMoraChartOptions(categories, series) {
+    return {
+        chart: {
+            type: 'bar',
+            height: 350,
+            background: 'transparent',
+            toolbar: {
+                show: false
+            }
+        },
+        series: series,
+        colors: [
+            '#00d4ff'
+        ],
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                borderRadius: 6,
+                columnWidth: '65%'
+            }
+        },
+        dataLabels: {
+            enabled: false
+        },
+        grid: {
+            borderColor: 'rgba(255,255,255,0.05)',
+            strokeDashArray: 4
+        },
+        legend: {
+            position: 'top',
+            labels: {
+                colors: '#d8e4f5'
+            }
+        },
+        xaxis: {
+            categories: categories,
+            title: {
+                text: 'Días de mora',
+                style: {
+                    color: '#8ca3c8'
+                }
+            },
+            labels: {
+                style: {
+                    colors: '#8ca3c8',
+                    fontSize: '11px'
+                }
+            }
+        },
+        yaxis: {
+            title: {
+                text: 'Número de créditos',
+                style: {
+                    color: '#8ca3c8'
+                }
+            },
+            labels: {
+                style: {
+                    colors: '#8ca3c8'
+                },
+                formatter: function(value) {
+                    return Number(value).toLocaleString('es-MX');
+                }
+            }
+        },
+        tooltip: {
+            theme: 'dark',
+            y: {
+                formatter: function(value) {
+                    return Number(value).toLocaleString('es-MX') + ' créditos';
+                }
             }
         }
     };

@@ -1,4 +1,4 @@
-from sqlalchemy import func, desc
+from sqlalchemy import func, desc, case
 from app import db
 from app.models.creditos import Credito
 from app.utils.months import month_case
@@ -603,6 +603,169 @@ class CarteraService:
                 'total_cartera': total_cartera,
                 'morosidad': morosidad
             })
+
+        return {
+            'anio': anio,
+            'mes': mes,
+            'data': resultados
+        }
+    @staticmethod
+    def get_morosidad_por_producto(anio=None, mes=None):
+        # ==========================
+        # OBTENER ÚLTIMO PERIODO
+        # ==========================
+        if not anio or not mes:
+            ultimo_periodo = CarteraService.get_latest_period()
+            anio = ultimo_periodo.anio
+            mes = ultimo_periodo.mes
+        # ==========================
+        # MOROSIDAD POR PRODUCTO
+        # ==========================
+        morosidad_data = db.session.query(
+            Credito.producto_credito.label('producto'),
+            func.sum(
+                Credito.capital_vigente
+            ).label('vigente'),
+            func.sum(
+                Credito.capital_vencido
+            ).label('vencido')
+        ).filter(
+            Credito.anio == anio,
+            Credito.mes == mes
+        ).group_by(
+            Credito.producto_credito
+        ).order_by(
+            Credito.producto_credito
+        ).all()
+        resultados = []
+        for dato in morosidad_data:
+
+            capital_vigente = float(dato.vigente or 0)
+            capital_vencido = float(dato.vencido or 0)
+            total_cartera = (capital_vigente +capital_vencido)
+            if total_cartera > 0:
+                morosidad = (capital_vencido /total_cartera) * 100
+            else:
+                morosidad = 0
+            resultados.append({
+                'producto': dato.producto,
+                'capital_vigente': capital_vigente,
+                'capital_vencido': capital_vencido,
+                'total_cartera': total_cartera,
+                'morosidad': round(morosidad,2)
+            })
+        return {
+            'anio': anio,
+            'mes': mes,
+            'data': resultados
+        }
+    @staticmethod
+    def get_distribucion_dias_mora(anio=None, mes=None):
+
+        if not anio or not mes:
+            ultimo_periodo = CarteraService.get_latest_period()
+            anio = ultimo_periodo.anio
+            mes = ultimo_periodo.mes
+
+        rango_mora = case(
+            (Credito.dias_mora_cartera == 0, '0 días'),
+            (Credito.dias_mora_cartera.between(1, 30),'1-30 días'),
+            (Credito.dias_mora_cartera.between(31, 60),'31-60 días'),
+            (Credito.dias_mora_cartera.between(61, 90),'61-90 días'),
+            (Credito.dias_mora_cartera.between(91, 180),'91-180 días'),
+            (Credito.dias_mora_cartera > 180,'+180 días'),
+            else_='Sin clasificar'
+        ).label('rango')
+
+        distribucion_data = db.session.query(
+            rango_mora,
+            func.sum(Credito.capital_vencido).label('capital_vencido')
+        ).filter(
+            Credito.anio == anio,
+            Credito.mes == mes
+        ).group_by(
+            rango_mora
+        ).all()
+
+        orden_rangos = {
+            '0 días': 1,
+            '1-30 días': 2,
+            '31-60 días': 3,
+            '61-90 días': 4,
+            '91-180 días': 5,
+            '+180 días': 6,
+            'Sin clasificar': 7
+        }
+
+        resultados = []
+
+        for dato in distribucion_data:
+            capital_vencido = float(dato.capital_vencido or 0)
+
+            resultados.append({
+                'rango': dato.rango,
+                'capital_vencido': capital_vencido
+            })
+
+        resultados.sort(
+            key=lambda item: orden_rangos.get(
+                item['rango'],
+                99
+            )
+        )
+        return {
+            'anio': anio,
+            'mes': mes,
+            'data': resultados
+        }
+    @staticmethod
+    def get_cantidad_creditos_por_dias_mora(anio=None, mes=None):
+        if not anio or not mes:
+            ultimo_periodo = CarteraService.get_latest_period()
+            anio = ultimo_periodo.anio
+            mes = ultimo_periodo.mes
+
+        rango_mora = case(
+            (Credito.dias_mora_cartera == 0, '0 días'),
+            (Credito.dias_mora_cartera.between(1, 30), '1-30 días'),
+            (Credito.dias_mora_cartera.between(31, 60), '31-60 días'),
+            (Credito.dias_mora_cartera.between(61, 90), '61-90 días'),
+            (Credito.dias_mora_cartera.between(91, 180), '91-180 días'),
+            (Credito.dias_mora_cartera > 180, '+180 días'),
+            else_='Sin clasificar'
+        ).label('rango')
+
+        datos = db.session.query(
+            rango_mora,
+            func.count(Credito.id).label('cantidad_creditos')
+        ).filter(
+            Credito.anio == anio,
+            Credito.mes == mes
+        ).group_by(
+            rango_mora
+        ).all()
+
+        orden_rangos = {
+            '0 días': 1,
+            '1-30 días': 2,
+            '31-60 días': 3,
+            '61-90 días': 4,
+            '91-180 días': 5,
+            '+180 días': 6,
+            'Sin clasificar': 7
+        }
+
+        resultados = [
+            {
+                'rango': dato.rango,
+                'cantidad_creditos': int(dato.cantidad_creditos or 0)
+            }
+            for dato in datos
+        ]
+
+        resultados.sort(
+            key=lambda item: orden_rangos.get(item['rango'], 99)
+        )
 
         return {
             'anio': anio,
