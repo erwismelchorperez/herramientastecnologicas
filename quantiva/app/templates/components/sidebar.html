@@ -79,14 +79,14 @@
                     <a class="sub-link" onclick="nav('socios-demo',this)">
                         <span class="sub-dot"></span>Demografía / Perfil
                     </a>
-                    <a class="sub-link" onclick="nav('socios-fid',this)">
+                    <!--<a class="sub-link" onclick="nav('socios-fid',this)">
                         <span class="sub-dot"></span>Antigüedad / Fidelización
-                    </a>
+                    </a>-->
                 </div>
             </div>
         </div>
         <!-- Reportes -->
-        <div class="nav-group">
+        <!--<div class="nav-group">
             <span class="nav-label">Forecasting</span>
             <div class="nav-item {% if request.endpoint in ['forecast_cartera.dashboard'] %} open {% endif %}" id="grp-forecasting">
                 <a class="nav-link" onclick="toggle('grp-grp-forecasting')">
@@ -106,9 +106,9 @@
                 <span>Configuración</span>
                 </a>
             </div>
-        </div>
+        </div>-->
         <!-- Configuraciones -->
-        <div class="nav-group">
+        <!--<div class="nav-group">
             <span class="nav-label">Configuración</span>
             <div class="nav-item {% if request.endpoint in ['configuracion.confcartera'] %} open {% endif %}" id="grp-configuracion">
                 <a class="nav-link" onclick="toggle('grp-configuracion')">
@@ -128,7 +128,7 @@
                     </a>
                 </div>
             </div>
-        </div>
+        </div>-->
         <!-- Credit risk -->
         <div class="nav-group">
             <span class="nav-label">Riesgo de crédito</span>
@@ -139,15 +139,15 @@
                     <i class="nav-arrow bi bi-chevron-right"></i>
                 </a>
                 <div class="sub-menu">
-                    <a href="{{ url_for('credit_risk.dashboard') }}" class="sub-link  {% if request.endpoint == 'credit_risk.dashboard' %}active{% endif %}">
+                    <!--<a href="{{ url_for('credit_risk.dashboard') }}" class="sub-link  {% if request.endpoint == 'credit_risk.dashboard' %}active{% endif %}">
                         <span class="sub-dot"></span>Dashboard
-                    </a>
+                    </a>-->
                     <a href="{{ url_for('credit_risk.evaluation') }}" class="sub-link  {% if request.endpoint == 'credit_risk.evaluation' %}active{% endif %}" >
                         <span class="sub-dot"></span>Evaluación
                     </a>
-                    <a class="sub-link" onclick="nav('socios-fid',this)">
+                    <!--<a class="sub-link" onclick="nav('socios-fid',this)">
                         <span class="sub-dot"></span>Antigüedad / Fidelización
-                    </a>
+                    </a>-->
                 </div>
             </div>
         </div>
