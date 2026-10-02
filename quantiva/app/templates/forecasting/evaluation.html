@@ -45,7 +45,7 @@
         </div>
         <form id="creditRiskForm">
 
-            <div class="g3">
+            <!--<div class="g3">
 
                 <div>
                     <label class="form-label">
@@ -213,7 +213,335 @@
 
                 </div>
 
+            </div>-->
+            <div class="g3">
+                <div>
+                    <label class="form-label">
+                        Edad (años)
+                    </label>
+                    <input
+                        type="number"
+                        name="edad"
+                        class="form-control"
+                        min="0"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label class="form-label">
+                        Código postal
+                    </label>
+                    <input
+                        type="text"
+                        name="codigo_postal"
+                        class="form-control"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label class="form-label">
+                        Tipo de vivienda
+                    </label>
+                    <select
+                        name="tipovivienda"
+                        class="form-select"
+                        required
+                    >
+                        <option value="">Seleccionar</option>
+                        <option value="COMPARTIDA">COMPARTIDA</option>
+                        <option value="FAMILIAR">FAMILIAR</option>
+                        <option value="NO APLICA">NO APLICA</option>
+                        <option value="PROPIA">PROPIA</option>
+                        <option value="RENTADA">RENTADA</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="form-label">
+                        Dependientes
+                    </label>
+                    <input
+                        type="number"
+                        name="dependientes"
+                        class="form-control"
+                        min="0"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label class="form-label">
+                        Estado civil
+                    </label>
+                    <select
+                        name="estadocivil"
+                        class="form-select"
+                        required
+                    >
+                        <option value="">Seleccionar</option>
+                        <option value="CASADO(A)">CASADO(A)</option>
+                        <option value="SOLTERO(A)">SOLTERO(A)</option>
+                        <option value="DIVORCIADO(A)">DIVORCIADO(A)</option>
+                        <option value="NO APLICA">NO APLICA</option>
+                        <option value="UNIÓN LIBRE">UNIÓN LIBRE</option>
+                        <option value="VIUDO(A)">VIUDO(A)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="form-label">
+                        Género
+                    </label>
+                    <select
+                        name="genero"
+                        class="form-select"
+                        required
+                    >
+                        <option value="">Seleccionar</option>
+                        <option value="M">MASCULINO</option>
+                        <option value="F">FEMENINO</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="form-label">
+                        Clave de actividad
+                    </label>
+                    <input
+                        type="text"
+                        name="claveactividad"
+                        class="form-control"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label class="form-label">
+                        Nivel académico
+                    </label>
+                    <select
+                        name="nivelacademico"
+                        class="form-select"
+                        required
+                    >
+                        <option value="">Seleccionar</option>
+                        <option value="DOCTORADO">DOCTORADO</option>
+                        <option value="LICENCIATURA">LICENCIATURA</option>
+                        <option value="MAESTRIA">MAESTRIA</option>
+                        <option value="NINGUNO">NINGUNO</option>
+                        <option value="PREPARATORIA">PREPARATORIA</option>
+                        <option value="PRIMARIA">PRIMARIA</option>
+                        <option value="SECUNDARIA">SECUNDARIA</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="form-label">
+                        Teléfono
+                    </label>
+                    <select
+                        name="telefono"
+                        class="form-select"
+                        required
+                    >
+                        <option value="">Seleccionar</option>
+                        <option value="YES">YES</option>
+                        <option value="NO">NO</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="form-label">
+                        Ingreso mensual
+                    </label>
+                    <input
+                        type="number"
+                        step="0.01"
+                        name="ingreso"
+                        class="form-control"
+                        min="0"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label class="form-label">
+                        Egreso mensual
+                    </label>
+                    <input
+                        type="number"
+                        step="0.01"
+                        name="egreso"
+                        class="form-control"
+                        min="0"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label class="form-label">
+                        Tipo de préstamo
+                    </label>
+                    <select
+                        name="tipoprestamo"
+                        class="form-select"
+                        required
+                    >
+                        <option value="">Seleccionar</option>
+                        <option value="TP0">TP0</option>
+                        <option value="TP190">TP190</option>
+                        <option value="TP191">TP191</option>
+                        <option value="TP193">TP193</option>
+                        <option value="TP196">TP196</option>
+                        <option value="TP197">TP197</option>
+                        <option value="TP198">TP198</option>
+                        <option value="TP199">TP199</option>
+                        <option value="TP302">TP302</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="form-label">
+                        Tasa de interés
+                    </label>
+                    <input
+                        type="number"
+                        step="0.0001"
+                        name="tasainteres"
+                        class="form-control"
+                        min="0"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label class="form-label">
+                        Tasa moratoria
+                    </label>
+                    <input
+                        type="number"
+                        step="0.0001"
+                        name="tasamoratoria"
+                        class="form-control"
+                        min="0"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label class="form-label">
+                        Monto
+                    </label>
+                    <input
+                        type="number"
+                        step="0.01"
+                        name="monto"
+                        class="form-control"
+                        min="0"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label class="form-label">
+                        Número de avales
+                    </label>
+                    <input
+                        type="number"
+                        name="num_avales"
+                        class="form-control"
+                        min="0"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label class="form-label">
+                        Créditos trabajados
+                    </label>
+                    <input
+                        type="number"
+                        name="creditostrabajados"
+                        class="form-control"
+                        min="0"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label class="form-label">
+                        Bien
+                    </label>
+                    <input
+                        type="text"
+                        name="bien"
+                        class="form-control"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label class="form-label">
+                        Monto de garantía
+                    </label>
+                    <input
+                        type="number"
+                        step="0.01"
+                        name="montogarantia"
+                        class="form-control"
+                        min="0"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label class="form-label">
+                        Finalidad
+                    </label>
+                    <select
+                        name="finalidad"
+                        class="form-select"
+                        required
+                    >
+                        <option value="">Seleccionar</option>
+                        <option value="CONSUMO">CONSUMO</option>
+                        <option value="COMERCIAL">COMERCIAL</option>
+                        <option value="VIVIENDA">VIVIENDA</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="form-label">
+                        Remesas
+                    </label>
+                    <select
+                        name="remesas"
+                        class="form-select"
+                        required
+                    >
+                        <option value="">Seleccionar</option>
+                        <option value="YES">YES</option>
+                        <option value="NO">NO</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="form-label">
+                        Plazo
+                    </label>
+                    <input
+                        type="number"
+                        name="plazo"
+                        class="form-control"
+                        min="0"
+                        required
+                    >
+                </div>
+
             </div>
+
 
             <div class="mt-4 d-flex justify-content-end gap-2">
                 <button type="button" id="btnCancelarEvaluacion" class="tb-btn secondary tb-btn-lg">

@@ -52,7 +52,7 @@ class CarteraService:
         creditos_vigentes = db.session.query(func.count(Credito.vigente_vencido)).filter(
             Credito.anio == anio,
             Credito.mes == mes,
-            Credito.vigente_vencido == 'VIGENTE'
+            func.upper(func.trim(Credito.vigente_vencido)) == 'VIGENTE'
         ).scalar()
 
         creditos_vigentes = int(creditos_vigentes or 0)
@@ -60,7 +60,7 @@ class CarteraService:
         creditos_vencidos = db.session.query(func.count(Credito.vigente_vencido)).filter(
             Credito.anio == anio,
             Credito.mes == mes,
-            Credito.vigente_vencido == 'VENCIDO'
+            func.upper(func.trim(Credito.vigente_vencido)) == 'VENCIDO'
         ).scalar()
 
         creditos_vencidos = int(creditos_vencidos or 0)
@@ -70,7 +70,7 @@ class CarteraService:
         ).filter(
             Credito.anio == anio,
             Credito.mes == mes,
-            Credito.renovado_reestructurado_normal == 'RE-ESTRUCTURADO X CONTINGENCIA'
+            func.upper(func.trim(Credito.renovado_reestructurado_normal)) == 'RE-ESTRUCTURADO X CONTINGENCIA'
         ).scalar()
 
         creditos_reestructurados = int(creditos_reestructurados or 0)
