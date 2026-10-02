@@ -1,0 +1,366 @@
+[
+    {
+        "Pattern": "[tasamoratoria <= 19.0]",
+        "negative Count": 435,
+        "negative Support": 0.16912908242612754,
+        "positive Count": 82,
+        "positive Support": 0.03188180404354588
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia <= 1500.0]",
+        "negative Count": 905,
+        "negative Support": 0.35186625194401244,
+        "positive Count": 1551,
+        "positive Support": 0.6030326594090202
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR]",
+        "negative Count": 722,
+        "negative Support": 0.2807153965785381,
+        "positive Count": 179,
+        "positive Support": 0.06959564541213063
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [monto <= 15000.0] \u2227 [edad > 65.0]",
+        "negative Count": 50,
+        "negative Support": 0.019440124416796267,
+        "positive Count": 15,
+        "positive Support": 0.00583203732503888
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [monto <= 15000.0] \u2227 [edad > 65.0] \u2227 [creditostrabajados <= 20.0]",
+        "negative Count": 46,
+        "negative Support": 0.017884914463452566,
+        "positive Count": 9,
+        "positive Support": 0.003499222395023328
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [monto <= 15000.0] \u2227 [edad > 65.0] \u2227 [creditostrabajados <= 20.0] \u2227 [monto <= 12799.999999999996]",
+        "negative Count": 40,
+        "negative Support": 0.015552099533437015,
+        "positive Count": 4,
+        "positive Support": 0.0015552099533437014
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [monto <= 15000.0] \u2227 [edad > 65.0] \u2227 [creditostrabajados <= 20.0] \u2227 [monto <= 12799.999999999996] \u2227 [edad <= 69.0]",
+        "negative Count": 26,
+        "negative Support": 0.01010886469673406,
+        "positive Count": 1,
+        "positive Support": 0.00038880248833592535
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [monto <= 15000.0] \u2227 [edad > 65.0] \u2227 [creditostrabajados <= 20.0] \u2227 [monto <= 12799.999999999996] \u2227 [edad > 69.0]",
+        "negative Count": 14,
+        "negative Support": 0.005443234836702955,
+        "positive Count": 3,
+        "positive Support": 0.0011664074650077762
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [monto <= 15000.0] \u2227 [edad > 65.0] \u2227 [creditostrabajados > 20.0]",
+        "negative Count": 4,
+        "negative Support": 0.0015552099533437014,
+        "positive Count": 6,
+        "positive Support": 0.0023328149300155523
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [monto > 15000.0]",
+        "negative Count": 587,
+        "negative Support": 0.22822706065318818,
+        "positive Count": 47,
+        "positive Support": 0.01827371695178849
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal <= 70720.0] \u2227 [codigopostal <= 70110.0] \u2227 [edad <= 49.0] \u2227 [egreso <= 7960.36309906965]",
+        "negative Count": 23,
+        "negative Support": 0.008942457231726283,
+        "positive Count": 47,
+        "positive Support": 0.01827371695178849
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal <= 70720.0] \u2227 [codigopostal <= 70110.0] \u2227 [edad <= 49.0] \u2227 [egreso > 7960.36309906965]",
+        "negative Count": 78,
+        "negative Support": 0.030326594090202177,
+        "positive Count": 43,
+        "positive Support": 0.01671850699844479
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal <= 70720.0] \u2227 [codigopostal <= 70110.0] \u2227 [edad <= 49.0] \u2227 [egreso > 7960.36309906965] \u2227 [edad > 46.0]",
+        "negative Count": 23,
+        "negative Support": 0.008942457231726283,
+        "positive Count": 3,
+        "positive Support": 0.0011664074650077762
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal <= 70720.0] \u2227 [codigopostal <= 70110.0] \u2227 [edad <= 49.0] \u2227 [egreso > 7960.36309906965] \u2227 [edad > 46.0] \u2227 [creditostrabajados <= 5.166666666666668]",
+        "negative Count": 7,
+        "negative Support": 0.0027216174183514776,
+        "positive Count": 3,
+        "positive Support": 0.0011664074650077762
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal <= 70720.0] \u2227 [codigopostal <= 70110.0] \u2227 [edad <= 49.0] \u2227 [egreso > 7960.36309906965] \u2227 [edad > 46.0] \u2227 [creditostrabajados > 5.166666666666668]",
+        "negative Count": 16,
+        "negative Support": 0.006220839813374806,
+        "positive Count": 0,
+        "positive Support": 0.0
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal <= 70720.0] \u2227 [codigopostal <= 70110.0] \u2227 [edad > 49.0]",
+        "negative Count": 65,
+        "negative Support": 0.025272161741835147,
+        "positive Count": 137,
+        "positive Support": 0.053265940902021774
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal <= 70720.0] \u2227 [codigopostal <= 70110.0] \u2227 [edad > 49.0] \u2227 [monto <= 50000.0]",
+        "negative Count": 54,
+        "negative Support": 0.020995334370139968,
+        "positive Count": 130,
+        "positive Support": 0.05054432348367029
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal <= 70720.0] \u2227 [codigopostal <= 70110.0] \u2227 [edad > 49.0] \u2227 [monto <= 50000.0] \u2227 [ingreso <= 12500.0] \u2227 [egreso <= 7802.047625459359]",
+        "negative Count": 17,
+        "negative Support": 0.006609642301710731,
+        "positive Count": 44,
+        "positive Support": 0.017107309486780714
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal <= 70720.0] \u2227 [codigopostal <= 70110.0] \u2227 [edad > 49.0] \u2227 [monto <= 50000.0] \u2227 [ingreso <= 12500.0] \u2227 [egreso <= 7802.047625459359] \u2227 [dependientes <= 0.0]",
+        "negative Count": 13,
+        "negative Support": 0.00505443234836703,
+        "positive Count": 20,
+        "positive Support": 0.007776049766718507
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal <= 70720.0] \u2227 [codigopostal <= 70110.0] \u2227 [edad > 49.0] \u2227 [monto <= 50000.0] \u2227 [ingreso <= 12500.0] \u2227 [egreso <= 7802.047625459359] \u2227 [dependientes <= 0.0] \u2227 [creditostrabajados <= 4.0]",
+        "negative Count": 6,
+        "negative Support": 0.0023328149300155523,
+        "positive Count": 4,
+        "positive Support": 0.0015552099533437014
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal <= 70720.0] \u2227 [codigopostal <= 70110.0] \u2227 [edad > 49.0] \u2227 [monto <= 50000.0] \u2227 [ingreso <= 12500.0] \u2227 [egreso <= 7802.047625459359] \u2227 [dependientes <= 0.0] \u2227 [creditostrabajados > 4.0]",
+        "negative Count": 7,
+        "negative Support": 0.0027216174183514776,
+        "positive Count": 16,
+        "positive Support": 0.006220839813374806
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal <= 70720.0] \u2227 [codigopostal <= 70110.0] \u2227 [edad > 49.0] \u2227 [monto <= 50000.0] \u2227 [ingreso <= 12500.0] \u2227 [egreso <= 7802.047625459359] \u2227 [dependientes <= 0.0] \u2227 [creditostrabajados > 4.0] \u2227 [ingreso <= 7544.942222222224]",
+        "negative Count": 2,
+        "negative Support": 0.0007776049766718507,
+        "positive Count": 9,
+        "positive Support": 0.003499222395023328
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal <= 70720.0] \u2227 [codigopostal <= 70110.0] \u2227 [edad > 49.0] \u2227 [monto <= 50000.0] \u2227 [ingreso <= 12500.0] \u2227 [egreso <= 7802.047625459359] \u2227 [dependientes > 0.0]",
+        "negative Count": 4,
+        "negative Support": 0.0015552099533437014,
+        "positive Count": 24,
+        "positive Support": 0.00933125972006221
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal <= 70720.0] \u2227 [codigopostal <= 70110.0] \u2227 [edad > 49.0] \u2227 [monto <= 50000.0] \u2227 [ingreso <= 12500.0] \u2227 [egreso <= 7802.047625459359] \u2227 [dependientes > 0.0] \u2227 [creditostrabajados <= 3.0]",
+        "negative Count": 0,
+        "negative Support": 0.0,
+        "positive Count": 14,
+        "positive Support": 0.005443234836702955
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal <= 70720.0] \u2227 [codigopostal <= 70110.0] \u2227 [edad > 49.0] \u2227 [monto <= 50000.0] \u2227 [ingreso <= 12500.0] \u2227 [egreso <= 7802.047625459359] \u2227 [dependientes > 0.0] \u2227 [creditostrabajados > 3.0]",
+        "negative Count": 4,
+        "negative Support": 0.0015552099533437014,
+        "positive Count": 10,
+        "positive Support": 0.0038880248833592537
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal <= 70720.0] \u2227 [codigopostal <= 70110.0] \u2227 [edad > 49.0] \u2227 [monto <= 50000.0] \u2227 [ingreso <= 12500.0] \u2227 [egreso > 7802.047625459359]",
+        "negative Count": 18,
+        "negative Support": 0.006998444790046656,
+        "positive Count": 6,
+        "positive Support": 0.0023328149300155523
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal <= 70720.0] \u2227 [codigopostal <= 70110.0] \u2227 [edad > 49.0] \u2227 [monto <= 50000.0] \u2227 [ingreso <= 12500.0] \u2227 [egreso > 7802.047625459359] \u2227 [ingreso <= 10429.638391280781]",
+        "negative Count": 11,
+        "negative Support": 0.0042768273716951785,
+        "positive Count": 0,
+        "positive Support": 0.0
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal <= 70720.0] \u2227 [codigopostal <= 70110.0] \u2227 [edad > 49.0] \u2227 [monto <= 50000.0] \u2227 [ingreso > 12500.0]",
+        "negative Count": 19,
+        "negative Support": 0.007387247278382581,
+        "positive Count": 80,
+        "positive Support": 0.03110419906687403
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal <= 70720.0] \u2227 [codigopostal <= 70110.0] \u2227 [edad > 49.0] \u2227 [monto > 50000.0]",
+        "negative Count": 11,
+        "negative Support": 0.0042768273716951785,
+        "positive Count": 7,
+        "positive Support": 0.0027216174183514776
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal <= 70720.0] \u2227 [codigopostal > 70110.0] \u2227 [tipoprestamo = TP302]",
+        "negative Count": 8,
+        "negative Support": 0.003110419906687403,
+        "positive Count": 5,
+        "positive Support": 0.0019440124416796269
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal > 70720.0]",
+        "negative Count": 160,
+        "negative Support": 0.06220839813374806,
+        "positive Count": 400,
+        "positive Support": 0.15552099533437014
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal > 70720.0] \u2227 [monto <= 5000.0]",
+        "negative Count": 42,
+        "negative Support": 0.016329704510108865,
+        "positive Count": 18,
+        "positive Support": 0.006998444790046656
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal > 70720.0] \u2227 [monto <= 5000.0] \u2227 [creditostrabajados <= 16.0]",
+        "negative Count": 30,
+        "negative Support": 0.01166407465007776,
+        "positive Count": 5,
+        "positive Support": 0.0019440124416796269
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal > 70720.0] \u2227 [monto <= 5000.0] \u2227 [creditostrabajados <= 16.0] \u2227 [edad <= 50.0]",
+        "negative Count": 13,
+        "negative Support": 0.00505443234836703,
+        "positive Count": 0,
+        "positive Support": 0.0
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal > 70720.0] \u2227 [monto <= 5000.0] \u2227 [creditostrabajados <= 16.0] \u2227 [edad > 50.0]",
+        "negative Count": 17,
+        "negative Support": 0.006609642301710731,
+        "positive Count": 5,
+        "positive Support": 0.0019440124416796269
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal > 70720.0] \u2227 [monto <= 5000.0] \u2227 [creditostrabajados <= 16.0] \u2227 [edad > 50.0] \u2227 [codigopostal <= 70733.7]",
+        "negative Count": 7,
+        "negative Support": 0.0027216174183514776,
+        "positive Count": 3,
+        "positive Support": 0.0011664074650077762
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal > 70720.0] \u2227 [monto <= 5000.0] \u2227 [creditostrabajados <= 16.0] \u2227 [edad > 50.0] \u2227 [codigopostal > 70733.7]",
+        "negative Count": 10,
+        "negative Support": 0.0038880248833592537,
+        "positive Count": 2,
+        "positive Support": 0.0007776049766718507
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal > 70720.0] \u2227 [monto <= 5000.0] \u2227 [creditostrabajados > 16.0] \u2227 [montogarantia <= 2100.0]",
+        "negative Count": 3,
+        "negative Support": 0.0011664074650077762,
+        "positive Count": 7,
+        "positive Support": 0.0027216174183514776
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal > 70720.0] \u2227 [monto <= 5000.0] \u2227 [creditostrabajados > 16.0] \u2227 [montogarantia > 2100.0]",
+        "negative Count": 9,
+        "negative Support": 0.003499222395023328,
+        "positive Count": 6,
+        "positive Support": 0.0023328149300155523
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal > 70720.0] \u2227 [monto > 5000.0]",
+        "negative Count": 118,
+        "negative Support": 0.045878693623639194,
+        "positive Count": 382,
+        "positive Support": 0.14852255054432348
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal > 70720.0] \u2227 [monto > 5000.0] \u2227 [ingreso <= 1800.0]",
+        "negative Count": 80,
+        "negative Support": 0.03110419906687403,
+        "positive Count": 343,
+        "positive Support": 0.1333592534992224
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal > 70720.0] \u2227 [monto > 5000.0] \u2227 [ingreso > 1800.0] \u2227 [dependientes <= 0.0]",
+        "negative Count": 23,
+        "negative Support": 0.008942457231726283,
+        "positive Count": 12,
+        "positive Support": 0.004665629860031105
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal > 70720.0] \u2227 [monto > 5000.0] \u2227 [ingreso > 1800.0] \u2227 [dependientes <= 0.0] \u2227 [ingreso <= 26600.688888888886]",
+        "negative Count": 19,
+        "negative Support": 0.007387247278382581,
+        "positive Count": 6,
+        "positive Support": 0.0023328149300155523
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal > 70720.0] \u2227 [monto > 5000.0] \u2227 [ingreso > 1800.0] \u2227 [dependientes <= 0.0] \u2227 [ingreso <= 26600.688888888886] \u2227 [edad <= 50.66666666666667]",
+        "negative Count": 10,
+        "negative Support": 0.0038880248833592537,
+        "positive Count": 1,
+        "positive Support": 0.00038880248833592535
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal > 70720.0] \u2227 [monto > 5000.0] \u2227 [ingreso > 1800.0] \u2227 [dependientes <= 0.0] \u2227 [ingreso <= 26600.688888888886] \u2227 [edad > 50.66666666666667]",
+        "negative Count": 9,
+        "negative Support": 0.003499222395023328,
+        "positive Count": 5,
+        "positive Support": 0.0019440124416796269
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal > 70720.0] \u2227 [monto > 5000.0] \u2227 [ingreso > 1800.0] \u2227 [dependientes <= 0.0] \u2227 [ingreso > 26600.688888888886]",
+        "negative Count": 4,
+        "negative Support": 0.0015552099533437014,
+        "positive Count": 6,
+        "positive Support": 0.0023328149300155523
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal > 70720.0] \u2227 [monto > 5000.0] \u2227 [ingreso > 1800.0] \u2227 [dependientes > 0.0]",
+        "negative Count": 15,
+        "negative Support": 0.00583203732503888,
+        "positive Count": 27,
+        "positive Support": 0.010497667185069984
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal > 70720.0] \u2227 [monto > 5000.0] \u2227 [ingreso > 1800.0] \u2227 [dependientes > 0.0] \u2227 [creditostrabajados <= 1.0]",
+        "negative Count": 7,
+        "negative Support": 0.0027216174183514776,
+        "positive Count": 3,
+        "positive Support": 0.0011664074650077762
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal > 70720.0] \u2227 [monto > 5000.0] \u2227 [ingreso > 1800.0] \u2227 [dependientes > 0.0] \u2227 [creditostrabajados > 1.0]",
+        "negative Count": 8,
+        "negative Support": 0.003110419906687403,
+        "positive Count": 24,
+        "positive Support": 0.00933125972006221
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal > 70720.0] \u2227 [monto > 5000.0] \u2227 [ingreso > 1800.0] \u2227 [dependientes > 0.0] \u2227 [creditostrabajados > 1.0] \u2227 [ingreso > 10000.0]",
+        "negative Count": 3,
+        "negative Support": 0.0011664074650077762,
+        "positive Count": 19,
+        "positive Support": 0.007387247278382581
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal > 70720.0] \u2227 [monto > 5000.0] \u2227 [ingreso > 1800.0] \u2227 [dependientes > 0.0] \u2227 [creditostrabajados > 1.0] \u2227 [ingreso > 10000.0] \u2227 [codigopostal <= 70735.0]",
+        "negative Count": 0,
+        "negative Support": 0.0,
+        "positive Count": 10,
+        "positive Support": 0.0038880248833592537
+    },
+    {
+        "Pattern": "[tasamoratoria > 19.0] \u2227 [montogarantia > 1500.0] \u2227 [tipovivienda = FAMILIAR] \u2227 [codigopostal > 70720.0] \u2227 [monto > 5000.0] \u2227 [ingreso > 1800.0] \u2227 [dependientes > 0.0] \u2227 [creditostrabajados > 1.0] \u2227 [ingreso > 10000.0] \u2227 [codigopostal > 70735.0]",
+        "negative Count": 3,
+        "negative Support": 0.0011664074650077762,
+        "positive Count": 9,
+        "positive Support": 0.003499222395023328
+    }
+]
