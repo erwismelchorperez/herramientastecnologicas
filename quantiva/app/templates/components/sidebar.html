@@ -76,7 +76,7 @@
                     <a href="{{ url_for('socios.dashboard') }}" class="sub-link  {% if request.endpoint == 'socios.dashboard' %}active{% endif %}" onclick="nav('socios-altas',this)">
                         <span class="sub-dot"></span>Socios
                     </a>
-                    <a class="sub-link" onclick="nav('socios-demo',this)">
+                    <a href="{{ url_for('socios.perfil') }}" class="sub-link  {% if request.endpoint == 'socios.perfil' %}active{% endif %}" onclick="nav('socios-demo',this)">
                         <span class="sub-dot"></span>Demografía / Perfil
                     </a>
                     <!--<a class="sub-link" onclick="nav('socios-fid',this)">

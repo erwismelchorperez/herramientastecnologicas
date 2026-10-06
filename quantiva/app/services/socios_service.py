@@ -262,3 +262,136 @@ class SociosService:
             'chart_labels':[x[0] for x in datos],
             'chart_series':[int(x[2]) for x in datos]
         }
+    @staticmethod
+    def get_escolaridad_chart(anio=None, mes=None):
+
+        if not anio or not mes:
+            ultimo = SociosService.get_latest_period()
+            anio = ultimo.anio
+            mes = ultimo.mes
+
+        datos = db.session.query(
+            Socios.escolaridad,
+            func.count(
+                Socios.numero_socio
+            ).label('total')
+        ).filter(
+            Socios.anio == anio,
+            Socios.mes == mes,
+            Socios.fecha_baja.is_(None)
+        ).group_by(
+            Socios.escolaridad
+        ).order_by(
+            func.count(Socios.numero_socio).desc()
+        ).all()
+
+        return {
+            'chart_labels': [
+                (x.escolaridad if x.escolaridad else 'SIN DATO')
+                for x in datos
+            ],
+            'chart_series': [
+                int(x.total)
+                for x in datos
+            ]
+        }
+    @staticmethod
+    def get_codigopostal_chart(anio=None, mes=None):
+
+        if not anio or not mes:
+            ultimo = SociosService.get_latest_period()
+            anio = ultimo.anio
+            mes = ultimo.mes
+
+        datos = db.session.query(
+            Socios.codigopostal,
+            func.count(
+                Socios.numero_socio
+            ).label('total')
+        ).filter(
+            Socios.anio == anio,
+            Socios.mes == mes,
+            Socios.fecha_baja.is_(None),
+            Socios.codigopostal.isnot(None)
+        ).group_by(
+            Socios.codigopostal
+        ).order_by(
+            func.count(Socios.numero_socio).desc()
+        ).limit(10).all()
+
+        return {
+            'chart_labels': [
+                x.codigopostal
+                for x in datos
+            ],
+            'chart_series': [
+                int(x.total)
+                for x in datos
+            ]
+        }
+    @staticmethod
+    def get_localidad_chart(anio=None, mes=None):
+
+        if not anio or not mes:
+            ultimo = SociosService.get_latest_period()
+            anio = ultimo.anio
+            mes = ultimo.mes
+
+        datos = db.session.query(
+            Socios.localidad,
+            func.count(
+                Socios.numero_socio
+            ).label('total')
+        ).filter(
+            Socios.anio == anio,
+            Socios.mes == mes,
+            Socios.fecha_baja.is_(None)
+        ).group_by(
+            Socios.localidad
+        ).order_by(
+            func.count(Socios.numero_socio).desc()
+        ).all()
+
+        return {
+            'chart_labels': [
+                (x.localidad if x.localidad else 'SIN DATO')
+                for x in datos
+            ],
+            'chart_series': [
+                int(x.total)
+                for x in datos
+            ]
+        }
+    @staticmethod
+    def get_municipio_chart(anio=None, mes=None):
+
+        if not anio or not mes:
+            ultimo = SociosService.get_latest_period()
+            anio = ultimo.anio
+            mes = ultimo.mes
+
+        datos = db.session.query(
+            Socios.municipio,
+            func.count(
+                Socios.numero_socio
+            ).label('total')
+        ).filter(
+            Socios.anio == anio,
+            Socios.mes == mes,
+            Socios.fecha_baja.is_(None)
+        ).group_by(
+            Socios.municipio
+        ).order_by(
+            func.count(Socios.numero_socio).desc()
+        ).all()
+
+        return {
+            'chart_labels': [
+                (x.municipio if x.municipio else 'SIN DATO')
+                for x in datos
+            ],
+            'chart_series': [
+                int(x.total)
+                for x in datos
+            ]
+        }

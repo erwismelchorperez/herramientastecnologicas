@@ -2,12 +2,20 @@ let sociosSucursalChart;
 let sociosSexoChart;
 let sociosEdadChart;
 let sociosAntiguedadChart;
+let sociosEscolaridadChart;
+let sociosCodigoPostalChart;
+let sociosLocalidadChart;
+let sociosMunicipioChart;
 $(document).ready(function(){
     initFilters();
     initSociosSexoChart();
     initSociosSucursalChart();
     initSociosEdadChart();
     initSociosAntiguedadChart();
+    initSociosEscolaridadChart();
+    initSociosCodigoPostalChart();
+    initSociosLocalidadChart();
+    initSociosMunicipioChart();
 
     let anio = $('#anioSelect').val();
     let mes = $('#mesSelect').val();
@@ -16,6 +24,10 @@ $(document).ready(function(){
     loadSociosSucursalChart(anio, mes);
     loadSociosEdadChart(anio,mes);
     loadSociosAntiguedadChart(anio,mes);
+    loadSociosEscolaridadChart(anio,mes);
+    loadSociosCodigoPostalChart(anio,mes);
+    loadSociosLocalidadChart(anio,mes);
+    loadSociosMunicipioChart(anio,mes);
 });
 /* Bloque de inits */
 function initFilters(){
@@ -45,6 +57,7 @@ function initFilters(){
                 loadSociosSucursalChart(anio, mes);
                 loadSociosEdadChart(anio,mes);
                 loadSociosAntiguedadChart(anio,mes);
+                loadSociosEscolaridadChart(anio,mes);
             },
             error: function (xhr) {
                 console.error(xhr);
@@ -60,6 +73,7 @@ function initFilters(){
         loadSociosSucursalChart(anio, mes);
         loadSociosEdadChart(anio,mes);
         loadSociosAntiguedadChart(anio,mes);
+        loadSociosEscolaridadChart(anio,mes);
     });
 }
 function initSociosSucursalChart(){
@@ -104,6 +118,50 @@ function initSociosAntiguedadChart(){
         )
     )
     sociosAntiguedadChart.render()
+}
+function initSociosEscolaridadChart(){ 
+    sociosEscolaridadChart=new ApexCharts(
+        document.querySelector("#sociosEscolaridadChart"),
+        getHorizontalBarOptions(
+            [],
+            [],
+            'rgba(124,255,155,0.85)'
+        )
+    )
+    sociosEscolaridadChart.render()
+}
+function initSociosCodigoPostalChart(){ 
+    sociosCodigoPostalChart=new ApexCharts(
+        document.querySelector("#sociosCodigoPostalChart"),
+        getHorizontalBarOptions(
+            [],
+            [],
+            'rgba(124,255,155,0.85)'
+        )
+    )
+    sociosCodigoPostalChart.render()
+}
+function initSociosLocalidadChart(){ 
+    sociosLocalidadChart=new ApexCharts(
+        document.querySelector("#sociosLocalidadChart"),
+        getHorizontalBarOptions(
+            [],
+            [],
+            'rgba(124,255,155,0.85)'
+        )
+    )
+    sociosLocalidadChart.render()
+}
+function initSociosMunicipioChart(){ 
+    sociosMunicipioChart=new ApexCharts(
+        document.querySelector("#sociosMunicipioChart"),
+        getHorizontalBarOptions(
+            [],
+            [],
+            'rgba(124,255,155,0.85)'
+        )
+    )
+    sociosMunicipioChart.render()
 }
 /* Termina bloque de inits */
 /* Bloque de load */
@@ -230,6 +288,98 @@ function loadSociosAntiguedadChart(anio,mes){
                     )
                 )
             sociosAntiguedadChart.render()
+        }
+    })
+}
+function loadSociosEscolaridadChart(anio,mes){
+    $.ajax({
+        url: '/api/socios/escolaridad-chart',
+        method: 'GET',
+        data:{
+            anio: anio,
+            mes: mes
+        },
+        success:function(response){
+            sociosEscolaridadChart.destroy()
+            sociosEscolaridadChart=
+                new ApexCharts(
+                    document.querySelector("#sociosEscolaridadChart"),
+                    getHorizontalBarOptions(
+                        response.chart_labels,
+                        response.chart_series,
+                        'rgba(124,255,155,0.85)'
+                    )
+                )
+            sociosEscolaridadChart.render()
+        }
+    })
+}
+function loadSociosCodigoPostalChart(anio,mes){
+    $.ajax({
+        url: '/api/socios/codigopostal-chart',
+        method: 'GET',
+        data:{
+            anio: anio,
+            mes: mes
+        },
+        success:function(response){
+            sociosCodigoPostalChart.destroy()
+            sociosCodigoPostalChart=
+                new ApexCharts(
+                    document.querySelector("#sociosCodigoPostalChart"),
+                    getHorizontalBarOptions(
+                        response.chart_labels,
+                        response.chart_series,
+                        'rgba(124,255,155,0.85)'
+                    )
+                )
+            sociosCodigoPostalChart.render()
+        }
+    })
+}
+function loadSociosLocalidadChart(anio,mes){
+    $.ajax({
+        url: '/api/socios/localidad-chart',
+        method: 'GET',
+        data:{
+            anio: anio,
+            mes: mes
+        },
+        success:function(response){
+            sociosLocalidadChart.destroy()
+            sociosLocalidadChart=
+                new ApexCharts(
+                    document.querySelector("#sociosLocalidadChart"),
+                    getHorizontalBarOptions(
+                        response.chart_labels,
+                        response.chart_series,
+                        'rgba(124,255,155,0.85)'
+                    )
+                )
+            sociosLocalidadChart.render()
+        }
+    })
+}
+function loadSociosMunicipioChart(anio,mes){
+    $.ajax({
+        url: '/api/socios/municipio-chart',
+        method: 'GET',
+        data:{
+            anio: anio,
+            mes: mes
+        },
+        success:function(response){
+            sociosMunicipioChart.destroy()
+            sociosMunicipioChart=
+                new ApexCharts(
+                    document.querySelector("#sociosMunicipioChart"),
+                    getHorizontalBarOptions(
+                        response.chart_labels,
+                        response.chart_series,
+                        'rgba(124,255,155,0.85)'
+                    )
+                )
+            sociosMunicipioChart.render()
         }
     })
 }

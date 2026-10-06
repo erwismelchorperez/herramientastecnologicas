@@ -13,3 +13,7 @@ class Socios(db.Model):
     sexo = db.Column(db.String(10),nullable=False)
     sucursal = db.Column(db.String(100),nullable=False)
     fecha_nacimiento = db.Column(db.Date,nullable=False)
+    escolaridad = db.Column(db.String(100),nullable=False)
+    codigopostal = db.Column(db.Integer,nullable=True)
+    localidad = db.Column(db.String(150),nullable=False)
+    municipio = db.Column(db.String(150),nullable=False)

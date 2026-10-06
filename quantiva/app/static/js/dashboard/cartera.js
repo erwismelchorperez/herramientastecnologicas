@@ -22,9 +22,11 @@ $(document).ready(function(){
     initFilters();
     let anio = $('#anioSelect').val();
     let mes = $('#mesSelect').val();
+    let sucursal = $('#sucursalSelect').val();
+    console.log("document                " + sucursal);
 
-    loadChart(anio);
-    loadSaldos(anio, mes);
+    loadChart(sucursal, anio);
+    loadSaldos(sucursal, anio, mes);
     //loadClasificacionChart(anio,mes);
     //loadBranchChart(anio,mes);
     loadClasificacionStatusChart(anio,mes);
@@ -36,6 +38,61 @@ $(document).ready(function(){
     loadProductosTable(anio,mes);
 });
 function initFilters(){
+    $('#sucursalSelect').on('change', function(){
+        let anio = $("#anioSelect").val();
+        let mes = $("#mesSelect").val();
+        let sucursal = $(this).val();
+        console.log("Sucursal seleccionada:     ", sucursal)
+        $.ajax({
+            url: '/api/years',
+            method: 'GET',
+            data: {sucursal: sucursal},
+            success: function(response){
+                let anioSelect = $('#anioSelect');
+                anioSelect.empty();
+                response.forEach(function (anio) {
+                    anioSelect.append(
+                        `<option value="${anio}">
+                            ${anio}
+                        </option>`
+                    );
+                });
+                anio = $("#anioSelect").val();
+            }
+        });
+        anio = $("#anioSelect").val();
+        $.ajax({
+            url: '/api/months',
+            method: 'GET',
+            data: {anio: anio},
+            success: function (response) {
+                loadChart(sucursal, anio);
+                /*
+                loadSaldos(anio,mes)
+                //loadClasificacionChart(anio,mes);
+                loadClasificacionStatusChart(anio, mes)
+                loadSucursalCountChart(anio, mes)
+                loadClasificacionStatusChart(anio, mes)
+                loadSucursalVencidoChart(anio,mes);
+                loadCarteraDonutChart(anio,mes);
+                loadTopProductosVigenteChart(anio,mes);
+                loadProductosTable(anio,mes);*/
+                let mesSelect = $('#mesSelect');
+                mesSelect.empty();
+                response.forEach(function (mes) {
+                    mesSelect.append(
+                        `<option value="${mes}">
+                            ${mes.toUpperCase()}
+                        </option>`
+                    );
+                });
+            },
+            error: function (xhr) {
+                console.error(xhr);
+            }
+        });
+    }
+    );
    $('#anioSelect').on('change', function () {
         let anio = $(this).val();
         let mes = $("#mesSelect").val();
@@ -87,11 +144,12 @@ function initFilters(){
         loadProductosTable(anio,mes);
     });  
 }
-function loadSaldos(anio, mes){
+function loadSaldos(sucursal, anio, mes){
     $.ajax({
         url: '/api/cartera/kpis',
         method: 'GET',
         data: {
+            sucursal: sucursal,
             anio: anio,
             mes: mes
         },
@@ -157,16 +215,11 @@ function initChart(){
     );
     carteraChart.render();
 }
-function loadChart(anio) {
+function loadChart(sucursal, anio) {
     $.ajax({
-
         url: '/api/cartera/chart',
-
         method: 'GET',
-
-        data: {
-            anio: anio
-        },
+        data: {sucursal: sucursal, anio: anio},
         success: function(response){
             carteraChart.destroy();
             carteraChart = new ApexCharts(
@@ -1078,15 +1131,15 @@ function loadProductosTable(anio,mes,page=1){
             response.data.forEach(item=>{
 
                 html+=`
-                <tr>
+                <tr class="text-center">
                     <td>${item.producto}</td>
-                    <td class="text-end">
+                    <td class="text-center">
                         ${formatCurrencyShort(item.capital_vigente)}
                     </td>
-                    <td class="text-end">
+                    <td class="text-center">
                         ${formatCurrencyShort(item.capital_vencido)}
                     </td>
-                    <td class="text-end">
+                    <td class="text-center">
                         ${item.numero_creditos.toLocaleString()}
                     </td>
                 </tr>
