@@ -11,17 +11,18 @@ class CarteraService:
         mes_orden = month_case(Credito.mes)
         return db.session.query(Credito.anio,Credito.mes).order_by(Credito.anio.desc(),mes_orden.desc()).first()
     @staticmethod
-    def get_general_kpis(anio=None, mes=None):
-
+    def get_general_kpis(sucursal=None, anio=None, mes=None):
+        print("Sucurlsal get_general_kpis       ", sucursal)
         if not anio or not mes:
-
             ultimo_periodo = CarteraService.get_latest_period()
-
             anio = ultimo_periodo.anio
             mes = ultimo_periodo.mes
 
+        if sucursal == 'all':
+            cartera_total = db.session.query(func.sum(Credito.capital_vigente)).filter(Credito.anio == anio,Credito.mes == mes).scalar()
+        else:
+            cartera_total = db.session.query(func.sum(Credito.capital_vigente)).filter(Credito.anio == anio,Credito.mes == mes, Credito.sucursal == sucursal).scalar()
 
-        cartera_total = db.session.query(func.sum(Credito.capital_vigente)).filter(Credito.anio == anio,Credito.mes == mes).scalar()
         cartera_total = float(cartera_total or 0)
 
         morosidad_data = db.session.query(
@@ -101,20 +102,26 @@ class CarteraService:
             'ultimo_mes': mes
         }
     @staticmethod
-    def get_evolution_chart(anio= None):
+    def get_evolution_chart(sucursal='all', anio=None):
+        print("get_evolution_chart      ",sucursal)
         if not anio:
             ultimo_periodo = CarteraService.get_latest_period()
             anio = ultimo_periodo.anio
 
         mes_orden = month_case(Credito.mes)
-        datos = db.session.query(
+        query = db.session.query(
             Credito.mes,
             func.sum(
                 Credito.capital_vigente
             ).label('total')
         ).filter(
             Credito.anio == anio
-        ).group_by(
+        )
+
+        if sucursal != 'all':
+            query = query.filter(Credito.sucursal == sucursal)
+
+        datos = query.group_by(
             Credito.mes
         ).order_by(
             mes_orden.asc()
@@ -126,10 +133,8 @@ class CarteraService:
         for row in datos:
             labels.append(row.mes.upper())
             series.append(float(row.total))
-        return {
-            'chart_labels': labels,
-            'chart_series': series
-        }
+
+        return {'chart_labels': labels,'chart_series': series}
     @staticmethod
     def get_product_chart(anio=None, mes=None):
         # ====================================
