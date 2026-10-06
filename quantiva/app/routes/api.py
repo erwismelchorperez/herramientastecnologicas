@@ -7,6 +7,12 @@ from app.services.ia_service import ForecastService
 from app.services.dashboard_service import DashboardService
 api = Blueprint('api',__name__,url_prefix='/api')
 
+
+@api.route('/years')
+def get_years():
+    sucursal = request.args.get('sucursal')
+    meses = (FilterService.get_available_years(sucursal))
+    return jsonify(meses)
 @api.route('/months')
 def get_months():
     anio = request.args.get('anio',type=int)
@@ -16,13 +22,16 @@ def get_months():
 def cartera_kpis():
     anio = request.args.get('anio',type=int)
     mes = request.args.get('mes')
-    data = CarteraService.get_general_kpis(anio,mes)
+    sucursal = request.args.get('sucursal')
+    data = CarteraService.get_general_kpis(sucursal,anio,mes)
 
     return jsonify(data)
 @api.route('/cartera/chart')
 def cartera_chart():
+    sucursal = request.args.get('sucursal')
+    print("cartera_chart            ",sucursal)
     anio = request.args.get('anio',type=int)
-    data = (CarteraService.get_evolution_chart(anio))
+    data = (CarteraService.get_evolution_chart(sucursal, anio))
 
     return jsonify(data)
 @api.route('/cartera/product-chart')
@@ -180,6 +189,34 @@ def socios_antiguedad_chart():
     mes=request.args.get('mes')
 
     return jsonify(SociosService.get_antiguedad_chart(anio,mes))
+@api.route('/socios/escolaridad-chart')
+def socios_escolaridad_chart():
+
+    anio=request.args.get('anio',type=int)
+    mes=request.args.get('mes')
+
+    return jsonify(SociosService.get_escolaridad_chart(anio,mes))
+@api.route('/socios/codigopostal-chart')
+def socios_codigopostal_chart():
+
+    anio=request.args.get('anio',type=int)
+    mes=request.args.get('mes')
+
+    return jsonify(SociosService.get_codigopostal_chart(anio,mes))
+@api.route('/socios/localidad-chart')
+def socios_localidad_chart():
+
+    anio=request.args.get('anio',type=int)
+    mes=request.args.get('mes')
+
+    return jsonify(SociosService.get_localidad_chart(anio,mes))
+@api.route('/socios/municipio-chart')
+def socios_municipio_chart():
+
+    anio=request.args.get('anio',type=int)
+    mes=request.args.get('mes')
+
+    return jsonify(SociosService.get_municipio_chart(anio,mes))
 """
     Forecast
 """

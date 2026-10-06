@@ -6,12 +6,15 @@ from app.utils.months import month_case
 
 class FilterService:
     @staticmethod
-    def get_available_years():
-        anios = db.session.query(
-            Credito.anio
-        ).distinct().order_by(
+    def get_available_years(sucursal=None):
+        query = db.session.query(Credito.anio)
+        if sucursal != 'all':
+            query = query.filter(Credito.sucursal == sucursal)
+
+        anios = query.distinct().order_by(
             Credito.anio.desc()
         ).all()
+
         return [
             row.anio for row in anios
         ]
@@ -50,3 +53,10 @@ class FilterService:
             query = query.filter(Socios.anio == anio)
         meses = query.distinct().order_by("mes_num").all()
         return [row.mes for row in meses]
+    def get_available_branches():
+        sucursales = db.session.query(
+            Credito.sucursal
+        ).distinct().order_by(
+            Credito.sucursal.asc()
+        ).all()
+        return [row.sucursal for row in sucursales]

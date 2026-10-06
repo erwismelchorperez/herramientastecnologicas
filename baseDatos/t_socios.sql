@@ -14,3 +14,10 @@ CREATE TABLE socios (
     anio INT,
     mes VARCHAR(3)
 );
+
+alter table socios add COLUMN escolaridad VARCHAR(20);
+alter table socios add COLUMN codigopostal INTEGER;
+alter table socios add COLUMN localidad VARCHAR(150);
+alter table socios add COLUMN municipio VARCHAR(150);
+alter table socios add COLUMN estado VARCHAR(100);
+
