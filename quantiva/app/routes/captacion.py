@@ -13,10 +13,12 @@ def dashboard():
     selected_anio = request.args.get('anio',default=ultimo_periodo.anio,type=int)
     selected_mes = request.args.get('mes',default=ultimo_periodo.mes)
     
-    anios = (FilterService.get_available_years())
+    anios = (FilterService.get_available_years('all'))
     meses = (FilterService.get_available_months(selected_anio))
+    sucursales = FilterService.get_available_branches()
+    sucursales.insert(0, 'all')
     
     captacion_data = (CaptacionService.get_general_kpis())
     #chart_data = CarteraService.get_evolution_chart(selected_anio)
 
-    return render_template('captacion/dashboard.html', anios=anios, meses=meses)
+    return render_template('captacion/dashboard.html', anios=anios, meses=meses, sucursales=sucursales)
