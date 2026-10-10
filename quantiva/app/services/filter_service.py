@@ -19,6 +19,19 @@ class FilterService:
             row.anio for row in anios
         ]
     @staticmethod
+    def get_available_years_captacion(sucursal=None):
+        query = db.session.query(Captacion.anio)
+        if sucursal != 'all':
+            query = query.filter(Captacion.sucursal == sucursal)
+
+        anios = query.distinct().order_by(
+            Captacion.anio.desc()
+        ).all()
+
+        return [
+            row.anio for row in anios
+        ]
+    @staticmethod
     def get_available_months(anio=None):
         mes_orden = month_case(Credito.mes)
 
@@ -36,13 +49,17 @@ class FilterService:
             row.mes for row in meses
         ]
     @staticmethod
-    def get_available_months_captacion(anio=None):
+    def get_available_months_captacion(anio=None, sucursal='all'):
         mes_orden = month_case(Captacion.mes)
-        query = db.session.query(Captacion.mes,mes_orden.label('mes_num'))
-        print("ultimo anio:             ", anio)
+        query = db.session.query(
+            Captacion.mes,
+            mes_orden.label('mes_num')
+        )
         if anio:
             query = query.filter(Captacion.anio == anio)
-        meses = query.distinct().order_by("mes_num").all()
+        if sucursal and sucursal != 'all':
+            query = query.filter(Captacion.sucursal == sucursal)
+        meses = query.distinct().order_by('mes_num').all()
         return [row.mes for row in meses]
     @staticmethod
     def get_available_months_socios(anio=None):

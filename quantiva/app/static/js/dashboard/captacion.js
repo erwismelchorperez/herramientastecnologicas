@@ -2,6 +2,7 @@ let captacionEvolutionChart;
 let captacionProductoChart;
 let captacionSucursalChart;
 let captacionTipoSocioChart;
+sucursales = []
 $(document).ready(function(){
     initFilters();
     initCaptacionEvolutionChart();
@@ -11,31 +12,82 @@ $(document).ready(function(){
 
     let anio = $('#anioSelect').val();
     let mes = $('#mesSelect').val();
+    let sucursal = $("#sucursalSelect").val();
 
-    loadSaldos(anio, mes);
-    loadCaptacionEvolutionChart();
-    loadCaptacionProductoChart();
-    loadCaptacionSucursalChart();
-    loadCaptacionTipoSocioChart();
+    loadSaldos(sucursal,anio, mes);
+    loadCaptacionEvolutionChart(sucursal,anio,mes);
+    loadCaptacionProductoChart(sucursal,anio,mes);
+    loadCaptacionSucursalChart(sucursal,anio,mes);
+    loadCaptacionTipoSocioChart(sucursal,anio,mes);
 
 });
 function initFilters(){
+    $('#sucursalSelect').on('change', function(){
+        let anio = $("#anioSelect").val();
+        let mes = $("#mesSelect").val();
+        let sucursal = $(this).val();
+        console.log("Sucursal seleccionada:     ", sucursal)
+        $.ajax({
+            url: '/api/captacion/years',
+            method: 'GET',
+            data: {sucursal: sucursal},
+            success: function(response){
+                let anioSelect = $('#anioSelect');
+                anioSelect.empty();
+                response.forEach(function (anio) {
+                    anioSelect.append(
+                        `<option value="${anio}">
+                            ${anio}
+                        </option>`
+                    );
+                });
+                anio = $("#anioSelect").val();
+            }
+        });
+        
+        $.ajax({
+            url: '/api/months_captacion',
+            method: 'GET',
+            data: {sucursal: sucursal, anio: anio},
+            success: function (response) {
+                loadSaldos(sucursal,anio,mes)
+                loadCaptacionEvolutionChart(sucursal,anio,mes);
+                loadCaptacionProductoChart(sucursal,anio,mes);
+                loadCaptacionSucursalChart(sucursal,anio,mes);
+                loadCaptacionTipoSocioChart(sucursal,anio,mes);
+                let mesSelect = $('#mesSelect');
+                mesSelect.empty();
+                response.forEach(function (mes) {
+                    mesSelect.append(
+                        `<option value="${mes}">
+                            ${mes.toUpperCase()}
+                        </option>`
+                    );
+                });
+            },
+            error: function (xhr) {
+                console.error(xhr);
+            }
+        });
+    });
     $('#anioSelect').on('change', function () {
         let anio = $(this).val();
         let mes = $("#mesSelect").val();
+        let sucursal = $("#sucursalSelect").val();
         console.log("Año seleccionado:", anio, "  mes:   ", mes);
         $.ajax({
             url: '/api/months_captacion',
             method: 'GET',
             data: {
+                sucursal: sucursal,
                 anio: anio
             },
             success: function (response) {
-                loadSaldos(anio,mes)
-                loadCaptacionEvolutionChart(anio,mes);
-                loadCaptacionProductoChart(anio,mes);
-                loadCaptacionSucursalChart(anio,mes);
-                loadCaptacionTipoSocioChart(anio,mes);
+                loadSaldos(sucursal,anio,mes)
+                loadCaptacionEvolutionChart(sucursal, anio,mes);
+                loadCaptacionProductoChart(sucursal,anio,mes);
+                loadCaptacionSucursalChart(sucursal,anio,mes);
+                loadCaptacionTipoSocioChart(sucursal,anio,mes);
                 let mesSelect = $('#mesSelect');
                 mesSelect.empty();
                 response.forEach(function (mes) {
@@ -54,19 +106,21 @@ function initFilters(){
     $('#mesSelect').on('change', function () {
         let anio = $('#anioSelect').val();
         let mes = $(this).val();
+        let sucursal = $("#sucursalSelect").val();
         console.log(anio, mes);
-        loadSaldos(anio,mes);
-        loadCaptacionEvolutionChart(anio,mes);
-        loadCaptacionProductoChart(anio,mes);
-        loadCaptacionSucursalChart(anio,mes);
-        loadCaptacionTipoSocioChart(anio,mes);
+        loadSaldos(sucursal,anio,mes);
+        loadCaptacionEvolutionChart(sucursal,anio,mes);
+        loadCaptacionProductoChart(sucursal,anio,mes);
+        loadCaptacionSucursalChart(sucursal,anio,mes);
+        loadCaptacionTipoSocioChart(sucursal,anio,mes);
     });
 }
-function loadSaldos(anio, mes){
+function loadSaldos(sucursal, anio, mes){
     $.ajax({
         url: '/api/captacion/kpis',
         method: 'GET',
         data: {
+            sucursal: sucursal,
             anio: anio,
             mes: mes
         },
@@ -109,11 +163,11 @@ function initCaptacionEvolutionChart(){
     )
     captacionEvolutionChart.render()
 }
-function loadCaptacionEvolutionChart(anio){
+function loadCaptacionEvolutionChart(sucursal, anio){
     $.ajax({
         url: '/api/captacion/evolution-chart',
         method: 'GET',
-        data: {anio: anio},
+        data: {sucursal: sucursal, anio: anio},
         success: function(response){
             captacionEvolutionChart.destroy()
             captacionEvolutionChart =
@@ -137,11 +191,11 @@ function initCaptacionProductoChart(){
     )
     captacionProductoChart.render()
 }
-function loadCaptacionProductoChart(anio,mes){
+function loadCaptacionProductoChart(sucursal, anio,mes){
     $.ajax({
         url: '/api/captacion/producto-chart',
         method: 'GET',
-        data: {anio: anio,mes: mes},
+        data: {sucursal:sucursal,anio: anio,mes: mes},
         success: function(response){
             captacionProductoChart.destroy()
             captacionProductoChart =
@@ -364,11 +418,11 @@ function initCaptacionTipoSocioChart(){
     )
     captacionTipoSocioChart.render()
 }
-function loadCaptacionSucursalChart(anio,mes){
+function loadCaptacionSucursalChart(sucursal, anio,mes){
     $.ajax({
         url: '/api/captacion/sucursal-chart',
         method: 'GET',
-        data: {anio: anio,mes: mes},
+        data: {sucursal: sucursal, anio: anio,mes: mes},
         success: function(response){
             captacionSucursalChart.destroy()
             captacionSucursalChart =
@@ -390,7 +444,7 @@ function loadCaptacionTipoSocioChart(anio,mes){
     $.ajax({
         url: '/api/captacion/tipo-socio-chart',
         method: 'GET',
-        data: {anio: anio,mes: mes},
+        data: {sucursal:sucursal, anio: anio,mes: mes},
         success: function(response){
             captacionTipoSocioChart.destroy()
             captacionTipoSocioChart =

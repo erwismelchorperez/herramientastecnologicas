@@ -5,9 +5,13 @@ from app.services.captacion_service import CaptacionService
 from app.services.socios_service import SociosService
 from app.services.ia_service import ForecastService
 from app.services.dashboard_service import DashboardService
+from app.services.institution_service import InstitucionService
 api = Blueprint('api',__name__,url_prefix='/api')
 
-
+@api.route('/tipo_institucion')
+def tipo_institucion():
+    data = InstitucionService.get_tipo_institucion()
+    return jsonify(data)
 @api.route('/years')
 def get_years():
     sucursal = request.args.get('sucursal')
@@ -58,24 +62,25 @@ def cartera_branch_chart():
 @api.route('/cartera/clasificacion-status-chart')
 def cartera_clasificacion_statuschart():
     anio = request.args.get('anio',type=int)
-
     mes = request.args.get('mes')
+    sucursal = request.args.get('sucursal')
 
-    data = CarteraService.get_clasificacion_statuschart(anio,mes)
+    data = CarteraService.get_clasificacion_statuschart(sucursal,anio,mes)
     return jsonify(data)
 @api.route('/cartera/sucursal-count-chart')
 def api_cartera_sucursal_count_chart():
+    sucursal = request.args.get('sucursal')
     anio = request.args.get('anio',type=int)
     mes = request.args.get('mes')
-    data = CarteraService.get_sucursal_count_chart(anio,mes)
+    data = CarteraService.get_sucursal_count_chart(sucursal,anio,mes)
     return jsonify(data)
 @api.route('/cartera/sucursal-vigente-chart')
 def sucursal_vigente_chart():
-
+    sucursal = request.args.get('sucursal')
     anio = request.args.get('anio',type=int)
     mes = request.args.get('mes')
 
-    data = CarteraService.get_sucursal_vigente_chart(anio,mes)
+    data = CarteraService.get_sucursal_vigente_chart(sucursal,anio,mes)
     return jsonify(data)
 @api.route('/cartera/sucursal-vigente-anual-chart')
 def sucursal_vigente_anual_chart():
@@ -83,15 +88,17 @@ def sucursal_vigente_anual_chart():
     return jsonify(CarteraService.get_sucursal_vigente_anual_chart(mes))
 @api.route('/cartera/sucursal-vencido-chart')
 def sucursal_vencido_chart():
+    sucursal = request.args.get('sucursal')
     anio = request.args.get('anio',type=int)
     mes = request.args.get('mes')
-    data = CarteraService.get_sucursal_vencido_chart(anio,mes)
+    data = CarteraService.get_sucursal_vencido_chart(sucursal,anio,mes)
     return jsonify(data)
 @api.route('/cartera/top-productos-vigente-chart')
 def top_productos_vigente_chart():
     anio = request.args.get('anio',type=int)
     mes = request.args.get('mes')
-    data = CarteraService.get_top_productos_vigente_chart(anio,mes)
+    sucursal = request.args.get('sucursal')
+    data = CarteraService.get_top_productos_vigente_chart(sucursal,anio,mes)
     return jsonify(data)
 @api.route('/cartera/productos-table')
 def productos_table():
@@ -110,43 +117,61 @@ def sucursal_vigente_vencido_chart():
 """
     Captación
 """
+@api.route('/captacion/years')
+def get_years_captacion():
+    sucursal = request.args.get('sucursal')
+    meses = (FilterService.get_available_years_captacion(sucursal))
+    return jsonify(meses)
 @api.route('/months_captacion')
 def get_months_captacion():
     anio = request.args.get('anio',type=int)
-    meses = (FilterService.get_available_months_captacion(anio))
+    sucursal = request.args.get('sucursal')
+    meses = (FilterService.get_available_months_captacion(sucursal,anio))
     return jsonify(meses)
+    
 @api.route('/captacion/kpis')
 def captacion_kpis():
     anio = request.args.get('anio',type=int)
     mes = request.args.get('mes')
-    data = CaptacionService.get_general_kpis(anio,mes)
+    sucursal = request.args.get('sucursal')
+    data = CaptacionService.get_general_kpis(sucursal,anio,mes)
     return jsonify(data)
 @api.route('/captacion/evolution-chart')
 def captacion_evolution_chart():
     anio = request.args.get('anio',type=int)
-    data = CaptacionService.get_evolution_chart(anio)
+    sucursal = request.args.get('sucursal')
+    data = CaptacionService.get_evolution_chart(sucursal,anio)
     return jsonify(data)
 @api.route('/captacion/producto-chart')
 def captacion_producto_chart():
     anio = request.args.get('anio',type=int)
     mes = request.args.get('mes')
-    data = CaptacionService.get_producto_chart(anio,mes)
+    sucursal = request.args.get('sucursal')
+    data = CaptacionService.get_producto_chart(sucursal, anio,mes)
 
     return jsonify(data)
 @api.route('/captacion/sucursal-chart')
 def captacion_sucursal_chart():
     anio = request.args.get('anio',type=int)
-
+    sucursal = request.args.get('sucursal')
     mes = request.args.get('mes')
-    data = CaptacionService.get_sucursal_chart(anio,mes)
+    data = CaptacionService.get_sucursal_chart(sucursal,anio,mes)
 
     return jsonify(data)
 @api.route('/captacion/tipo-socio-chart')
 def captacion_tipo_socio_chart():
-
+    sucursal = request.args.get('sucursal')
     anio = request.args.get('anio',type=int)
     mes = request.args.get('mes')
-    data = CaptacionService.get_tipo_socio_chart(anio,mes)
+    data = CaptacionService.get_tipo_socio_chart(sucursal,anio,mes)
+
+    return jsonify(data)
+@api.route('/captacion/get_top_ahorradores')
+def captacion_get_top_ahorradores():
+    anio = request.args.get('anio',type=int)
+    mes = request.args.get('mes')
+    sucursal = request.args.get('sucursal')
+    data = CaptacionService.get_top_ahorradores(sucursal,anio,mes)
 
     return jsonify(data)
 """
@@ -233,14 +258,26 @@ def get_cards():
 def get_evolution_cartera(anio=None):
     return jsonify(DashboardService.get_evolution_cartera(anio))
 @api.route('/cartera/get_morosidad_por_sucursal')
-def get_morosidad_por_sucursal(anio=None, mes=None):
-    return jsonify(CarteraService.get_morosidad_por_sucursal(anio, mes))
+def get_morosidad_por_sucursal():
+    sucursal=request.args.get('sucursal')
+    anio=request.args.get('anio',type=int)
+    mes=request.args.get('mes')
+    return jsonify(CarteraService.get_morosidad_por_sucursal(sucursal,anio, mes))
 @api.route('/cartera/get_morosidad_por_producto')
-def get_morosidad_por_producto(anio=None, mes=None):
-    return jsonify(CarteraService.get_morosidad_por_producto(anio,mes))
+def get_morosidad_por_producto():
+    sucursal=request.args.get('sucursal')
+    anio=request.args.get('anio',type=int)
+    mes=request.args.get('mes')
+    return jsonify(CarteraService.get_morosidad_por_producto(sucursal,anio,mes))
 @api.route('/cartera/get_distribucion_dias_mora')
-def get_distribucion_dias_mora(anio=None, mes=None):
-    return jsonify(CarteraService.get_distribucion_dias_mora(anio,mes))
+def get_distribucion_dias_mora():#consumo
+    sucursal=request.args.get('sucursal')
+    anio=request.args.get('anio',type=int)
+    mes=request.args.get('mes')
+    return jsonify(CarteraService.get_distribucion_dias_mora(sucursal,anio,mes))#consumo
 @api.route('/cartera/get_cantidad_creditos_por_dias_mora')
-def get_cantidad_creditos_por_dias_mora(anio=None, mes=None):
-    return jsonify(CarteraService.get_cantidad_creditos_por_dias_mora(anio,mes))    
+def get_cantidad_creditos_por_dias_mora():
+    sucursal=request.args.get('sucursal')
+    anio=request.args.get('anio',type=int)
+    mes=request.args.get('mes')
+    return jsonify(CarteraService.get_cantidad_creditos_por_dias_mora(sucursal, anio,mes))    

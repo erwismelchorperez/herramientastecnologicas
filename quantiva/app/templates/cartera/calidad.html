@@ -20,6 +20,21 @@ Dashboard de Cartera
         <form method="GET" class="filter-form">
             <div class="filter-group">
                 <label>
+                    Sucursales
+                </label>
+                <select id="sucursalSelect" name="sucursal">
+                    {% for sucursal in sucursales %}
+                        <option
+                            value="{{ sucursal }}"
+                            {% if sucursal == selected_sucursal %}selected{% endif %}
+                        >
+                            {{ sucursal }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>
                     Año
                 </label>
                 <select id="anioSelect" name="anio">
@@ -79,7 +94,80 @@ Dashboard de Cartera
             <div id="ch-prod-morosidad" style="min-height:240px"></div>
         </div>
     </div>
-    <div class="g2">
+    {% if tipo_institucion == 'SOFINCO' %}
+        <!-- CONSUMO -->
+        <div class="g2">
+            <div class="card a-c">
+                <div class="card-hd">
+                    <span class="card-title">Cartera de Consumo por días de mora</span>
+                    <span class="ctag">Originación $M</span>
+                </div>
+                <div id="ch-dias-mora" style="min-height:240px"></div>
+            </div>
+            <div class="card a-g">
+                <div class="card-hd">
+                    <span class="card-title">Cartera de Consumo por días de mora</span>
+                    <span class="ctag g">Stacked 100%</span>
+                </div>
+                <div id="ch-cantidad-dias-mora" style="min-height:240px"></div>
+            </div>
+        </div>
+    {% elif tipo_institucion == 'SOCAP' %}
+        <!-- CONSUMO -->
+        <div class="g2">
+            <div class="card a-c">
+                <div class="card-hd">
+                    <span class="card-title">Cartera de Consumo por días de mora</span>
+                    <span class="ctag">Originación $M</span>
+                </div>
+                <div id="ch-dias-mora-consumo" style="min-height:240px"></div>
+            </div>
+            <div class="card a-g">
+                <div class="card-hd">
+                    <span class="card-title">Cartera de Consumo por días de mora</span>
+                    <span class="ctag g">Stacked 100%</span>
+                </div>
+                <div id="ch-cantidad-dias-mora-consumo" style="min-height:240px"></div>
+            </div>
+        </div>
+
+        <!-- COMERCIAL -->
+        <div class="g2">
+            <div class="card a-c">
+                <div class="card-hd">
+                    <span class="card-title">Cartera Comercial por días de mora</span>
+                    <span class="ctag">Originación $M</span>
+                </div>
+                <div id="ch-dias-mora-comercial" style="min-height:240px"></div>
+            </div>
+            <div class="card a-g">
+                <div class="card-hd">
+                    <span class="card-title">Cartera Comercial por días de mora</span>
+                    <span class="ctag g">Stacked 100%</span>
+                </div>
+                <div id="ch-cantidad-dias-mora-comercial" style="min-height:240px"></div>
+            </div>
+        </div>
+
+        <!-- VIVIENDA -->
+        <div class="g2">
+            <div class="card a-c">
+                <div class="card-hd">
+                    <span class="card-title">Cartera de Vivienda por días de mora</span>
+                    <span class="ctag">Originación $M</span>
+                </div>
+                <div id="ch-dias-mora-vivienda" style="min-height:240px"></div>
+            </div>
+            <div class="card a-g">
+                <div class="card-hd">
+                    <span class="card-title">Cartera de Vivienda por días de mora</span>
+                    <span class="ctag g">Stacked 100%</span>
+                </div>
+                <div id="ch-cantidad-dias-mora-vivienda" style="min-height:240px"></div>
+            </div>
+        </div>
+    {% endif %}
+    <!--<div class="g2">
         <div class="card a-c">
             <div class="card-hd">
                 <span class="card-title">Distribución de cartera por días de mora</span>
@@ -94,7 +182,7 @@ Dashboard de Cartera
             </div>
             <div id="ch-cantidad-dias-mora" style="min-height:240px"></div>
         </div>
-    </div>
+    </div>-->
 </div>
 
 {% endblock %}

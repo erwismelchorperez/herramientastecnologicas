@@ -11,78 +11,51 @@ class CarteraService:
         mes_orden = month_case(Credito.mes)
         return db.session.query(Credito.anio,Credito.mes).order_by(Credito.anio.desc(),mes_orden.desc()).first()
     @staticmethod
-    def get_general_kpis(sucursal=None, anio=None, mes=None):
-        print("Sucurlsal get_general_kpis       ", sucursal)
+    def get_general_kpis(sucursal='all', anio=None, mes=None):
         if not anio or not mes:
             ultimo_periodo = CarteraService.get_latest_period()
             anio = ultimo_periodo.anio
             mes = ultimo_periodo.mes
 
-        if sucursal == 'all':
-            cartera_total = db.session.query(func.sum(Credito.capital_vigente)).filter(Credito.anio == anio,Credito.mes == mes).scalar()
-        else:
-            cartera_total = db.session.query(func.sum(Credito.capital_vigente)).filter(Credito.anio == anio,Credito.mes == mes, Credito.sucursal == sucursal).scalar()
-
-        cartera_total = float(cartera_total or 0)
-
-        morosidad_data = db.session.query(
-            func.sum(
-                Credito.capital_vigente
-            ).label('vigente'),
-            func.sum(
-                Credito.capital_vencido
-            ).label('vencido')
-        ).filter(
+        filtros = [
             Credito.anio == anio,
             Credito.mes == mes
-        ).first()
+        ]
+
+        if sucursal and sucursal != 'all':
+            filtros.append(Credito.sucursal == sucursal)
+
+        morosidad_data = db.session.query(
+            func.sum(Credito.capital_vigente).label('vigente'),
+            func.sum(Credito.capital_vencido).label('vencido')
+        ).filter(*filtros).first()
 
         capital_vigente = float(morosidad_data.vigente or 0)
-
         capital_vencido = float(morosidad_data.vencido or 0)
+        total_cartera = capital_vigente + capital_vencido
+        morosidad = (capital_vencido / total_cartera * 100) if total_cartera > 0 else 0
 
-        total_cartera = (capital_vigente + capital_vencido)
-        if total_cartera > 0:
-            morosidad = ( capital_vencido / total_cartera) * 100
-        else:
-            morosidad = 0
-
-        # ==========================
-        # CRÉDITOS VIGENTES/VENCIDOS
-        # ==========================
-        creditos_vigentes = db.session.query(func.count(Credito.vigente_vencido)).filter(
-            Credito.anio == anio,
-            Credito.mes == mes,
+        creditos_vigentes = db.session.query(
+            func.count(Credito.vigente_vencido)
+        ).filter(
+            *filtros,
             func.upper(func.trim(Credito.vigente_vencido)) == 'VIGENTE'
         ).scalar()
-
-        creditos_vigentes = int(creditos_vigentes or 0)
-
-        creditos_vencidos = db.session.query(func.count(Credito.vigente_vencido)).filter(
-            Credito.anio == anio,
-            Credito.mes == mes,
+        creditos_vencidos = db.session.query(
+            func.count(Credito.vigente_vencido)
+        ).filter(
+            *filtros,
             func.upper(func.trim(Credito.vigente_vencido)) == 'VENCIDO'
         ).scalar()
-
-        creditos_vencidos = int(creditos_vencidos or 0)
-
         creditos_reestructurados = db.session.query(
             func.count(Credito.renovado_reestructurado_normal)
         ).filter(
-            Credito.anio == anio,
-            Credito.mes == mes,
+            *filtros,
             func.upper(func.trim(Credito.renovado_reestructurado_normal)) == 'RE-ESTRUCTURADO X CONTINGENCIA'
         ).scalar()
-
-        creditos_reestructurados = int(creditos_reestructurados or 0)
-
         credito_promedio = db.session.query(
             func.avg(Credito.monto_original)
-        ).filter(
-            Credito.anio == anio,
-            Credito.mes == mes
-        ).scalar()
-
+        ).filter(*filtros).scalar()
         credito_promedio = float(credito_promedio or 0)
 
         return {
@@ -93,9 +66,9 @@ class CarteraService:
             'capital_vencido': format_currency_short(capital_vencido),
             'capital_vencido_title': capital_vencido,
             'morosidad': morosidad,
-            'creditos_vigentes': creditos_vigentes,
-            'creditos_vencidos': creditos_vencidos,
-            'creditos_reestructurados': creditos_reestructurados,
+            'creditos_vigentes': int(creditos_vigentes or 0),
+            'creditos_vencidos': int(creditos_vencidos or 0),
+            'creditos_reestructurados': int(creditos_reestructurados or 0),
             'credito_promedio': format_currency_short(credito_promedio),
             'credito_promedio_title': credito_promedio,
             'ultimo_anio': anio,
@@ -251,42 +224,7 @@ class CarteraService:
             'vencido': vencido
         }
     @staticmethod
-    def get_clasificacion_statuschart(anio=None, mes=None):
-        # ====================================
-        # ÚLTIMO PERIODO
-        # ====================================
-        if not anio or not mes:
-            ultimo_periodo = (CarteraService.get_latest_period())
-            anio = ultimo_periodo.anio
-            mes = ultimo_periodo.mes
-        # ====================================
-        # QUERY
-        # ====================================
-        datos = db.session.query(
-            Credito.clasificacion_credito,
-            func.count(
-                Credito.numero_credito
-            ).label('total')
-        ).filter(
-            Credito.anio == anio,
-            Credito.mes == mes
-        ).group_by(
-            Credito.clasificacion_credito
-        ).all()
-        # ====================================
-        # SERIES
-        # ====================================
-        labels = []
-        series = []
-        for row in datos:
-            labels.append(row.clasificacion_credito)
-            series.append(int(row.total))
-        return {
-            'labels': labels,
-            'series': series
-        }
-    @staticmethod
-    def get_sucursal_count_chart(anio=None, mes=None):
+    def get_clasificacion_statuschart(sucursal='all',anio=None,mes=None):
         # ====================================
         # ÚLTIMO PERIODO
         # ====================================
@@ -297,22 +235,94 @@ class CarteraService:
         # ====================================
         # QUERY
         # ====================================
-        datos = db.session.query(
-            Credito.sucursal,
-            func.count(Credito.numero_credito).label('total')
+        query = db.session.query(
+            Credito.clasificacion_credito,
+            func.count(
+                Credito.numero_credito
+            ).label('total')
         ).filter(
             Credito.anio == anio,
             Credito.mes == mes
-        ).group_by(
+        )
+
+        # ====================================
+        # FILTRO SUCURSAL
+        # ====================================
+        if sucursal != 'all':
+            query = query.filter(Credito.sucursal == sucursal)
+
+        # ====================================
+        # AGRUPACIÓN
+        # ====================================
+
+        datos = query.group_by(Credito.clasificacion_credito).all()
+
+        # ====================================
+        # SERIES
+        # ====================================
+
+        labels = []
+
+        series = []
+
+        for row in datos:
+
+            labels.append(row.clasificacion_credito)
+
+            series.append(int(row.total))
+
+        return {
+
+            'labels': labels,
+
+            'series': series
+
+        }
+    @staticmethod
+    def get_sucursal_count_chart(sucursal='all', anio=None, mes=None):
+        # ====================================
+        # ÚLTIMO PERIODO
+        # ====================================
+        if not anio or not mes:
+            ultimo_periodo = CarteraService.get_latest_period()
+            anio = ultimo_periodo.anio
+            mes = ultimo_periodo.mes
+
+        # ====================================
+        # QUERY
+        # ====================================
+        query = db.session.query(
+            Credito.sucursal,
+            func.count(
+                Credito.numero_credito
+            ).label('total')
+        ).filter(
+            Credito.anio == anio,
+            Credito.mes == mes
+        )
+        # ====================================
+        # FILTRO SUCURSAL
+        # ====================================
+        if sucursal != 'all':
+            query = query.filter(Credito.sucursal == sucursal)
+
+        # ====================================
+        # AGRUPACIÓN
+        # ====================================
+        datos = query.group_by(
             Credito.sucursal
         ).order_by(
-            func.count(Credito.numero_credito).desc()
+            func.count(
+                Credito.numero_credito
+            ).desc()
         ).all()
+
         # ====================================
         # SERIES
         # ====================================
         labels = []
         series = []
+
         for row in datos:
             labels.append(row.sucursal)
             series.append(int(row.total))
@@ -322,20 +332,27 @@ class CarteraService:
             'series': series
         }
     @staticmethod
-    def get_sucursal_vigente_chart(anio=None,mes=None):
+    def get_sucursal_vigente_chart(sucursal='all',anio=None, mes=None):
         if not anio or not mes:
             ultimo_periodo = CarteraService.get_latest_period()
             anio = ultimo_periodo.anio
             mes = ultimo_periodo.mes
 
-        datos = db.session.query(
+        query = db.session.query(
             Credito.sucursal,
             func.sum(Credito.capital_vigente).label('total')
         ).filter(
             Credito.anio == anio,
             Credito.mes == mes,
             func.upper(func.trim(Credito.vigente_vencido)) == 'VIGENTE'
-        ).group_by(
+        )
+
+        if sucursal != 'all':
+            query = query.filter(
+                Credito.sucursal == sucursal
+            )
+
+        datos = query.group_by(
             Credito.sucursal
         ).all()
 
@@ -406,21 +423,27 @@ class CarteraService:
             "series": series
         }
     @staticmethod
-    def get_sucursal_vencido_chart(anio=None,mes=None):
-
+    def get_sucursal_vencido_chart(sucursal='all', anio=None, mes=None):
         if not anio or not mes:
             ultimo_periodo = CarteraService.get_latest_period()
             anio = ultimo_periodo.anio
             mes = ultimo_periodo.mes
 
-        datos = db.session.query(
+        query = db.session.query(
             Credito.sucursal,
             func.sum(Credito.capital_vencido).label('total')
         ).filter(
             Credito.anio == anio,
             Credito.mes == mes,
             func.upper(func.trim(Credito.vigente_vencido)) == 'VENCIDO'
-        ).group_by(
+        )
+
+        if sucursal != 'all':
+            query = query.filter(
+                Credito.sucursal == sucursal
+            )
+
+        datos = query.group_by(
             Credito.sucursal
         ).all()
 
@@ -434,21 +457,28 @@ class CarteraService:
         return {
             'chart_labels': labels,
             'chart_series': series
-        }
+    }
     @staticmethod
-    def get_top_productos_vigente_chart(anio=None,mes=None):
+    def get_top_productos_vigente_chart(sucursal='all',anio=None, mes=None):
         if not anio or not mes:
             ultimo_periodo = CarteraService.get_latest_period()
             anio = ultimo_periodo.anio
             mes = ultimo_periodo.mes
 
-        datos = db.session.query(
+        query = db.session.query(
             Credito.producto_credito,
             func.sum(Credito.capital_vigente).label('total')
         ).filter(
             Credito.anio == anio,
             Credito.mes == mes
-        ).group_by(
+        )
+
+        if sucursal != 'all':
+            query = query.filter(
+                Credito.sucursal == sucursal
+            )
+
+        datos = query.group_by(
             Credito.producto_credito
         ).order_by(
             desc('total')
@@ -560,28 +590,25 @@ class CarteraService:
             ]
         }
     @staticmethod
-    def get_morosidad_por_sucursal(anio=None, mes=None):
-        # ==========================
-        # calculando el índide de morosidad por sucursal
-        # OBTENER ÚLTIMO PERIODO
-        # ==========================
+    def get_morosidad_por_sucursal(sucursal='all', anio=None, mes=None):
         if not anio or not mes:
             ultimo_periodo = CarteraService.get_latest_period()
-
             anio = ultimo_periodo.anio
             mes = ultimo_periodo.mes
 
-        # ==========================
-        # MOROSIDAD POR SUCURSAL
-        # ==========================
-        morosidad_data = db.session.query(
+        query = db.session.query(
             Credito.sucursal.label('sucursal'),
             func.sum(Credito.capital_vigente).label('vigente'),
             func.sum(Credito.capital_vencido).label('vencido')
         ).filter(
             Credito.anio == anio,
             Credito.mes == mes
-        ).group_by(
+        )
+
+        if sucursal != 'all':
+            query = query.filter(Credito.sucursal == sucursal)
+
+        morosidad_data = query.group_by(
             Credito.sucursal
         ).order_by(
             Credito.sucursal
@@ -590,10 +617,8 @@ class CarteraService:
         resultados = []
 
         for dato in morosidad_data:
-
             capital_vigente = float(dato.vigente or 0)
             capital_vencido = float(dato.vencido or 0)
-
             total_cartera = capital_vigente + capital_vencido
 
             if total_cartera > 0:
@@ -615,58 +640,60 @@ class CarteraService:
             'data': resultados
         }
     @staticmethod
-    def get_morosidad_por_producto(anio=None, mes=None):
-        # ==========================
-        # OBTENER ÚLTIMO PERIODO
-        # ==========================
+    def get_morosidad_por_producto(sucursal='all',anio=None, mes=None ):
         if not anio or not mes:
             ultimo_periodo = CarteraService.get_latest_period()
             anio = ultimo_periodo.anio
             mes = ultimo_periodo.mes
-        # ==========================
-        # MOROSIDAD POR PRODUCTO
-        # ==========================
-        morosidad_data = db.session.query(
+
+        query = db.session.query(
             Credito.producto_credito.label('producto'),
-            func.sum(
-                Credito.capital_vigente
-            ).label('vigente'),
-            func.sum(
-                Credito.capital_vencido
-            ).label('vencido')
+            func.sum(Credito.capital_vigente).label('vigente'),
+            func.sum(Credito.capital_vencido).label('vencido')
         ).filter(
             Credito.anio == anio,
             Credito.mes == mes
-        ).group_by(
+        )
+
+        if sucursal != 'all':
+            query = query.filter(Credito.sucursal == sucursal)
+
+        morosidad_data = query.group_by(
             Credito.producto_credito
         ).order_by(
             Credito.producto_credito
         ).all()
-        resultados = []
-        for dato in morosidad_data:
 
+        resultados = []
+
+        for dato in morosidad_data:
             capital_vigente = float(dato.vigente or 0)
             capital_vencido = float(dato.vencido or 0)
-            total_cartera = (capital_vigente +capital_vencido)
+            total_cartera = capital_vigente + capital_vencido
+
             if total_cartera > 0:
-                morosidad = (capital_vencido /total_cartera) * 100
+                morosidad = (capital_vencido / total_cartera) * 100
             else:
                 morosidad = 0
+
             resultados.append({
                 'producto': dato.producto,
                 'capital_vigente': capital_vigente,
                 'capital_vencido': capital_vencido,
                 'total_cartera': total_cartera,
-                'morosidad': round(morosidad,2)
+                'morosidad': round(morosidad, 2)
             })
+
         return {
             'anio': anio,
             'mes': mes,
             'data': resultados
         }
     @staticmethod
-    def get_distribucion_dias_mora(anio=None, mes=None):
-
+    def get_distribucion_dias_mora(sucursal='all', anio=None, mes=None):
+        """
+        Función para obtener los días de mora para la cartera de consumo.
+        """
         if not anio or not mes:
             ultimo_periodo = CarteraService.get_latest_period()
             anio = ultimo_periodo.anio
@@ -674,32 +701,42 @@ class CarteraService:
 
         rango_mora = case(
             (Credito.dias_mora_cartera == 0, '0 días'),
-            (Credito.dias_mora_cartera.between(1, 30),'1-30 días'),
-            (Credito.dias_mora_cartera.between(31, 60),'31-60 días'),
-            (Credito.dias_mora_cartera.between(61, 90),'61-90 días'),
-            (Credito.dias_mora_cartera.between(91, 180),'91-180 días'),
-            (Credito.dias_mora_cartera > 180,'+180 días'),
+            (Credito.dias_mora_cartera.between(1, 7), '1-7 días'),
+            (Credito.dias_mora_cartera.between(8, 30), '8-30 días'),
+            (Credito.dias_mora_cartera.between(31, 60), '31-60 días'),
+            (Credito.dias_mora_cartera.between(61, 90), '61-90 días'),
+            (Credito.dias_mora_cartera.between(91, 120), '91-120 días'),
+            (Credito.dias_mora_cartera.between(121, 180), '121-180 días'),
+            (Credito.dias_mora_cartera > 181, '+180 días'),
             else_='Sin clasificar'
         ).label('rango')
 
-        distribucion_data = db.session.query(
+        query = db.session.query(
             rango_mora,
             func.sum(Credito.capital_vencido).label('capital_vencido')
         ).filter(
             Credito.anio == anio,
             Credito.mes == mes
-        ).group_by(
+        )
+
+        if sucursal != 'all':
+            query = query.filter(
+                Credito.sucursal == sucursal
+            )
+
+        distribucion_data = query.group_by(
             rango_mora
         ).all()
 
         orden_rangos = {
             '0 días': 1,
-            '1-30 días': 2,
-            '31-60 días': 3,
-            '61-90 días': 4,
-            '91-180 días': 5,
-            '+180 días': 6,
-            'Sin clasificar': 7
+            '1-7 días': 2,
+            '8-30 días': 3,
+            '31-60 días': 4,
+            '61-90 días': 5,
+            '91-120 días': 6,
+            '121-180 días': 7,
+            '+180 días': 8
         }
 
         resultados = []
@@ -718,13 +755,14 @@ class CarteraService:
                 99
             )
         )
+
         return {
             'anio': anio,
             'mes': mes,
             'data': resultados
         }
     @staticmethod
-    def get_cantidad_creditos_por_dias_mora(anio=None, mes=None):
+    def get_cantidad_creditos_por_dias_mora(sucursal='all', anio=None, mes=None):
         if not anio or not mes:
             ultimo_periodo = CarteraService.get_latest_period()
             anio = ultimo_periodo.anio
@@ -732,32 +770,42 @@ class CarteraService:
 
         rango_mora = case(
             (Credito.dias_mora_cartera == 0, '0 días'),
-            (Credito.dias_mora_cartera.between(1, 30), '1-30 días'),
+            (Credito.dias_mora_cartera.between(1, 7), '1-7 días'),
+            (Credito.dias_mora_cartera.between(8, 30), '8-30 días'),
             (Credito.dias_mora_cartera.between(31, 60), '31-60 días'),
             (Credito.dias_mora_cartera.between(61, 90), '61-90 días'),
-            (Credito.dias_mora_cartera.between(91, 180), '91-180 días'),
-            (Credito.dias_mora_cartera > 180, '+180 días'),
+            (Credito.dias_mora_cartera.between(91, 120), '91-120 días'),
+            (Credito.dias_mora_cartera.between(121, 180), '121-180 días'),
+            (Credito.dias_mora_cartera > 181, '+180 días'),
             else_='Sin clasificar'
         ).label('rango')
 
-        datos = db.session.query(
+        query = db.session.query(
             rango_mora,
             func.count(Credito.id).label('cantidad_creditos')
         ).filter(
             Credito.anio == anio,
             Credito.mes == mes
-        ).group_by(
+        )
+
+        if sucursal != 'all':
+            query = query.filter(
+                Credito.sucursal == sucursal
+            )
+
+        datos = query.group_by(
             rango_mora
         ).all()
 
         orden_rangos = {
             '0 días': 1,
-            '1-30 días': 2,
-            '31-60 días': 3,
-            '61-90 días': 4,
-            '91-180 días': 5,
-            '+180 días': 6,
-            'Sin clasificar': 7
+            '1-7 días': 2,
+            '8-30 días': 3,
+            '31-60 días': 4,
+            '61-90 días': 5,
+            '91-120 días': 6,
+            '121-180 días': 7,
+            '+180 días': 8
         }
 
         resultados = [
@@ -777,3 +825,5 @@ class CarteraService:
             'mes': mes,
             'data': resultados
         }
+
+##############################

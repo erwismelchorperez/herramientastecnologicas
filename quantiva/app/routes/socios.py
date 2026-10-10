@@ -11,7 +11,7 @@ def dashboard():
     ultimo_periodo = SociosService.get_latest_period()
     selected_anio = request.args.get('anio',default=ultimo_periodo.anio,type=int)
     selected_mes = request.args.get('mes',default=ultimo_periodo.mes)
-    anios = (FilterService.get_available_years())
+    anios = (FilterService.get_available_years('all'))
     meses = (FilterService.get_available_months(selected_anio))
 
     return render_template(

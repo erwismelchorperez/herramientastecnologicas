@@ -3,25 +3,87 @@ let sucursalVigenteChart;
 let indiceMorosidadProductoChart;
 let distribucionDiasMoraChart = null;
 let cantidadCreditosDiasMoraChart = null;
+let tipo_institucion = null;
 $(document).ready(function(){
     initChart();
     initIndiceMorosidadSucursalChart();
     initIndiceMorosidadProductoChart();
-    initDistribucionDiasMoraChart()
-    initCantidadCreditosDiasMoraChartOptions()
+    initDistribucionDiasMoraChart();
+    initCantidadCreditosDiasMoraChartOptions();
+    tipoinstitucion();
     initFilters();
     let anio = $('#anioSelect').val();
     let mes = $('#mesSelect').val();
-    loadSaldos(anio, mes);
-    loadIndiceMorosidadSucursalChart(anio, mes);
-    loadIndiceMorosidadProductoChart(anio, mes);
-    loadDistribucionDiasMoraChart(anio, mes)
-    loadCantidadCreditosDiasMoraChart(anio, mes)
+    let sucursal = $('#sucursalSelect').val();
+    loadSaldos(sucursal,anio, mes);
+    loadIndiceMorosidadSucursalChart(sucursal,anio, mes);
+    loadIndiceMorosidadProductoChart(sucursal,anio, mes);
+    loadDistribucionDiasMoraChart(sucursal,anio, mes)
+    loadCantidadCreditosDiasMoraChart(sucursal,anio, mes)
 });
+function tipoinstitucion(){
+    $.ajax({
+        url: '/api/tipo_institucion',
+        method: 'GET',
+        success: function(response){
+            console.log("tipo_institucion           " + response)
+            tipo_institucion = response
+        }
+    });
+}
 function initFilters(){
+    $('#sucursalSelect').on('change', function(){
+        let anio = $("#anioSelect").val();
+        let mes = $("#mesSelect").val();
+        let sucursal = $(this).val();
+        console.log("Sucursal seleccionada:     ", sucursal)
+        $.ajax({
+            url: '/api/years',
+            method: 'GET',
+            data: {sucursal: sucursal},
+            success: function(response){
+                let anioSelect = $('#anioSelect');
+                anioSelect.empty();
+                response.forEach(function (anio) {
+                    anioSelect.append(
+                        `<option value="${anio}">
+                            ${anio}
+                        </option>`
+                    );
+                });
+                anio = $("#anioSelect").val();
+            }
+        });
+        anio = $("#anioSelect").val();
+        $.ajax({
+            url: '/api/months',
+            method: 'GET',
+            data: {anio: anio},
+            success: function (response) {
+                loadSaldos(sucursal,anio,mes)
+                loadIndiceMorosidadProductoChart(sucursal,anio, mes);
+                loadIndiceMorosidadSucursalChart(sucursal,anio, mes);
+                loadDistribucionDiasMoraChart(sucursal, anio, mes);
+                loadCantidadCreditosDiasMoraChart(sucursal, anio, mes);
+                let mesSelect = $('#mesSelect');
+                mesSelect.empty();
+                response.forEach(function (mes) {
+                    mesSelect.append(
+                        `<option value="${mes}">
+                            ${mes.toUpperCase()}
+                        </option>`
+                    );
+                });
+            },
+            error: function (xhr) {
+                console.error(xhr);
+            }
+        });
+    });
    $('#anioSelect').on('change', function () {
         let anio = $(this).val();
         let mes = $("#mesSelect").val();
+        let sucursal = $("#sucursalSelect").val();
         console.log("Año seleccionado:", anio);
         $.ajax({
             url: '/api/months',
@@ -30,11 +92,11 @@ function initFilters(){
                 anio: anio
             },
             success: function (response) {
-                loadSaldos(anio,mes)
-                loadIndiceMorosidadProductoChart(anio, mes);
-                loadIndiceMorosidadSucursalChart(anio, mes);
-                loadDistribucionDiasMoraChart(anio, mes);
-                loadCantidadCreditosDiasMoraChart(anio, mes);
+                loadSaldos(sucursal,anio,mes)
+                loadIndiceMorosidadProductoChart(sucursal,anio, mes);
+                loadIndiceMorosidadSucursalChart(sucursal,anio, mes);
+                loadDistribucionDiasMoraChart(sucursal, anio, mes);
+                loadCantidadCreditosDiasMoraChart(sucursal,anio, mes);
                 let mesSelect = $('#mesSelect');
                 mesSelect.empty();
                 response.forEach(function (mes) {
@@ -53,12 +115,13 @@ function initFilters(){
     $('#mesSelect').on('change', function () {
         let anio = $('#anioSelect').val();
         let mes = $(this).val();
+        let sucursal = $("#sucursalSelect").val();
         console.log(anio, mes);
         loadSaldos(anio,mes);
-        loadIndiceMorosidadSucursalChart(anio, mes);
-        loadIndiceMorosidadProductoChart(anio, mes);
-        loadDistribucionDiasMoraChart(anio, mes);
-        loadCantidadCreditosDiasMoraChart(anio, mes);
+        loadIndiceMorosidadSucursalChart(sucursal,anio, mes);
+        loadIndiceMorosidadProductoChart(sucursal,anio, mes);
+        loadDistribucionDiasMoraChart(sucursal,anio, mes);
+        loadCantidadCreditosDiasMoraChart(sucursal, anio, mes);
     });  
 }
 function formatMoney(value){
@@ -71,11 +134,12 @@ function formatMoney(value){
     ).format(value);
 }
 /* Inicio Load Chart */
-function loadSaldos(anio, mes){
+function loadSaldos(sucursal, anio, mes){
     $.ajax({
         url: '/api/cartera/kpis',
         method: 'GET',
         data: {
+            sucursal: sucursal,
             anio: anio,
             mes: mes
         },
@@ -187,12 +251,12 @@ function loadSaldos(anio, mes){
         }
     });
 }
-function loadIndiceMorosidadSucursalChart(anio, mes){
+function loadIndiceMorosidadSucursalChart(sucursal, anio, mes){
     console.log("Indice de morosidad sucursal       ",anio, mes)
     $.ajax({
         url: '/api/cartera/get_morosidad_por_sucursal',
         method: 'GET',
-        data: {anio: anio, mes: mes},
+        data: {sucursal: sucursal,anio: anio, mes: mes},
         success: function(response){
             console.log("Indice Morosidad Sucursal:   ", response);
             //console.log(JSON.stringify(response, null, 2));
@@ -227,11 +291,12 @@ function loadIndiceMorosidadSucursalChart(anio, mes){
         }
     });
 }
-function loadIndiceMorosidadProductoChart(anio, mes) {
+function loadIndiceMorosidadProductoChart(sucursal,anio, mes) {
     $.ajax({
         url: '/api/cartera/get_morosidad_por_producto',
         method: 'GET',
         data: {
+            sucursal: sucursal,
             anio:anio,
             mes: mes
         },
@@ -272,11 +337,11 @@ function loadIndiceMorosidadProductoChart(anio, mes) {
         }
     });
 }
-function loadDistribucionDiasMoraChart(anio, mes) {
+function loadDistribucionDiasMoraChart(sucursal, anio, mes) {
     $.ajax({
         url: '/api/cartera/get_distribucion_dias_mora',
         method: 'GET',
-        data: {anio:anio, mes: mes},
+        data: {sucursal: sucursal, anio:anio, mes: mes},
         success: function(response) {
             console.log('Distribución por días de mora:',response);
             const categories = response.data.map(
@@ -308,11 +373,11 @@ function loadDistribucionDiasMoraChart(anio, mes) {
         }
     });
 }
-function loadCantidadCreditosDiasMoraChart(mes) {
+function loadCantidadCreditosDiasMoraChart(sucursal, anio, mes) {
     $.ajax({
         url: '/api/cartera/get_cantidad_creditos_por_dias_mora',
         method: 'GET',
-        data: { mes: mes },
+        data: { sucursal:sucursal, anio:anio, mes: mes },
         success: function(response) {
             const categories = response.data.map(item => item.rango);
             const series = [{
