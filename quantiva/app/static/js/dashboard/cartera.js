@@ -29,12 +29,12 @@ $(document).ready(function(){
     loadSaldos(sucursal, anio, mes);
     //loadClasificacionChart(anio,mes);
     //loadBranchChart(anio,mes);
-    loadClasificacionStatusChart(anio,mes);
-    loadSucursalCountChart(anio,mes);
-    loadSucursalVigenteChart(anio,mes)
-    loadSucursalVencidoChart(anio,mes);
-    loadCarteraDonutChart(anio,mes);
-    loadTopProductosVigenteChart(anio,mes);
+    loadClasificacionStatusChart(sucursal,anio,mes);
+    loadSucursalCountChart(sucursal,anio,mes);
+    loadSucursalVigenteChart(sucursal,anio,mes)
+    loadSucursalVencidoChart(sucursal,anio,mes);
+    loadCarteraDonutChart(sucursal,anio,mes);
+    loadTopProductosVigenteChart(sucursal,anio,mes);
     loadProductosTable(anio,mes);
 });
 function initFilters(){
@@ -67,16 +67,15 @@ function initFilters(){
             data: {anio: anio},
             success: function (response) {
                 loadChart(sucursal, anio);
-                /*
-                loadSaldos(anio,mes)
+                loadSaldos(sucursal, anio,mes)
                 //loadClasificacionChart(anio,mes);
-                loadClasificacionStatusChart(anio, mes)
-                loadSucursalCountChart(anio, mes)
-                loadClasificacionStatusChart(anio, mes)
-                loadSucursalVencidoChart(anio,mes);
-                loadCarteraDonutChart(anio,mes);
-                loadTopProductosVigenteChart(anio,mes);
-                loadProductosTable(anio,mes);*/
+                loadClasificacionStatusChart(sucursal,anio, mes);
+                loadSucursalCountChart(sucursal, anio, mes);
+                loadClasificacionStatusChart(sucursal,anio, mes);
+                loadSucursalVigenteChart(sucursal,anio,mes);
+                loadSucursalVencidoChart(sucursal,anio,mes);
+                loadCarteraDonutChart(sucursal,anio,mes);
+                loadTopProductosVigenteChart(sucursal,anio,mes);
                 let mesSelect = $('#mesSelect');
                 mesSelect.empty();
                 response.forEach(function (mes) {
@@ -96,7 +95,9 @@ function initFilters(){
    $('#anioSelect').on('change', function () {
         let anio = $(this).val();
         let mes = $("#mesSelect").val();
+        let sucursal = $("#sucursalSelect").val();
         console.log("Año seleccionado:", anio);
+        console.log("Sucursal seleccionado:", sucursal);
         $.ajax({
             url: '/api/months',
             method: 'GET',
@@ -104,15 +105,16 @@ function initFilters(){
                 anio: anio
             },
             success: function (response) {
-                loadChart(anio);
-                loadSaldos(anio,mes)
+                loadChart(sucursal, anio);
+                loadSaldos(sucursal, anio,mes)
                 //loadClasificacionChart(anio,mes);
-                loadClasificacionStatusChart(anio, mes)
-                loadSucursalCountChart(anio, mes)
-                loadClasificacionStatusChart(anio, mes)
-                loadSucursalVencidoChart(anio,mes);
-                loadCarteraDonutChart(anio,mes);
-                loadTopProductosVigenteChart(anio,mes);
+                loadClasificacionStatusChart(sucursal,anio, mes)
+                loadSucursalCountChart(sucursal, anio, mes)
+                loadClasificacionStatusChart(sucursal,anio, mes)
+                loadSucursalVigenteChart(sucursal,anio,mes)
+                loadSucursalVencidoChart(sucursal,anio,mes);
+                loadCarteraDonutChart(sucursal,anio,mes);
+                loadTopProductosVigenteChart(sucursal,anio,mes);
                 loadProductosTable(anio,mes);
                 let mesSelect = $('#mesSelect');
                 mesSelect.empty();
@@ -132,15 +134,17 @@ function initFilters(){
     $('#mesSelect').on('change', function () {
         let anio = $('#anioSelect').val();
         let mes = $(this).val();
+        let sucursal = $('#sucursalSelect').val();
         console.log(anio, mes);
         loadSaldos(anio,mes)
         //loadClasificacionChart(anio,mes);
-        loadClasificacionStatusChart(anio, mes)
-        loadSucursalCountChart(anio, mes)
-        loadClasificacionStatusChart(anio, mes)
-        loadSucursalVencidoChart(anio,mes);
-        loadCarteraDonutChart(anio,mes);
-        loadTopProductosVigenteChart(anio,mes);
+        loadClasificacionStatusChart(sucursal,anio, mes)
+        loadSucursalCountChart(sucursal, anio, mes)
+        loadClasificacionStatusChart(sucursal,anio, mes)
+        loadSucursalVigenteChart(sucursal,anio,mes)
+        loadSucursalVencidoChart(sucursal,anio,mes);
+        loadCarteraDonutChart(sucursal,anio,mes);
+        loadTopProductosVigenteChart(sucursal,anio,mes);
         loadProductosTable(anio,mes);
     });  
 }
@@ -625,11 +629,12 @@ function initClasificacionStatusChart(){
     );
     clasificacion_statusChart.render();
 }
-function loadClasificacionStatusChart(anio, mes){
+function loadClasificacionStatusChart(sucursal, anio, mes){
     $.ajax({
         url: '/api/cartera/clasificacion-status-chart',
         method: 'GET',
         data: {
+            sucursal: sucursal,
             anio: anio,
             mes: mes
         },
@@ -684,11 +689,13 @@ function initSucursalCountChart(){
     sucursalCountChart.render();
 
 }
-function loadSucursalCountChart(anio, mes){
+function loadSucursalCountChart(sucursal, anio, mes){
+    console.log("loadSucursalCountChart         " + sucursal)
     $.ajax({
         url: '/api/cartera/sucursal-count-chart',
         method: 'GET',
         data: {
+            sucursal: sucursal,
             anio: anio,
             mes: mes
         },
@@ -711,11 +718,12 @@ function initSucursalVigenteChart(){
     );
     sucursalVigenteChart.render();
 }
-function loadSucursalVigenteChart(anio,mes){
+function loadSucursalVigenteChart(sucursal,anio,mes){
     $.ajax({
         url: '/api/cartera/sucursal-vigente-chart',
         method: 'GET',
         data: {
+            sucursal: sucursal,
             anio: anio,
             mes: mes
         },
@@ -884,11 +892,12 @@ function getSucursalVencidoChartOptions(labels,series){
         }
     };
 }
-function loadSucursalVencidoChart(anio,mes){
+function loadSucursalVencidoChart(sucursal,anio,mes){
     $.ajax({
         url: '/api/cartera/sucursal-vencido-chart',
         method: 'GET',
         data: {
+            sucursal: sucursal,
             anio: anio,
             mes: mes
         },
@@ -990,11 +999,12 @@ function getCarteraDonutOptions(series){
         }
     };
 }
-function loadCarteraDonutChart(anio,mes){
+function loadCarteraDonutChart(sucursal, anio,mes){
     $.ajax({
         url: '/api/cartera/kpis',
         method: 'GET',
         data: {
+            sucursal: sucursal,
             anio: anio,
             mes: mes
         },
@@ -1093,11 +1103,12 @@ function getTopProductosVigenteChartOptions(labels,series){
         }
     };
 }
-function loadTopProductosVigenteChart(anio,mes){
+function loadTopProductosVigenteChart(sucursal,anio,mes){
     $.ajax({
         url: '/api/cartera/top-productos-vigente-chart',
         method: 'GET',
         data: {
+            sucursal: sucursal,
             anio: anio,
             mes: mes
         },

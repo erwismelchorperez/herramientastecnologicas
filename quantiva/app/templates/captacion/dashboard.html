@@ -18,6 +18,21 @@ Dashboard de Captación
             <form method="GET" class="filter-form">
                 <div class="filter-group">
                     <label>
+                        Sucursales
+                    </label>
+                    <select id="sucursalSelect" name="sucursal">
+                        {% for sucursal in sucursales %}
+                            <option
+                                value="{{ sucursal }}"
+                                {% if sucursal == selected_sucursal %}selected{% endif %}
+                            >
+                                {{ sucursal }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>
                         Año
                     </label>
                     <select id="anioSelect" name="anio">

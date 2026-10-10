@@ -21,3 +21,8 @@ alter table socios add COLUMN localidad VARCHAR(150);
 alter table socios add COLUMN municipio VARCHAR(150);
 alter table socios add COLUMN estado VARCHAR(100);
 
+GRANT USAGE ON SCHEMA public TO emelchor;
+
+GRANT SELECT, INSERT, UPDATE, DELETE
+ON TABLE public.institucion
+TO emelchor;
