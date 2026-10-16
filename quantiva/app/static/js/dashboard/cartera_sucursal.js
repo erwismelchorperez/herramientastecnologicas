@@ -66,6 +66,7 @@ function loadSaldos(anio, mes){
         url: '/api/cartera/sucursal-vigente-chart',
         method: 'GET',
         data: {
+            sucursal: 'all',
             anio: anio,
             mes: mes
         },
