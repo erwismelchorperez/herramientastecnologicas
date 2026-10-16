@@ -57,16 +57,16 @@
                 <a href="{{ url_for('captacion.dashboard') }}" class="sub-link {% if request.endpoint == 'captacion.dashboard' %}active{% endif %}" onclick="nav('cap-plazo',this)">
                     <span class="sub-dot"></span>Depósitos a Plazo
                 </a>
-                <a class="sub-link" onclick="nav('cap-ahorro',this)">
+                <!--<a class="sub-link" onclick="nav('cap-ahorro',this)">
                     <span class="sub-dot"></span>Ahorro / Vista
-                </a>
+                </a>-->
                 </div>
             </div>
         </div>
         <!-- Socios -->
         <div class="nav-group">
             <span class="nav-label">Socios</span>
-            <div class="nav-item {% if request.endpoint in ['socios.dashboard'] %} open {% endif %}" id="grp-socios">
+            <div class="nav-item {% if request.endpoint in ['socios.dashboard','socios.perfil'] %} open {% endif %}" id="grp-socios">
                 <a class="nav-link" onclick="toggle('grp-socios')">
                 <i class="nav-icon bi bi-people"></i>
                 <span>Socios</span>
