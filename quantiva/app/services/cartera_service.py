@@ -825,5 +825,56 @@ class CarteraService:
             'mes': mes,
             'data': resultados
         }
+    @staticmethod
+    def get_morosidad_anual(sucursal='all', anio=None):
+        if not anio:
+            ultimo_periodo = CarteraService.get_latest_period()
+            anio = ultimo_periodo.anio
 
+        mes_orden = month_case(Credito.mes)
+
+        query = db.session.query(
+            Credito.mes.label('mes'),
+            func.sum(Credito.capital_vigente).label('vigente'),
+            func.sum(Credito.capital_vencido).label('vencido')
+        ).filter(
+            Credito.anio == anio
+        )
+
+        if sucursal and sucursal != 'all':
+            query = query.filter(Credito.sucursal == sucursal)
+
+        datos = query.group_by(
+            Credito.mes
+        ).order_by(
+            mes_orden
+        ).all()
+
+        meses = []
+        morosidad_mensual = []
+
+        nombres_meses = {
+            'ene': 'Ene', 'feb': 'Feb', 'mar': 'Mar',
+            'abr': 'Abr', 'may': 'May', 'jun': 'Jun',
+            'jul': 'Jul', 'ago': 'Ago', 'sep': 'Sep',
+            'oct': 'Oct', 'nov': 'Nov', 'dic': 'Dic'
+        }
+
+        for fila in datos:
+            capital_vigente = float(fila.vigente or 0)
+            capital_vencido = float(fila.vencido or 0)
+            total_cartera = capital_vigente + capital_vencido
+
+            morosidad = (
+                capital_vencido / total_cartera * 100
+                if total_cartera > 0 else 0
+            )
+
+            meses.append(nombres_meses.get(fila.mes, fila.mes))
+            morosidad_mensual.append(round(morosidad, 2))
+
+        return {
+            'chart_labels': meses,
+            'chart_series': morosidad_mensual
+        }
 ##############################
