@@ -28,7 +28,6 @@ def cartera_kpis():
     mes = request.args.get('mes')
     sucursal = request.args.get('sucursal')
     data = CarteraService.get_general_kpis(sucursal,anio,mes)
-
     return jsonify(data)
 @api.route('/cartera/chart')
 def cartera_chart():
@@ -281,3 +280,8 @@ def get_cantidad_creditos_por_dias_mora():
     anio=request.args.get('anio',type=int)
     mes=request.args.get('mes')
     return jsonify(CarteraService.get_cantidad_creditos_por_dias_mora(sucursal, anio,mes))    
+@api.route('/cartera/get_morosidad_anual')
+def get_morosidad_anual():
+    sucursal=request.args.get('sucursal')
+    anio=request.args.get('anio',type=int)
+    return jsonify(CarteraService.get_morosidad_anual(sucursal, anio))    

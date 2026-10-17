@@ -3,6 +3,7 @@ let sucursalVigenteChart;
 let indiceMorosidadProductoChart;
 let distribucionDiasMoraChart = null;
 let cantidadCreditosDiasMoraChart = null;
+let indicemorosidadAnualChart = null;
 let tipo_institucion = null;
 $(document).ready(function(){
     initChart();
@@ -11,6 +12,7 @@ $(document).ready(function(){
     initDistribucionDiasMoraChart();
     initCantidadCreditosDiasMoraChartOptions();
     tipoinstitucion();
+    initIndiceMorosidadAnualChart();
     initFilters();
     let anio = $('#anioSelect').val();
     let mes = $('#mesSelect').val();
@@ -20,6 +22,7 @@ $(document).ready(function(){
     loadIndiceMorosidadProductoChart(sucursal,anio, mes);
     loadDistribucionDiasMoraChart(sucursal,anio, mes)
     loadCantidadCreditosDiasMoraChart(sucursal,anio, mes)
+    loadindiceMorosidadAnualChart(sucursal, anio);
 });
 function tipoinstitucion(){
     $.ajax({
@@ -65,6 +68,7 @@ function initFilters(){
                 loadIndiceMorosidadSucursalChart(sucursal,anio, mes);
                 loadDistribucionDiasMoraChart(sucursal, anio, mes);
                 loadCantidadCreditosDiasMoraChart(sucursal, anio, mes);
+                loadindiceMorosidadAnualChart(sucursal,anio);
                 let mesSelect = $('#mesSelect');
                 mesSelect.empty();
                 response.forEach(function (mes) {
@@ -97,6 +101,7 @@ function initFilters(){
                 loadIndiceMorosidadSucursalChart(sucursal,anio, mes);
                 loadDistribucionDiasMoraChart(sucursal, anio, mes);
                 loadCantidadCreditosDiasMoraChart(sucursal,anio, mes);
+                loadindiceMorosidadAnualChart(sucursal,anio);
                 let mesSelect = $('#mesSelect');
                 mesSelect.empty();
                 response.forEach(function (mes) {
@@ -117,7 +122,7 @@ function initFilters(){
         let mes = $(this).val();
         let sucursal = $("#sucursalSelect").val();
         console.log(anio, mes);
-        loadSaldos(anio,mes);
+        loadSaldos(sucursal,anio,mes);
         loadIndiceMorosidadSucursalChart(sucursal,anio, mes);
         loadIndiceMorosidadProductoChart(sucursal,anio, mes);
         loadDistribucionDiasMoraChart(sucursal,anio, mes);
@@ -406,6 +411,39 @@ function loadCantidadCreditosDiasMoraChart(sucursal, anio, mes) {
         }
     });
 }
+function loadindiceMorosidadAnualChart(sucursal, anio) {
+    $.ajax({
+        url: '/api/cartera/get_morosidad_anual',
+        method: 'GET',
+        data: { sucursal: sucursal, anio: anio },
+        success: function(response) {
+            const categories = response.chart_labels;
+            const series = [{
+                name: 'Índice de morosidad',
+                data: response.chart_series.map(Number)
+            }];
+            console.log("morosidad anual:           ",response)
+            if (!indicemorosidadAnualChart) {
+                indicemorosidadAnualChart = new ApexCharts(
+                    document.querySelector('#carteraEvolutionChart'),
+                    getindiceMorosidadAnualChartOptions(categories, series)
+                );
+                indicemorosidadAnualChart.render();
+            } else {
+                indicemorosidadAnualChart.updateOptions({
+                    xaxis: { categories: categories }
+                });
+                indicemorosidadAnualChart.updateSeries(series);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error(
+                'Error al cargar el índice de morosidad anual:',
+                error
+            );
+        }
+    });
+}
 /* Fin Load Chart */
 /* Init charts */
 function initIndiceMorosidadProductoChart(){
@@ -425,6 +463,15 @@ function initIndiceMorosidadSucursalChart(){
         getIndiceMorosidadSucursalChartOptions([],[])
     );
     sucursalVigenteChart.render();
+}
+function initIndiceMorosidadAnualChart(){
+    indicemorosidadAnualChart = new ApexCharts(
+        document.querySelector(
+            "#morosidadEvolutionChart"
+        ),
+        getIndiceMorosidadAnualChartOptions([],[])
+    );
+    indicemorosidadAnualChart.render();
 }
 function initChart(){
     /*carteraChart = new ApexCharts(
@@ -458,6 +505,91 @@ function initCantidadCreditosDiasMoraChartOptions(){
 }
 /* Fin charts */
 /* Init GetCharts */
+function getIndiceMorosidadAnualChartOptions(categories, series) {
+    return {
+        chart: {
+            type: 'line',
+            height: 350,
+            background: 'transparent',
+            toolbar: {
+                show: false
+            },
+            zoom: {
+                enabled: false
+            }
+        },
+        series: series,
+        colors: ['#00d4ff'],
+        stroke: {
+            curve: 'smooth',
+            width: 3
+        },
+        markers: {
+            size: 5,
+            hover: {
+                size: 7
+            }
+        },
+        dataLabels: {
+            enabled: false
+        },
+        grid: {
+            borderColor: 'rgba(255,255,255,0.05)',
+            strokeDashArray: 4
+        },
+        legend: {
+            position: 'top',
+            labels: {
+                colors: '#d8e4f5'
+            }
+        },
+        xaxis: {
+            categories: categories,
+            title: {
+                text: 'Año',
+                style: {
+                    color: '#8ca3c8'
+                }
+            },
+            labels: {
+                style: {
+                    colors: '#8ca3c8',
+                    fontSize: '11px'
+                }
+            }
+        },
+        yaxis: {
+            title: {
+                text: 'Índice de morosidad (%)',
+                style: {
+                    color: '#8ca3c8'
+                }
+            },
+            labels: {
+                style: {
+                    colors: '#8ca3c8'
+                },
+                formatter: function(value) {
+                    return Number(value).toFixed(2) + '%';
+                }
+            }
+        },
+        tooltip: {
+            theme: 'dark',
+            y: {
+                formatter: function(value) {
+                    return Number(value).toLocaleString(
+                        'es-MX',
+                        {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        }
+                    ) + '%';
+                }
+            }
+        }
+    };
+}
 function getIndiceMorosidadSucursalChartOptions(categories, series) {
     return {
         chart: {
