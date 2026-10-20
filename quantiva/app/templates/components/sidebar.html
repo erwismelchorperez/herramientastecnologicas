@@ -47,7 +47,7 @@
         <!-- Captación -->
         <div class="nav-group">
             <span class="nav-label">Captación</span>
-            <div class="nav-item  {% if request.endpoint in ['captacion.dashboard'] %} open {% endif %}" id="grp-captacion">
+            <div class="nav-item  {% if request.endpoint in ['captacion.dashboard','captacion.analisisahorradores'] %} open {% endif %}" id="grp-captacion">
                 <a class="nav-link" onclick="toggle('grp-captacion')">
                 <i class="nav-icon bi bi-piggy-bank"></i>
                 <span>Captación</span>
@@ -57,16 +57,16 @@
                 <a href="{{ url_for('captacion.dashboard') }}" class="sub-link {% if request.endpoint == 'captacion.dashboard' %}active{% endif %}" onclick="nav('cap-plazo',this)">
                     <span class="sub-dot"></span>Depósitos a Plazo
                 </a>
-                <!--<a class="sub-link" onclick="nav('cap-ahorro',this)">
-                    <span class="sub-dot"></span>Ahorro / Vista
-                </a>-->
+                <a href="{{ url_for('captacion.analisisahorradores') }}" class="sub-link {% if request.endpoint == 'captacion.analisisahorradores' %}active{% endif %}" onclick="nav('cap-plazo',this)">
+                    <span class="sub-dot"></span>Análisis Ahorradores
+                </a>
                 </div>
             </div>
         </div>
         <!-- Socios -->
         <div class="nav-group">
             <span class="nav-label">Socios</span>
-            <div class="nav-item {% if request.endpoint in ['socios.dashboard','socios.perfil'] %} open {% endif %}" id="grp-socios">
+            <div class="nav-item {% if request.endpoint in ['socios.dashboard','socios.perfil','socios.vinculacion'] %} open {% endif %}" id="grp-socios">
                 <a class="nav-link" onclick="toggle('grp-socios')">
                 <i class="nav-icon bi bi-people"></i>
                 <span>Socios</span>
@@ -79,9 +79,9 @@
                     <a href="{{ url_for('socios.perfil') }}" class="sub-link  {% if request.endpoint == 'socios.perfil' %}active{% endif %}" onclick="nav('socios-demo',this)">
                         <span class="sub-dot"></span>Demografía / Perfil
                     </a>
-                    <!--<a class="sub-link" onclick="nav('socios-fid',this)">
-                        <span class="sub-dot"></span>Antigüedad / Fidelización
-                    </a>-->
+                    <a href="{{ url_for('socios.vinculacion') }}" class="sub-link  {% if request.endpoint == 'socios.vinculacion' %}active{% endif %}" onclick="nav('socios-demo',this)">
+                        <span class="sub-dot"></span>Vinculación / Financiera
+                    </a>
                 </div>
             </div>
         </div>

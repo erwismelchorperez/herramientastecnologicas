@@ -54,23 +54,37 @@ Dashboard de Cartera
 <div class="page active" id="page-cartera-suc">
     <div class="g4" id="sucursalesKpi"></div>
 
-  <div class="sec">Comparativo por Sucursal</div>
-  <div class="g2">
-    <div class="card a-c">
-        <div class="card-hd">
-            <span class="card-title">Cartera Anual por Sucursal</span>
-            <span class="ctag">Originación $M</span>
+    <div class="sec">Comparativo por Sucursal</div>
+    <div class="g2">
+        <div class="card a-c">
+            <div class="card-hd">
+                <span class="card-title">Cartera Anual por Sucursal</span>
+                <span class="ctag">Originación $M</span>
+            </div>
+            <div id="ch-suc-anual" style="min-height:240px"></div>
         </div>
-        <div id="ch-suc-anual" style="min-height:240px"></div>
-    </div>
-    <div class="card a-g">
-        <div class="card-hd">
-            <span class="card-title">Capital Vigente vs Vencido</span>
-            <span class="ctag g">Stacked 100%</span>
+        <div class="card a-g">
+            <div class="card-hd">
+                <span class="card-title">Capital Vigente vs Vencido</span>
+                <span class="ctag g">Stacked 100%</span>
+            </div>
+            <div id="ch-suc-stack" style="min-height:240px"></div>
         </div>
-        <div id="ch-suc-stack" style="min-height:240px"></div>
     </div>
-  </div>
+    <div class="sec">Evolución mensual producto</div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                        <h3 class="card-title">
+                        </h3>
+                    </div>
+                <div class="card-body">
+                    <div id="evolutionProductoChart" style="height: 250px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 {% endblock %}

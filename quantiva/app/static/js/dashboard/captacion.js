@@ -440,7 +440,7 @@ function loadCaptacionSucursalChart(sucursal, anio,mes){
         }
     })
 }
-function loadCaptacionTipoSocioChart(anio,mes){
+function loadCaptacionTipoSocioChart(sucursal,anio,mes){
     $.ajax({
         url: '/api/captacion/tipo-socio-chart',
         method: 'GET',

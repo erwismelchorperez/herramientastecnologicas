@@ -37,3 +37,18 @@ def perfil():
         selected_anio=selected_anio,
         selected_mes=selected_mes
         )
+@socios.route('/vinculacion')
+@login_required
+def vinculacion():
+    ultimo_periodo = SociosService.get_latest_period()
+    selected_anio = request.args.get('anio',default=ultimo_periodo.anio,type=int)
+    selected_mes = request.args.get('mes',default=ultimo_periodo.mes)
+    anios = (FilterService.get_available_years())
+    meses = (FilterService.get_available_months(selected_anio))
+    print(anios, "              ", meses)
+    return render_template(
+        'socios/vinculacion.html',
+        anios=anios,
+        meses=meses,
+        selected_anio=selected_anio,
+        selected_mes=selected_mes)
