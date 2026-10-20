@@ -78,7 +78,6 @@ def sucursal_vigente_chart():
     sucursal = request.args.get('sucursal')
     anio = request.args.get('anio',type=int)
     mes = request.args.get('mes')
-
     data = CarteraService.get_sucursal_vigente_chart(sucursal,anio,mes)
     return jsonify(data)
 @api.route('/cartera/sucursal-vigente-anual-chart')
@@ -113,6 +112,12 @@ def sucursal_vigente_vencido_chart():
     mes = request.args.get('mes')
 
     return jsonify(CarteraService.get_sucursal_vigente_vencido_chart(anio,mes))
+@api.route('/cartera/get_monto_original_por_producto_mes')
+def get_monto_original_por_producto_mes():
+    sucursal = request.args.get('sucursal')
+    anio = request.args.get('anio',type=int)
+    data = CarteraService.get_monto_original_por_producto_mes(sucursal,anio)
+    return jsonify(data)
 """
     Captación
 """
@@ -127,7 +132,6 @@ def get_months_captacion():
     sucursal = request.args.get('sucursal')
     meses = (FilterService.get_available_months_captacion(sucursal,anio))
     return jsonify(meses)
-    
 @api.route('/captacion/kpis')
 def captacion_kpis():
     anio = request.args.get('anio',type=int)
@@ -155,7 +159,6 @@ def captacion_sucursal_chart():
     sucursal = request.args.get('sucursal')
     mes = request.args.get('mes')
     data = CaptacionService.get_sucursal_chart(sucursal,anio,mes)
-
     return jsonify(data)
 @api.route('/captacion/tipo-socio-chart')
 def captacion_tipo_socio_chart():
@@ -172,6 +175,13 @@ def captacion_get_top_ahorradores():
     sucursal = request.args.get('sucursal')
     data = CaptacionService.get_top_ahorradores(sucursal,anio,mes)
 
+    return jsonify(data)
+@api.route('/captacion/get_ahorradores_por_sucursal_chart')
+def get_ahorradores_por_sucursal_chart():
+    anio = request.args.get('anio',type=int)
+    sucursal = request.args.get('sucursal')
+    mes = request.args.get('mes')
+    data = CaptacionService.get_ahorradores_por_sucursal_chart(sucursal,anio,mes)
     return jsonify(data)
 """
     Socios
@@ -241,6 +251,13 @@ def socios_municipio_chart():
     mes=request.args.get('mes')
 
     return jsonify(SociosService.get_municipio_chart(anio,mes))
+@api.route('/socios/get_kpis_productos')
+def get_kpis_productos():
+    sucursal=request.args.get('sucursal')
+    anio=request.args.get('anio',type=int)
+    mes=request.args.get('mes')
+
+    return jsonify(SociosService.get_kpis_productos(sucursal,anio,mes))
 """
     Forecast
 """

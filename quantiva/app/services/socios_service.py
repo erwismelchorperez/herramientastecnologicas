@@ -1,10 +1,14 @@
 from sqlalchemy import func, extract, desc, or_, case
 from app import db
 from app.models.socios import Socios
+from app.models.captacion import Captacion
+from app.models.creditos import Credito
 from app.utils.months import month_case
 from app.utils.months import month_number
 from app.utils.formatters import format_currency_short, format_number_short
 from datetime import datetime
+from app.services.captacion_service import CaptacionService
+from app.services.cartera_service import CarteraService
 import calendar
 class SociosService:
     @staticmethod
@@ -394,4 +398,67 @@ class SociosService:
                 int(x.total)
                 for x in datos
             ]
+        }
+    @staticmethod
+    def get_kpis_productos(sucursal='all', anio=None, mes=None):
+        if not anio or not mes:
+            ultimo_periodo = CaptacionService.get_latest_period()
+            anio = anio or ultimo_periodo.anio
+            mes = mes or ultimo_periodo.mes
+
+        # Socios activos
+        query_socios = db.session.query(
+            Socios.numero_socio
+        ).filter(
+            Socios.fecha_baja.is_(None)
+        )
+
+        if sucursal and sucursal != 'all':
+            query_socios = query_socios.filter(Socios.sucursal == sucursal)
+        socios_activos = set(query_socios.distinct().all())
+        # Socios con ahorro
+        query_ahorro = db.session.query(
+            Captacion.numero_socio
+        ).filter(
+            Captacion.anio == anio,
+            Captacion.mes == mes,
+            Captacion.numero_socio.isnot(None)
+        )
+
+        if sucursal and sucursal != 'all':
+            query_ahorro = query_ahorro.filter(Captacion.sucursal == sucursal)
+
+        socios_ahorro = set(query_ahorro.distinct().all())
+        # Socios con crédito
+        query_credito = db.session.query(
+            Credito.numero_socio_cliente
+        ).filter(
+            Credito.anio == anio,
+            Credito.mes == mes,
+            Credito.numero_socio_cliente.isnot(None)
+        )
+
+        if sucursal and sucursal != 'all':
+            query_credito = query_credito.filter(Credito.sucursal == sucursal)
+
+        socios_credito = set(query_credito.distinct().all())
+
+        # Considerar únicamente socios activos
+        socios_ahorro &= socios_activos
+        socios_credito &= socios_activos
+
+        # Clasificación de socios
+        con_ahorro = socios_ahorro - socios_credito
+        con_credito = socios_credito - socios_ahorro
+        con_ambos = socios_ahorro & socios_credito
+        sin_productos = socios_activos - (socios_ahorro | socios_credito)
+
+        return {
+            'socios_con_ahorro': len(con_ahorro),
+            'socios_con_credito': len(con_credito),
+            'socios_con_ahorro_y_credito': len(con_ambos),
+            'socios_sin_productos': len(sin_productos),
+            'total_socios': len(socios_activos),
+            'anio': anio,
+            'mes': mes
         }

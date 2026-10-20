@@ -49,7 +49,7 @@ class FilterService:
             row.mes for row in meses
         ]
     @staticmethod
-    def get_available_months_captacion(anio=None, sucursal='all'):
+    def get_available_months_captacion(sucursal='all',anio=None):
         mes_orden = month_case(Captacion.mes)
         query = db.session.query(
             Captacion.mes,
@@ -70,6 +70,7 @@ class FilterService:
             query = query.filter(Socios.anio == anio)
         meses = query.distinct().order_by("mes_num").all()
         return [row.mes for row in meses]
+    @staticmethod
     def get_available_branches():
         sucursales = db.session.query(
             Credito.sucursal
