@@ -877,4 +877,79 @@ class CarteraService:
             'chart_labels': meses,
             'chart_series': morosidad_mensual
         }
+    @staticmethod
+    def get_monto_original_por_producto_mes(sucursal='all', anio=None):
+        if not anio:
+            ultimo_periodo = CarteraService.get_latest_period()
+            anio = ultimo_periodo.anio
+
+        mes_orden = month_case(Credito.mes)
+
+        query = db.session.query(
+            Credito.producto_credito,
+            Credito.mes,
+            func.sum(Credito.monto_original).label('total')
+        ).filter(
+            Credito.anio == anio
+        )
+
+        if sucursal and sucursal != 'all':
+            query = query.filter(Credito.sucursal == sucursal)
+
+        datos = query.group_by(
+            Credito.producto_credito,
+            Credito.mes
+        ).order_by(
+            mes_orden,
+            Credito.producto_credito
+        ).all()
+
+        # Meses existentes
+        orden_meses = {'ene': 1, 'feb': 2, 'mar': 3,'abr': 4, 'may': 5, 'jun': 6,'jul': 7, 'ago': 8, 'sep': 9,'oct': 10, 'nov': 11, 'dic': 12}
+
+        meses = sorted(
+            {row.mes for row in datos},
+            key=lambda mes: orden_meses.get(
+                str(mes).strip().lower(), 99
+            )
+        )
+
+        # Productos existentes
+        productos = sorted({
+            row.producto_credito for row in datos
+            if row.producto_credito is not None
+        })
+
+        # Estructura temporal
+        valores = defaultdict(dict)
+
+        for row in datos:
+            valores[row.producto_credito][row.mes] = float(row.total or 0)
+
+        series = []
+
+        for producto in productos:
+            data = [
+                valores[producto].get(mes, 0)
+                for mes in meses
+            ]
+
+            series.append({
+                'name': producto,
+                'data': data
+            })
+
+        nombres_meses = {
+            'ene': 'Ene', 'feb': 'Feb', 'mar': 'Mar',
+            'abr': 'Abr', 'may': 'May', 'jun': 'Jun',
+            'jul': 'Jul', 'ago': 'Ago', 'sep': 'Sep',
+            'oct': 'Oct', 'nov': 'Nov', 'dic': 'Dic'
+        }
+
+        return {
+            'categories': [
+                nombres_meses.get(mes, mes) for mes in meses
+            ],
+            'series': series
+        }
 ##############################

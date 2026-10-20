@@ -193,6 +193,38 @@ class CaptacionService:
             'chart_series': series
         }
     @staticmethod
+    def get_ahorradores_por_sucursal_chart(sucursal='all', anio=None, mes=None):
+        if not anio or not mes:
+            ultimo_periodo = CaptacionService.get_latest_period()
+            anio = ultimo_periodo.anio
+            mes = ultimo_periodo.mes
+
+        query = db.session.query(
+            Captacion.sucursal,
+            func.count(
+                func.distinct(Captacion.numero_socio)
+            ).label('total')
+        ).filter(
+            Captacion.anio == anio,
+            Captacion.mes == mes
+        )
+
+        if sucursal and sucursal != 'all':
+            query = query.filter(
+                Captacion.sucursal == sucursal
+            )
+
+        datos = query.group_by(
+            Captacion.sucursal
+        ).order_by(
+            desc('total')
+        ).all()
+
+        return {
+            'chart_labels': [row.sucursal for row in datos],
+            'chart_series': [int(row.total or 0) for row in datos]
+        }
+    @staticmethod
     def get_tipo_socio_chart(sucursal='all',anio=None, mes=None):
         if not anio or not mes:
             ultimo_periodo = CaptacionService.get_latest_period()

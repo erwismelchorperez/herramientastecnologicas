@@ -6,7 +6,6 @@ let sociosEscolaridadChart;
 let sociosCodigoPostalChart;
 let sociosLocalidadChart;
 let sociosMunicipioChart;
-let topAhorradoresChart;
 $(document).ready(function(){
     initFilters();
     initSociosSexoChart();
@@ -17,7 +16,6 @@ $(document).ready(function(){
     initSociosCodigoPostalChart();
     initSociosLocalidadChart();
     initSociosMunicipioChart();
-    initSociosTopAhorradoresChart();
     
 
     let anio = $('#anioSelect').val();
@@ -31,7 +29,6 @@ $(document).ready(function(){
     loadSociosCodigoPostalChart(anio,mes);
     loadSociosLocalidadChart(anio,mes);
     loadSociosMunicipioChart(anio,mes);
-    loadTopAhorradores(sucursal='all',anio,mes);
 });
 /* Bloque de inits */
 function initFilters(){
@@ -166,17 +163,6 @@ function initSociosMunicipioChart(){
         )
     )
     sociosMunicipioChart.render()
-}
-function initSociosTopAhorradoresChart(){ 
-    topAhorradoresChart=new ApexCharts(
-        document.querySelector("#topAhorradoresChart"),
-        getHorizontalBarOptions(
-            [],
-            [],
-            'rgba(124,255,155,0.85)'
-        )
-    )
-    topAhorradoresChart.render()
 }
 /* Termina bloque de inits */
 /* Bloque de load */
@@ -398,30 +384,7 @@ function loadSociosMunicipioChart(anio,mes){
         }
     })
 }
-function loadTopAhorradores(sucursal,anio,mes){
-    $.ajax({
-        url: '/api/captacion/get_top_ahorradores',
-        method: 'GET',
-        data:{
-            sucursal:sucursal,
-            anio: anio,
-            mes: mes
-        },
-        success:function(response){
-            topAhorradoresChart.destroy()
-            topAhorradoresChart=
-                new ApexCharts(
-                    document.querySelector("#topAhorradoresChart"),
-                    getHorizontalBarOptions(
-                        response.chart_labels,
-                        response.chart_series,
-                        'rgba(124,255,155,0.85)'
-                    )
-                )
-            topAhorradoresChart.render()
-        }
-    })
-}
+
 /* Termina bloque de load */
 /* Bloque de get */
 function getHorizontalBarOptions( labels, series, color){

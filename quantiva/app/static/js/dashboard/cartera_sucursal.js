@@ -1,16 +1,19 @@
 sucursales = []
 let sucursalVigenteChart;
 let sucursalVigenteVencidoChart;
+let evolutionProductoChart;
 $(document).ready(function(){
     initChart();
     initSucursalVigenteChart();
     initSucursalVigenteVencidoChart();
+    initEvolucionProductoChart();
     initFilters();
     let anio = $('#anioSelect').val();
     let mes = $('#mesSelect').val();
     loadSaldos(anio, mes);
     loadSucursalVigenteChart(mes);
     loadSucursalVigenteVencidoChart(anio, mes);
+    loadEvolucionProductoChart('all', anio)
 });
 function initFilters(){
    $('#anioSelect').on('change', function () {
@@ -26,6 +29,7 @@ function initFilters(){
             success: function (response) {
                 loadSaldos(anio,mes)
                 loadSucursalVigenteVencidoChart(anio, mes);
+                loadEvolucionProductoChart('all', anio)
                 let mesSelect = $('#mesSelect');
                 mesSelect.empty();
                 response.forEach(function (mes) {
@@ -169,6 +173,43 @@ function loadSucursalVigenteVencidoChart(anio, mes){
         }
     });
 }
+function loadEvolucionProductoChart(sucursal, anio) {
+    $.ajax({
+        url: '/api/cartera/get_monto_original_por_producto_mes',
+        method: 'GET',
+        dataType: 'json',
+        data: {
+            sucursal: sucursal,
+            anio: anio
+        },
+        success: function(response) {
+            const contenedor = document.querySelector('#evolutionProductoChart');
+
+            if (!contenedor) {
+                console.error('No existe el contenedor #evolutionProductoChart.');
+                return;
+            }
+
+            if (evolutionProductoChart) {
+                evolutionProductoChart.destroy();
+            }
+
+            evolutionProductoChart = new ApexCharts(
+                contenedor,
+                getEvolucionProductoChartOptions(
+                    response.categories,
+                    response.series
+                )
+            );
+
+            evolutionProductoChart.render();
+        },
+        error: function(xhr, status, error) {
+            console.error('Error al cargar evolución por producto:', error);
+            console.error(xhr.responseText);
+        }
+    });
+}
 /* Fin Load Chart */
 /* Init charts */
 function initSucursalVigenteVencidoChart(){
@@ -188,6 +229,15 @@ function initSucursalVigenteChart(){
         getSucursalVigenteAnualChartOptions([],[])
     );
     sucursalVigenteChart.render();
+}
+function initEvolucionProductoChart(){
+    evolutionProductoChart = new ApexCharts(
+        document.querySelector(
+            "#evolutionProductoChart"
+        ),
+        getEvolucionProductoChartOptions([],[])
+    );
+    evolutionProductoChart.render();
 }
 function initChart(){
     /*carteraChart = new ApexCharts(
@@ -388,6 +438,129 @@ function getSucursalVigenteVencidoOptions(categories,series){
             position:'top',
             labels:{
                 colors:'#d8e4f5'
+            }
+        }
+    };
+}
+function getEvolucionProductoChartOptions(categories, series) {
+    return {
+        chart: {
+            type: 'line',
+            height: 350,
+            background: 'transparent',
+            toolbar: {
+                show: false
+            },
+            zoom: {
+                enabled: false
+            }
+        },
+        series: series,
+        colors: [
+            '#00d4ff',
+            '#00E5A0',
+            '#FFB020',
+            '#A78BFA',
+            '#FF4757',
+            '#F472B6',
+            '#38BDF8',
+            '#FACC15'
+        ],
+        stroke: {
+            curve: 'smooth',
+            width: 3,
+            lineCap: 'round'
+        },
+        markers: {
+            size: 4,
+            strokeWidth: 2,
+            hover: {
+                size: 7
+            }
+        },
+        dataLabels: {
+            enabled: false
+        },
+        grid: {
+            borderColor: 'rgba(255,255,255,.05)',
+            strokeDashArray: 4,
+            padding: {
+                left: 10,
+                right: 15
+            }
+        },
+        xaxis: {
+            categories: categories,
+            title: {
+                text: 'Mes',
+                style: {
+                    color: '#8ca3c8'
+                }
+            },
+            labels: {
+                style: {
+                    colors: '#8ca3c8',
+                    fontSize: '11px'
+                }
+            },
+            axisBorder: {
+                show: false
+            },
+            axisTicks: {
+                show: false
+            }
+        },
+        yaxis: {
+            title: {
+                text: 'Monto original ($)',
+                style: {
+                    color: '#8ca3c8'
+                }
+            },
+            labels: {
+                style: {
+                    colors: '#8ca3c8'
+                },
+                formatter: function(val) {
+                    if (val >= 1000000) {
+                        return (val / 1000000).toFixed(1) + 'M';
+                    }
+                    if (val >= 1000) {
+                        return (val / 1000).toFixed(0) + 'K';
+                    }
+                    return Number(val).toLocaleString('es-MX');
+                }
+            }
+        },
+        tooltip: {
+            theme: 'dark',
+            y: {
+                formatter: function(val) {
+                    return '$' + Number(val).toLocaleString('es-MX', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
+                }
+            }
+        },
+        legend: {
+            position: 'top',
+            labels: {
+                colors: '#d8e4f5'
+            },
+            markers: {
+                width: 10,
+                height: 10,
+                radius: 10
+            }
+        },
+        noData: {
+            text: 'No hay datos disponibles',
+            align: 'center',
+            verticalAlign: 'middle',
+            style: {
+                color: '#8ca3c8',
+                fontSize: '14px'
             }
         }
     };
