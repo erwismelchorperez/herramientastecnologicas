@@ -64,8 +64,12 @@ Dashboard de Captación
             </form>
         </div>
     </div>
-    <div class="sec">Top 10 Ahorradores</div>
+    <div class="sec">Evolución Captación</div>
     <div class="row">
+        <!--<div class="g2">
+            <div class="card a-g"><div class="card-hd"><span class="card-title">Evolución Captación</span><span class="ctag g">Saldo $M</span></div><div id="captacionEvolutionChart" style="min-height:200px"></div></div>
+            <div class="card a-y"><div class="card-hd"><span class="card-title">Número de cuentas por sucursal</span></div><div id="chart_numero_cuentas_por_sucursal" style="min-height:220px"></div></div>
+        </div>-->
         <div class="col-12">
             <div class="card-hd">
                 <span class="card-title">Evolución Captación</span>
@@ -78,7 +82,8 @@ Dashboard de Captación
     <div class="sec">Análisis de Depósitos a Plazo</div>
     <div class="row">
         <div class="g2">
-            <div class="card a-g"><div class="card-hd"><span class="card-title">Top Ahorradores</span><span class="ctag g">Saldo $M</span></div><div id="topAhorradoresChart" style="min-height:200px"></div></div>
+            <!--<div class="card a-g"><div class="card-hd"><span class="card-title">Top Ahorradores</span><span class="ctag g">Saldo $M</span></div><div id="topAhorradoresChart" style="min-height:200px"></div></div>-->
+            <div class="card a-y"><div class="card-hd"><span class="card-title">Número de cuentas por sucursal</span></div><div id="chart_numero_cuentas_por_sucursal" style="min-height:220px"></div></div>
             <div class="card a-y"><div class="card-hd"><span class="card-title">Distribución por Producto</span></div><div id="captacionProductoChart" style="min-height:220px"></div></div>
         </div>
         <div class="g2">
@@ -91,5 +96,6 @@ Dashboard de Captación
 
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="{{ url_for('static',filename='js/charts/chart-builder.js') }}"></script>
 <script src="{{ url_for('static',filename='js/dashboard/captacion/analisisahorradores.js') }}"></script>
 {% endblock %}

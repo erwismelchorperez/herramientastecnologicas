@@ -22,7 +22,7 @@
         <!-- Cartera -->
         <div class="nav-group">
             <span class="nav-label">Cartera</span>
-            <div class="nav-item {% if request.endpoint in ['cartera.dashboard', 'cartera.sucursales', 'cartera.calidad'] %} open {% endif %}" id="grp-cartera">
+            <div class="nav-item {% if request.endpoint in ['cartera.dashboard', 'cartera.sucursales', 'cartera.calidad', 'cartera.evolucion', 'cartera.garantias','cartera.concentracion'] %} open {% endif %}" id="grp-cartera">
                 <a class="nav-link" onclick="toggle('grp-cartera')">
                     <i class="nav-icon bi bi-wallet2"></i>
                     <span>Cartera</span>
@@ -30,16 +30,28 @@
                 </a>
                 <div class="sub-menu">
                     <a href="{{ url_for('cartera.dashboard') }}" class="sub-link {% if request.endpoint == 'cartera.dashboard' %}active{% endif %}" >
-                        <span class="sub-dot"></span>Cartera
+                        <span class="sub-dot"></span>Resumen de cartera
+                    </a>
+                    <a href="{{ url_for('cartera.evolucion') }}" class="sub-link {% if request.endpoint == 'cartera.evolucion' %}active{% endif %}" >
+                        <span class="sub-dot"></span>Evolución de cartera
                     </a>
                     <a href="{{ url_for('cartera.sucursales') }}" class="sub-link {% if request.endpoint == 'cartera.sucursales' %}active{% endif %}" >
                         <span class="sub-dot"></span>Cartera por sucursal
                         <span class="n-badge" style="margin-left:auto">!</span>
                     </a>
                     <a href="{{ url_for('cartera.calidad') }}" class="sub-link {% if request.endpoint == 'cartera.calidad' %}active{% endif %}" >
-                        <span class="sub-dot"></span>Calidad Cartera
+                        <span class="sub-dot"></span>Morosidad y vencimiento
                         <span class="n-badge" style="margin-left:auto">!</span>
                     </a>
+                    <a href="{{ url_for('cartera.garantias') }}" class="sub-link {% if request.endpoint == 'cartera.garantias' %}active{% endif %}" >
+                        <span class="sub-dot"></span>Garantías y EPRC
+                        <span class="n-badge" style="margin-left:auto">!</span>
+                    </a>
+                    <a href="{{ url_for('cartera.concentracion') }}" class="sub-link {% if request.endpoint == 'cartera.concentracion' %}active{% endif %}" >
+                        <span class="sub-dot"></span>Acreditados y concentración
+                        <span class="n-badge" style="margin-left:auto">!</span>
+                    </a>
+                    
                 </div>
             </div>
         </div>
@@ -47,19 +59,26 @@
         <!-- Captación -->
         <div class="nav-group">
             <span class="nav-label">Captación</span>
-            <div class="nav-item  {% if request.endpoint in ['captacion.dashboard','captacion.analisisahorradores'] %} open {% endif %}" id="grp-captacion">
+            <div class="nav-item  {% if request.endpoint in ['captacion.dashboard','captacion.analisisahorradores', 'captacion.resumen','captacion.sociosconcentracion'] %} open {% endif %}" id="grp-captacion">
                 <a class="nav-link" onclick="toggle('grp-captacion')">
                 <i class="nav-icon bi bi-piggy-bank"></i>
                 <span>Captación</span>
                 <i class="nav-arrow bi bi-chevron-right"></i>
                 </a>
                 <div class="sub-menu">
-                <a href="{{ url_for('captacion.dashboard') }}" class="sub-link {% if request.endpoint == 'captacion.dashboard' %}active{% endif %}" onclick="nav('cap-plazo',this)">
-                    <span class="sub-dot"></span>Depósitos a Plazo
-                </a>
-                <a href="{{ url_for('captacion.analisisahorradores') }}" class="sub-link {% if request.endpoint == 'captacion.analisisahorradores' %}active{% endif %}" onclick="nav('cap-plazo',this)">
-                    <span class="sub-dot"></span>Análisis Ahorradores
-                </a>
+                    <a href="{{ url_for('captacion.resumen') }}" class="sub-link {% if request.endpoint == 'captacion.resumen' %}active{% endif %}" onclick="nav('cap-plazo',this)">
+                        <span class="sub-dot"></span>Resumen de Captación
+                    </a>
+                    <a href="{{ url_for('captacion.dashboard') }}" class="sub-link {% if request.endpoint == 'captacion.dashboard' %}active{% endif %}" onclick="nav('cap-plazo',this)">
+                        <span class="sub-dot"></span>Evolución de captación
+                    </a>
+                    <a href="{{ url_for('captacion.analisisahorradores') }}" class="sub-link {% if request.endpoint == 'captacion.analisisahorradores' %}active{% endif %}" onclick="nav('cap-plazo',this)">
+                        <span class="sub-dot"></span>Análisis Ahorradores
+                    </a>
+                    <a href="{{ url_for('captacion.sociosconcentracion') }}" class="sub-link {% if request.endpoint == 'captacion.sociosconcentracion' %}active{% endif %}" onclick="nav('cap-plazo',this)">
+                        <span class="sub-dot"></span>Socios y concentración
+                    </a>
+                    
                 </div>
             </div>
         </div>

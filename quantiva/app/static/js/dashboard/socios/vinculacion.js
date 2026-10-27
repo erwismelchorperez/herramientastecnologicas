@@ -177,22 +177,22 @@ function loadSaldos(sucursal,anio, mes){
         },
         success: function (response) {
             console.log(response);
-            $('#capital_social').html(
+            $('#socios_con_ahorro').html(
                     response.socios_con_ahorro
                 ).attr(
                     'title',
                     '$' + Number(response.capital_social_title).toLocaleString());
-            $('#socios_activos').html(
+            $('#socios_con_credito').html(
                     response.socios_con_credito
                 ).attr(
                     'title',
                     + Number(response.socios_activos_title).toLocaleString());
-            $('#altas_mes').html(
-                    response.socios_sin_productos
+            $('#socios_con_ahorro_y_credito').html(
+                    response.socios_con_ahorro_y_credito
                 ).attr(
                     'title', + Number(response.altas_mes_title).toLocaleString());
-            $('#bajas_mes').html(
-                    response.socios_con_ahorro_y_credito
+            $('#socios_sin_productos').html(
+                    response.socios_sin_productos
                 ).attr(
                     'title', + Number(response.bajas_mes_title).toLocaleString());
         },
@@ -385,7 +385,6 @@ function loadSociosMunicipioChart(anio,mes){
         }
     })
 }
-
 /* Termina bloque de load */
 /* Bloque de get */
 function getHorizontalBarOptions( labels, series, color){
