@@ -5,13 +5,13 @@ let captacionTipoSocioChart;
 sucursales = [];
 let topAhorradoresChart;
 let ahorradoresSucursalChart;
+let numeroCuentasPorSucursalChart = null;
 $(document).ready(function(){
     initFilters();
     initCaptacionEvolutionChart();
     initCaptacionProductoChart();
     initCaptacionSucursalChart();
     initCaptacionTipoSocioChart();
-    initSociosTopAhorradoresChart();
     initAhorradoresSucursalChart();
 
     let anio = $('#anioSelect').val();
@@ -22,11 +22,29 @@ $(document).ready(function(){
     loadCaptacionProductoChart(sucursal,anio,mes);
     loadCaptacionSucursalChart(sucursal,anio,mes);
     loadCaptacionTipoSocioChart(sucursal,anio,mes);
-    loadTopAhorradores(sucursal,anio,mes);
     loadAhorradoresSucursalChart(sucursal,anio,mes);
+    loadNumeroCuentasPorSucursal(sucursal, anio, mes);
 
 });
 /* Bloque de inits */
+function initCharts(){
+    numeroCuentasPorSucursalChart = createBarChart({
+        element: '#chart_numero_cuentas_por_sucursal',
+        labels: [],
+        series: [{
+            name: 'Número de cuentas',
+            data: []
+        }],
+        title: '',
+        xAxisTitle: 'Sucursal',
+        yAxisTitle: 'Número de cuentas',
+        valueType: 'number',
+        compact: true,
+        decimals: 0,
+        height: 350,
+        legend: false
+    });
+}
 function initFilters(){
     $('#sucursalSelect').on('change', function(){
         let anio = $("#anioSelect").val();
@@ -53,6 +71,7 @@ function initFilters(){
                 loadCaptacionProductoChart(sucursal,anio,mes);
                 loadCaptacionSucursalChart(sucursal,anio,mes);
                 loadCaptacionTipoSocioChart(sucursal,anio,mes);
+                loadNumeroCuentasPorSucursal(sucursal, anio, mes);
             }
         });
         
@@ -66,6 +85,7 @@ function initFilters(){
                 loadCaptacionProductoChart(sucursal,anio,mes);
                 loadCaptacionSucursalChart(sucursal,anio,mes);
                 loadCaptacionTipoSocioChart(sucursal,anio,mes);
+                loadNumeroCuentasPorSucursal(sucursal, anio, mes);
                 let mesSelect = $('#mesSelect');
                 mesSelect.empty();
                 response.forEach(function (mes) {
@@ -98,7 +118,8 @@ function initFilters(){
                 loadCaptacionProductoChart(sucursal,anio,mes);
                 loadCaptacionSucursalChart(sucursal,anio,mes);
                 loadCaptacionTipoSocioChart(sucursal,anio,mes);
-                loadTopAhorradores(sucursal,anio,mes);
+                //loadTopAhorradores(sucursal,anio,mes);
+                loadNumeroCuentasPorSucursal(sucursal, anio, mes);
                 let mesSelect = $('#mesSelect');
                 mesSelect.empty();
                 response.forEach(function (mes) {
@@ -135,17 +156,6 @@ function initCaptacionEvolutionChart(){
         getCaptacionEvolutionOptions([],[])
     )
     captacionEvolutionChart.render()
-}
-function initSociosTopAhorradoresChart(){ 
-    topAhorradoresChart=new ApexCharts(
-        document.querySelector("#topAhorradoresChart"),
-        getHorizontalBarOptions(
-            [],
-            [],
-            'rgba(124,255,155,0.85)'
-        )
-    )
-    topAhorradoresChart.render()
 }
 function initCaptacionProductoChart(){
 
@@ -195,30 +205,6 @@ function initAhorradoresSucursalChart(){
 }
 /* Termina bloque de inits */
 /* Bloque de load */
-function loadTopAhorradores(sucursal,anio,mes){
-    $.ajax({
-        url: '/api/captacion/get_top_ahorradores',
-        method: 'GET',
-        data:{
-            sucursal:sucursal,
-            anio: anio,
-            mes: mes
-        },
-        success:function(response){
-            topAhorradoresChart.destroy()
-            topAhorradoresChart=
-                new ApexCharts(
-                    document.querySelector("#topAhorradoresChart"),
-                    getHorizontalBarOptions(
-                        response.chart_labels,
-                        response.chart_series,
-                        'rgba(124,255,155,0.85)'
-                    )
-                )
-            topAhorradoresChart.render()
-        }
-    })
-}
 function loadCaptacionEvolutionChart(sucursal, anio){
     $.ajax({
         url: '/api/captacion/evolution-chart',
@@ -322,6 +308,41 @@ function loadAhorradoresSucursalChart(sucursal,anio,mes){
             ahorradoresSucursalChart.render()
         }
     })
+}
+function loadNumeroCuentasPorSucursal(sucursal, anio, mes = 'all') {
+    $.ajax({
+        url: '/api/captacion/get_numero_cuentas_por_sucursal',
+        method: 'GET',
+        data: { sucursal, anio, mes },
+        success: function(response) {
+            if (numeroCuentasPorSucursalChart) {
+                numeroCuentasPorSucursalChart.destroy();
+            }
+
+            numeroCuentasPorSucursalChart = createBarChart({
+                element: '#chart_numero_cuentas_por_sucursal',
+                labels: response.chart_labels || [],
+                series: [{
+                    name: 'Número de cuentas',
+                    data: response.chart_values || []
+                }],
+                title: '',
+                xAxisTitle: 'Sucursal',
+                yAxisTitle: 'Número de cuentas',
+                valueType: 'number',
+                compact: true,
+                decimals: 0,
+                height: 350,
+                legend: false
+            });
+        },
+        error: function(xhr) {
+            console.error(
+                'Error al cargar el número de cuentas por sucursal:',
+                xhr.responseText
+            );
+        }
+    });
 }
 /* Termina bloque de load */
 /* Bloque de get */

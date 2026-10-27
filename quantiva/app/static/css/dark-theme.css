@@ -943,6 +943,13 @@ body::before {
 .kpi.kpk .kpi-val { color:var(--pink);   }
 .kpi-sub  { font-size:.64rem; color:var(--muted); display:block; margin-top:3px; }
 .kpi-sub.up   { color:var(--green); }
+.kpi-sub.kc   { color:var(--cyan); }
+.kpi-sub.kg   { color:var(--green); }
+.kpi-sub.ko   { color:var(--orange); }
+.kpi-sub.ky   { color:var(--yellow); }
+.kpi-sub.kr   { color:var(--red);   }
+.kpi-sub.kp   { color:var(--purple);   }
+.kpi-sub.kpk  { color:var(--pink);   }
 .kpi-sub.down { color:var(--red);   }
 
 /* ── TABLE ── */

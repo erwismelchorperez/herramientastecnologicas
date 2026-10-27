@@ -410,12 +410,21 @@ class SociosService:
         query_socios = db.session.query(
             Socios.numero_socio
         ).filter(
-            Socios.fecha_baja.is_(None)
+            Socios.fecha_baja.is_(None),
+            Socios.numero_socio.isnot(None)
         )
 
         if sucursal and sucursal != 'all':
-            query_socios = query_socios.filter(Socios.sucursal == sucursal)
-        socios_activos = set(query_socios.distinct().all())
+            query_socios = query_socios.filter(
+                Socios.sucursal == sucursal
+            )
+
+        socios_activos = {
+            str(row[0]).strip()
+            for row in query_socios.distinct().all()
+            if row[0] is not None
+        }
+
         # Socios con ahorro
         query_ahorro = db.session.query(
             Captacion.numero_socio
@@ -426,9 +435,16 @@ class SociosService:
         )
 
         if sucursal and sucursal != 'all':
-            query_ahorro = query_ahorro.filter(Captacion.sucursal == sucursal)
+            query_ahorro = query_ahorro.filter(
+                Captacion.sucursal == sucursal
+            )
 
-        socios_ahorro = set(query_ahorro.distinct().all())
+        socios_ahorro = {
+            str(row[0]).strip()
+            for row in query_ahorro.distinct().all()
+            if row[0] is not None
+        }
+
         # Socios con crédito
         query_credito = db.session.query(
             Credito.numero_socio_cliente
@@ -439,9 +455,15 @@ class SociosService:
         )
 
         if sucursal and sucursal != 'all':
-            query_credito = query_credito.filter(Credito.sucursal == sucursal)
+            query_credito = query_credito.filter(
+                Credito.sucursal == sucursal
+            )
 
-        socios_credito = set(query_credito.distinct().all())
+        socios_credito = {
+            str(row[0]).strip()
+            for row in query_credito.distinct().all()
+            if row[0] is not None
+        }
 
         # Considerar únicamente socios activos
         socios_ahorro &= socios_activos

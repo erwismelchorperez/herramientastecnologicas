@@ -1,6 +1,7 @@
-from sqlalchemy import func, desc, case
+from sqlalchemy import func, desc, case, distinct
 from app import db
 from app.models.creditos import Credito
+from app.services.filter_service import FilterService
 from app.utils.months import month_case
 from app.utils.formatters import format_currency_short
 from collections import defaultdict
@@ -952,4 +953,456 @@ class CarteraService:
             ],
             'series': series
         }
-##############################
+    @staticmethod
+    def get_evolutionvigvenc_chart(sucursal='all', anio=None):
+        if not anio:
+            ultimo_periodo = CarteraService.get_latest_period()
+            anio = ultimo_periodo.anio
+
+        mes_orden = month_case(Credito.mes)
+
+        query = db.session.query(
+            Credito.mes,
+            func.sum(Credito.capital_vigente).label('vigente'),
+            func.sum(Credito.capital_vencido).label('vencido')
+        ).filter(
+            Credito.anio == anio
+        )
+
+        if sucursal and sucursal != 'all':
+            query = query.filter(
+                Credito.sucursal == sucursal
+            )
+
+        datos = query.group_by(
+            Credito.mes
+        ).order_by(
+            mes_orden.asc()
+        ).all()
+
+        labels = []
+        capital_vigente = []
+        capital_vencido = []
+
+        for row in datos:
+            labels.append(row.mes.upper())
+            capital_vigente.append(float(row.vigente or 0))
+            capital_vencido.append(float(row.vencido or 0))
+
+        return {
+            'chart_labels': labels,
+            'chart_series': [
+                {
+                    'name': 'Capital vigente',
+                    'data': capital_vigente
+                },
+                {
+                    'name': 'Capital vencido',
+                    'data': capital_vencido
+                }
+            ]
+        }
+    @staticmethod
+    def get_colocacion_mensual(sucursal='all', anio=None):
+        query = db.session.query(
+            func.extract('month', Credito.fecha_otorgamiento).label('mes'),
+            func.sum(Credito.monto_original).label('colocacion')
+        ).filter(
+            Credito.fecha_otorgamiento.isnot(None)
+        )
+
+        if sucursal and sucursal.lower() != 'all':
+            query = query.filter(Credito.sucursal == sucursal)
+
+        if anio:
+            query = query.filter(
+                func.extract('year', Credito.fecha_otorgamiento) == int(anio)
+            )
+
+        resultados = query.group_by(
+            func.extract('month', Credito.fecha_otorgamiento)
+        ).order_by(
+            func.extract('month', Credito.fecha_otorgamiento)
+        ).all()
+
+        meses = FilterService.get_available_months(anio=anio)
+        print("meses   ",meses)
+        #meses = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN','JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC']
+
+        colocacion_mensual = {mes: 0 for mes in range(1, len(meses) + 1)}
+        print("Colocacion mensual   ",colocacion_mensual)
+
+        for mes, colocacion in resultados:
+            colocacion_mensual[int(mes)] = float(colocacion or 0)
+
+        return {
+            'chart_labels': meses,
+            'chart_series': [
+                {
+                    'name': 'Colocación',
+                    'data': [colocacion_mensual[mes] for mes in range(1, len(meses) + 1)]
+                }
+            ]
+        }
+    @staticmethod
+    def get_creditos_otorgados_mensual(sucursal='all', anio=None):
+        query = db.session.query(
+            func.extract('month', Credito.fecha_otorgamiento).label('mes'),
+            func.count(Credito.numero_credito).label('total_creditos')
+        ).filter(
+            Credito.fecha_otorgamiento.isnot(None)
+        )
+
+        if sucursal and sucursal.lower() != 'all':
+            query = query.filter(Credito.sucursal == sucursal)
+
+        if anio:
+            query = query.filter(
+                func.extract('year', Credito.fecha_otorgamiento) == int(anio)
+            )
+
+        resultados = query.group_by(
+            func.extract('month', Credito.fecha_otorgamiento)
+        ).order_by(
+            func.extract('month', Credito.fecha_otorgamiento)
+        ).all()
+
+        meses = FilterService.get_available_months(anio=anio)
+        creditos_mensuales = {mes: 0 for mes in range(1, len(meses) + 1)}
+
+        for mes, total in resultados:
+            mes = int(mes)
+            if mes in creditos_mensuales:
+                creditos_mensuales[mes] = int(total or 0)
+
+        return {
+            'chart_labels': meses,
+            'chart_series': [
+                {
+                    'name': 'Créditos otorgados',
+                    'data': [creditos_mensuales[mes] for mes in range(1, len(meses) + 1)]
+                }
+            ]
+        }
+    @staticmethod
+    def get_montos_por_tipo_garantia(sucursal='all', anio=None, mes=None):
+        query = db.session.query(
+            func.coalesce(func.sum(Credito.monto_garantia_liquida), 0).label('garantia_liquida'),
+            func.coalesce(func.sum(Credito.monto_garantia_prendaria), 0).label('garantia_prendaria'),
+            func.coalesce(func.sum(Credito.monto_garantia_hipotecaria), 0).label('garantia_hipotecaria')
+        )
+
+        if sucursal and sucursal.lower() != 'all':
+            query = query.filter(Credito.sucursal == sucursal)
+
+        if anio:
+            query = query.filter(Credito.anio == int(anio))
+
+        if mes:
+            query = query.filter(Credito.mes == mes)
+
+        liquida, prendaria, hipotecaria = query.one()
+
+        return {
+            'chart_labels': [
+                'Garantía líquida',
+                'Garantía prendaria',
+                'Garantía hipotecaria'
+            ],
+            'chart_series': [
+                {
+                    'name': 'Monto por tipo de garantía',
+                    'data': [
+                        float(liquida or 0),
+                        float(prendaria or 0),
+                        float(hipotecaria or 0)
+                    ]
+                }
+            ]
+        }
+    @staticmethod
+    def get_garantias_por_sucursal(sucursal='all', anio=None, mes=None):
+        query = db.session.query(
+            Credito.sucursal.label('sucursal'),
+            func.coalesce(func.sum(Credito.monto_garantia_liquida), 0).label('garantia_liquida'),
+            func.coalesce(func.sum(Credito.monto_garantia_prendaria), 0).label('garantia_prendaria'),
+            func.coalesce(func.sum(Credito.monto_garantia_hipotecaria), 0).label('garantia_hipotecaria')
+        )
+
+        if sucursal and sucursal.lower() != 'all':
+            query = query.filter(Credito.sucursal == sucursal)
+
+        if anio:
+            query = query.filter(Credito.anio == int(anio))
+
+        if mes:
+            query = query.filter(Credito.mes == mes)
+
+        resultados = query.group_by(
+            Credito.sucursal
+        ).order_by(
+            Credito.sucursal
+        ).all()
+
+        return {
+            'chart_labels': [r.sucursal for r in resultados],
+            'chart_series': [
+                {
+                    'name': 'Garantía líquida',
+                    'data': [float(r.garantia_liquida or 0) for r in resultados]
+                },
+                {
+                    'name': 'Garantía prendaria',
+                    'data': [float(r.garantia_prendaria or 0) for r in resultados]
+                },
+                {
+                    'name': 'Garantía hipotecaria',
+                    'data': [float(r.garantia_hipotecaria or 0) for r in resultados]
+                }
+            ]
+        }
+    @staticmethod
+    def get_eprc_por_sucursal(sucursal='all', anio=None, mes=None):
+        query = db.session.query(
+            Credito.sucursal.label('sucursal'),
+            func.coalesce(func.sum(Credito.eprc_para_parte_cubierta), 0).label('parte_cubierta'),
+            func.coalesce(func.sum(Credito.eprc_para_parte_expuesta), 0).label('parte_expuesta'),
+            func.coalesce(func.sum(Credito.eprc_intereses_cave), 0).label('intereses_cave')
+        )
+
+        if sucursal and sucursal.lower() != 'all':
+            query = query.filter(Credito.sucursal == sucursal)
+
+        if anio:
+            query = query.filter(Credito.anio == int(anio))
+
+        if mes:
+            query = query.filter(Credito.mes == mes)
+
+        resultados = query.group_by(
+            Credito.sucursal
+        ).order_by(
+            Credito.sucursal
+        ).all()
+
+        return {
+            'chart_labels': [r.sucursal for r in resultados],
+            'chart_series': [
+                {
+                    'name': 'EPRC parte cubierta',
+                    'data': [float(r.parte_cubierta or 0) for r in resultados]
+                },
+                {
+                    'name': 'EPRC parte expuesta',
+                    'data': [float(r.parte_expuesta or 0) for r in resultados]
+                },
+                {
+                    'name': 'EPRC intereses CAVE',
+                    'data': [float(r.intereses_cave or 0) for r in resultados]
+                }
+            ]
+        }
+    @staticmethod
+    def get_eprc_por_clasificacion(sucursal='all', anio=None, mes=None):
+        query = db.session.query(
+            Credito.clasificacion_credito.label('clasificacion'),
+            func.coalesce(func.sum(Credito.eprc_para_parte_cubierta), 0).label('parte_cubierta'),
+            func.coalesce(func.sum(Credito.eprc_para_parte_expuesta), 0).label('parte_expuesta'),
+            func.coalesce(func.sum(Credito.eprc_intereses_cave), 0).label('intereses_cave')
+        )
+
+        if sucursal and sucursal.lower() != 'all':
+            query = query.filter(Credito.sucursal == sucursal)
+
+        if anio:
+            query = query.filter(Credito.anio == int(anio))
+
+        if mes:
+            query = query.filter(Credito.mes == mes)
+
+        resultados = query.group_by(
+            Credito.clasificacion_credito
+        ).order_by(
+            Credito.clasificacion_credito
+        ).all()
+
+        return {
+            'chart_labels': [
+                r.clasificacion or 'Sin especificar'
+                for r in resultados
+            ],
+            'chart_series': [
+                {
+                    'name': 'EPRC parte cubierta',
+                    'data': [float(r.parte_cubierta or 0) for r in resultados]
+                },
+                {
+                    'name': 'EPRC parte expuesta',
+                    'data': [float(r.parte_expuesta or 0) for r in resultados]
+                },
+                {
+                    'name': 'EPRC intereses CAVE',
+                    'data': [float(r.intereses_cave or 0) for r in resultados]
+                }
+            ]
+        }
+    @staticmethod
+    def get_top_10_acreditados_capital(sucursal='all', anio=None, mes=None):
+        capital_total = (
+            func.coalesce(Credito.capital_vigente, 0) +
+            func.coalesce(Credito.capital_vencido, 0)
+        )
+
+        query = db.session.query(
+            Credito.numero_socio_cliente.label('acreditado'),
+            func.sum(capital_total).label('capital_total')
+        )
+
+        if sucursal and sucursal.lower() != 'all':
+            query = query.filter(Credito.sucursal == sucursal)
+
+        if anio:
+            query = query.filter(Credito.anio == int(anio))
+
+        if mes:
+            query = query.filter(Credito.mes == mes)
+
+        resultados = query.group_by(
+            Credito.numero_socio_cliente
+        ).order_by(
+            func.sum(capital_total).desc()
+        ).limit(10).all()
+
+        return {
+            'chart_labels': [
+                r.acreditado or 'Sin especificar'
+                for r in resultados
+            ],
+            'chart_series': [
+                {
+                    'name': 'Capital total',
+                    'data': [
+                        float(r.capital_total or 0)
+                        for r in resultados
+                    ]
+                }
+            ]
+        }
+    @staticmethod
+    def get_top_10_acreditados_capital_vencido(sucursal='all', anio=None, mes=None):
+        capital_vencido = func.coalesce(Credito.capital_vencido, 0)
+
+        query = db.session.query(
+            Credito.numero_socio_cliente.label('acreditado'),
+            func.sum(capital_vencido).label('capital_vencido')
+        )
+
+        if sucursal and sucursal.lower() != 'all':
+            query = query.filter(Credito.sucursal == sucursal)
+
+        if anio:
+            query = query.filter(Credito.anio == int(anio))
+
+        if mes:
+            query = query.filter(Credito.mes == mes)
+
+        resultados = query.group_by(
+            Credito.numero_socio_cliente
+        ).order_by(
+            func.sum(capital_vencido).desc()
+        ).limit(10).all()
+
+        return {
+            'chart_labels': [
+                r.acreditado or 'Sin especificar'
+                for r in resultados
+            ],
+            'chart_series': [
+                {
+                    'name': 'Capital total',
+                    'data': [
+                        float(r.capital_vencido or 0)
+                        for r in resultados
+                    ]
+                }
+            ]
+        }
+    @staticmethod
+    def get_top_20_acreditados_numero_creditos(sucursal='all', anio=None, mes=None):
+        if not anio or not mes:
+            ultimo_periodo = CarteraService.get_latest_period()
+            anio = ultimo_periodo.anio
+            mes = ultimo_periodo.mes
+
+        query = db.session.query(
+            Credito.numero_socio_cliente.label('acreditado'),
+            func.count(distinct(Credito.numero_credito)).label('numero_creditos')
+        ).filter(
+            Credito.numero_socio_cliente.isnot(None),
+            Credito.numero_credito.isnot(None)
+        )
+
+        if sucursal != 'all':
+            query = query.filter(Credito.sucursal == sucursal)
+        if anio:
+            query = query.filter(Credito.anio == int(anio))
+        if mes:
+            query = query.filter(Credito.mes == mes)
+
+        resultados = query.group_by(
+            Credito.numero_socio_cliente
+        ).order_by(
+            func.count(distinct(Credito.numero_credito)).desc(),
+            Credito.numero_socio_cliente.asc()
+        ).limit(10).all()
+
+        return {
+            'chart_labels': [str(r.acreditado) for r in resultados],
+            'chart_series': [{
+                'name': 'Número de créditos',
+                'data': [int(r.numero_creditos) for r in resultados]
+            }]
+        }
+    @staticmethod
+    def get_ranking_creditos_mayor_antiguedad_pago(sucursal='all', anio=None, mes=None, limite=20):
+
+        query = db.session.query(
+            Credito.numero_credito,
+            Credito.numero_socio_cliente,
+            func.max(Credito.dias_mora_cartera).label('dias_mora'),
+            func.max(Credito.capital_vencido).label('capital_vencido'),
+            func.max(Credito.capital_vigente).label('capital_vigente')
+        ).filter(
+            Credito.numero_credito.isnot(None),
+            Credito.dias_mora_cartera.isnot(None)
+        )
+
+        if sucursal != 'all':
+            query = query.filter(Credito.sucursal == sucursal)
+        if anio:
+            query = query.filter(Credito.anio == int(anio))
+        if mes:
+            query = query.filter(Credito.mes == mes)
+
+        resultados = query.group_by(
+            Credito.numero_credito,
+            Credito.numero_socio_cliente
+        ).order_by(
+            func.max(Credito.dias_mora_cartera).desc()
+        ).limit(limite).all()
+
+        return {
+            'chart_labels': [str(r.numero_credito) for r in resultados],
+            'chart_series': [{
+                'name': 'Días de mora',
+                'data': [int(r.dias_mora or 0) for r in resultados]
+            }],
+            'detalle': [{
+                'numero_credito': str(r.numero_credito),
+                'numero_socio_cliente': str(r.numero_socio_cliente or ''),
+                'dias_mora': int(r.dias_mora or 0),
+                'capital_vencido': float(r.capital_vencido or 0),
+                'capital_vigente': float(r.capital_vigente or 0)
+            } for r in resultados]
+        }
+############################## 

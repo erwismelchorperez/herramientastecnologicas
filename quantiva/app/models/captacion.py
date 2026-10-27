@@ -15,3 +15,5 @@ class Captacion(db.Model):
     tipo_deposito_cuenta_producto = db.Column(db.String(100),nullable=False)
     sucursal = db.Column(db.String(100),nullable=False)
     no_socio_padre_tutor = db.Column(db.String(100),nullable=False)
+    num_contrato_cuenta = db.Column(db.String(100),nullable=False)
+    intereses_generados_mes = db.Column(db.Numeric(14,2),nullable=True)

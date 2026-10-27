@@ -9,7 +9,7 @@ Dashboard de Cartera
 <div class="page-header">
     <div class="page-header-info">
         <div class="page-title">
-            Dashboard de Cartera
+            Dashboard Resumen de Cartera
         </div>
         <div class="page-subtitle">
             Monitoreo financiero y análisis de cartera
@@ -66,12 +66,20 @@ Dashboard de Cartera
     </div>
 </div>
 <div class="page active" id="page-cartera-suc">
-  <div class="g4">
-    <div class="kpi kc"><div class="kpi-top"><div><span class="kpi-lbl">Vigente</span><span id="creditos_vigentes" class="kpi-val"></span><span class="kpi-sub up"></span></div><div class="kpi-ico"><i class="bi bi-check-circle-fill"></i></div></div></div>
-    <div class="kpi kg"><div class="kpi-top"><div><span class="kpi-lbl">Vencidos</span><span id="creditos_vencidos" class="kpi-val">$1,287 M</span><span class="kpi-sub down"></span></div><div class="kpi-ico"><i class="bi bi-exclamation-triangle-fill"></i></div></div></div>
-    <div class="kpi ko"><div class="kpi-top"><div><span class="kpi-lbl">Reestructurados</span><span id="reestructurado" class="kpi-val">$1,131 M</span><span class="kpi-sub"></span></div><div class="kpi-ico"><i class="bi bi-arrow-repeat"></i></div></div></div>
-    <div class="kpi kr"><div class="kpi-top"><div><span class="kpi-lbl">Crédito Promedio</span><span id="credito_promedio" class="kpi-val">$143 M</span><span class="kpi-sub down"></span></div><div class="kpi-ico"><i class="bi bi-cash-stack"></i></div></div></div>
-  </div>
+    <div class="g4">
+        <div class="kpi kc"><div class="kpi-top"><div><span class="kpi-lbl">Vigente</span><span id="creditos_vigentes" class="kpi-val"></span><span class="kpi-sub kc"># Créditos Vigentes</span></div><div class="kpi-ico"><i class="bi bi-check-circle-fill"></i></div></div></div>
+        <div class="kpi kg"><div class="kpi-top"><div><span class="kpi-lbl">Vencidos</span><span id="creditos_vencidos" class="kpi-val">$1,287 M</span><span class="kpi-sub kg"># Créditos Vencidos</span></div><div class="kpi-ico"><i class="bi bi-exclamation-triangle-fill"></i></div></div></div>
+        <div class="kpi ko"><div class="kpi-top"><div><span class="kpi-lbl">Reestructurados</span><span id="reestructurado" class="kpi-val">$1,131 M</span><span class="kpi-sub ko"># Créditos Reestructurados</span></div><div class="kpi-ico"><i class="bi bi-arrow-repeat"></i></div></div></div>
+        <div class="kpi kr"><div class="kpi-top"><div><span class="kpi-lbl">Crédito Promedio</span><span id="credito_promedio" class="kpi-val">$143 M</span><span class="kpi-sub kr"></span></div><div class="kpi-ico"><i class="bi bi-cash-stack"></i></div></div></div>
+    </div>
+</div>
+<div class="page active" id="page-cartera-suc">
+    <div class="g4">
+        <div class="kpi kc"><div class="kpi-top"><div><span class="kpi-lbl">Cartera Total</span><span id="carteraTotal" class="kpi-val">$2,285 M</span><span class="kpi-sub kc">Cartera Vig. + Cartera Ven.</span></div><div class="kpi-ico"><i class="bi bi-bank2"></i></div></div></div>
+        <div class="kpi kg"><div class="kpi-top"><div><span class="kpi-lbl">Capital Vigente</span><span id="capitalvigente" class="kpi-val">$1,287 M</span><span id="subcapitalvigente" class="kpi-sub kg">% de la cartera total</span></div><div class="kpi-ico"><i class="bi bi-shield-check"></i></div></div></div>
+        <div class="kpi ko"><div class="kpi-top"><div><span class="kpi-lbl">Capital Vencido</span><span id="capitalvencido" class="kpi-val">$1,131 M</span><span id="subcapitalvencido" class="kpi-sub ko">% de la cartera total</span></div><div class="kpi-ico"><i class="bi bi-shield-exclamation"></i></div></div></div>
+        <div class="kpi kr"><div class="kpi-top"><div><span class="kpi-lbl">Índice de Morosidad</span><span id="morosidad" class="kpi-val">$143 M</span><span class="kpi-sub kr">Cartera Ven. / Cartera total</span></div><div class="kpi-ico"><i class="bi bi-graph-down-arrow"></i></div></div></div>
+    </div>
 </div>
 <div class="sec">Evolución Anual</div>
 <div class="row">
@@ -82,7 +90,7 @@ Dashboard de Cartera
                     </h3>
                 </div>
             <div class="card-body">
-                <div id="carteraEvolutionChart" style="height: 200px;"></div>
+                <div id="carteraEvolutionChart" style="height: 250px;"></div>
             </div>
         </div>
     </div>
@@ -123,7 +131,7 @@ Dashboard de Cartera
 
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-<script src="{{ url_for('static',filename='js/dashboard/cartera.js') }}"></script>
+<script src="{{ url_for('static',filename='js/dashboard/cartera/cartera.js') }}"></script>
 <script>
     window.chartLabels =
         {{ chart_labels | tojson }};
