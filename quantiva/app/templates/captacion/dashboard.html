@@ -65,69 +65,25 @@ Dashboard de Captación
         </div>
     </div>
     <!-- -->
-    <div class="page active" id="page-cartera-suc">
-        <div class="g4">
-            <div class="kpi kc">
-                <div class="kpi-top">
-                    <div>
-                        <span class="kpi-lbl">Captación Total</span>
-                        <span id="captacionTotal" class="kpi-val"></span>
-                        <span class="kpi-sub">Captación al cierre de mes</span>
-                    </div>
-                    <div class="kpi-ico">
-                        <i class="bi bi-piggy-bank"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="kpi kg">
-                <div class="kpi-top">
-                    <div>
-                        <span class="kpi-lbl">Captación Captado</span>
-                        <span id="captacioncaptado" class="kpi-val"></span>
-                        <span class="kpi-sub">Captación captado cierre de mes</span>
-                    </div>
-                    <div class="kpi-ico"><i class="bi bi-wallet2"></i></div>
-                </div>
-            </div>
-            <div class="kpi ko">
-                <div class="kpi-top">
-                    <div>
-                        <span class="kpi-lbl">Depositos captación</span>
-                        <span id="captaciondeposito" class="kpi-val"></span>
-                        <span class="kpi-sub">Depositos captación cierre de mes</span>
-                    </div>
-                    <div class="kpi-ico"><i class="bi bi-arrow-down-circle-fill"></i></div>
-                </div>
-            </div>
-            <div class="kpi kr">
-                <div class="kpi-top">
-                    <div>
-                        <span class="kpi-lbl">Retiros captación</span>
-                        <span id="captacionretiro" class="kpi-val"></span>
-                        <span class="kpi-sub down">Retiros captación cierre de mes</span>
-                    </div>
-                    <div class="kpi-ico">
-                        <i class="bi bi-arrow-up-circle-fill"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- -->
-    <!-- -->
     <div class="sec">Análisis de Depósitos a Plazo</div>
     <div class="g2">
         <div class="card a-c"><div class="card-hd"><span class="card-title">Evolución Captación</span><span class="ctag">$M</span></div><div id="captacionEvolutionChart" style="min-height:220px"></div></div>
-        <div class="card a-y"><div class="card-hd"><span class="card-title">Distribución por Producto</span></div><div id="captacionProductoChart" style="min-height:220px"></div></div>
+        <div class="card a-y"><div class="card-hd"><span class="card-title">Variación mensual de la captación</span></div><div id="chart_variacion_mensual_captacion" style="min-height:220px"></div></div>
     </div>
     <div class="g2">
         <div class="card a-c"><div class="card-hd"><span class="card-title">Captación por Sucursal</span><span class="ctag">$M</span></div><div id="captacionSucursalChart" style="min-height:220px"></div></div>
         <div class="card a-y"><div class="card-hd"><span class="card-title">Tipo de Socio</span></div><div id="captacionTipoSocioChart" style="min-height:220px"></div></div>
+    </div>
+    <div class="sec">Evolución de socios y cuentas</div>
+    <div class="g2">
+        <div class="card a-c"><div class="card-hd"><span class="card-title">Evolución de socios ahorradores por producto</span><span class="ctag">$M</span></div><div id="chart_evolucion_socios_ahorradores" style="min-height:220px"></div></div>
+        <div class="card a-y"><div class="card-hd"><span class="card-title">Evolución del número de cuentas por producto</span></div><div id="chart_evolucion_numero_cuentas" style="min-height:220px"></div></div>
     </div>
     <!-- -->
 {% endblock %}
 
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="{{ url_for('static',filename='js/charts/chart-builder.js') }}"></script>
 <script src="{{ url_for('static',filename='js/dashboard/captacion.js') }}"></script>
 {% endblock %}

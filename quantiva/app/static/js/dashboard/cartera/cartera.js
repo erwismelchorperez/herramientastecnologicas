@@ -71,7 +71,6 @@ function initFilters(){
                 //loadClasificacionChart(anio,mes);
                 loadClasificacionStatusChart(sucursal,anio, mes);
                 loadSucursalCountChart(sucursal, anio, mes);
-                loadClasificacionStatusChart(sucursal,anio, mes);
                 loadSucursalVigenteChart(sucursal,anio,mes);
                 loadSucursalVencidoChart(sucursal,anio,mes);
                 loadCarteraDonutChart(sucursal,anio,mes);
@@ -108,7 +107,6 @@ function initFilters(){
                 loadChart(sucursal, anio);
                 loadSaldos(sucursal, anio,mes)
                 //loadClasificacionChart(anio,mes);
-                loadClasificacionStatusChart(sucursal,anio, mes)
                 loadSucursalCountChart(sucursal, anio, mes)
                 loadClasificacionStatusChart(sucursal,anio, mes)
                 loadSucursalVigenteChart(sucursal,anio,mes)
@@ -136,9 +134,7 @@ function initFilters(){
         let mes = $(this).val();
         let sucursal = $('#sucursalSelect').val();
         console.log(anio, mes);
-        loadSaldos(anio,mes)
-        //loadClasificacionChart(anio,mes);
-        loadClasificacionStatusChart(sucursal,anio, mes)
+        loadSaldos(sucursal,anio,mes)
         loadSucursalCountChart(sucursal, anio, mes)
         loadClasificacionStatusChart(sucursal,anio, mes)
         loadSucursalVigenteChart(sucursal,anio,mes)

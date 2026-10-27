@@ -15,9 +15,18 @@ class FilterService:
             Credito.anio.desc()
         ).all()
 
-        return [
-            row.anio for row in anios
-        ]
+        return [row.anio for row in anios]
+    @staticmethod
+    def get_available_years_socios(sucursal=None):
+        query = db.session.query(Socios.anio)
+        if sucursal != 'all':
+            query = query.filter(Socios.sucursal == sucursal)
+
+        anios = query.distinct().order_by(
+            Socios.anio.desc()
+        ).all()
+
+        return [row.anio for row in anios]
     @staticmethod
     def get_available_years_captacion(sucursal=None):
         query = db.session.query(Captacion.anio)

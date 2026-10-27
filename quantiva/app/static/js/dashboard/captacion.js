@@ -2,6 +2,10 @@ let captacionEvolutionChart;
 let captacionProductoChart;
 let captacionSucursalChart;
 let captacionTipoSocioChart;
+let variacionMensualCaptacionChart = null;
+let evolucionSociosAhorradoresChart = null;
+let evolucionNumeroCuentasChart = null;
+
 sucursales = []
 $(document).ready(function(){
     initFilters();
@@ -9,6 +13,7 @@ $(document).ready(function(){
     initCaptacionProductoChart();
     initCaptacionSucursalChart();
     initCaptacionTipoSocioChart();
+    initCharts();
 
     let anio = $('#anioSelect').val();
     let mes = $('#mesSelect').val();
@@ -16,10 +21,12 @@ $(document).ready(function(){
 
     loadSaldos(sucursal,anio, mes);
     loadCaptacionEvolutionChart(sucursal,anio,mes);
-    loadCaptacionProductoChart(sucursal,anio,mes);
     loadCaptacionSucursalChart(sucursal,anio,mes);
     loadCaptacionTipoSocioChart(sucursal,anio,mes);
-
+    loadVariacionMensualCaptacion(sucursal, anio);
+    loadEvolucionSociosAhorradores(sucursal, anio, mes);
+    loadEvolucionNumeroCuentas(sucursal, anio, mes);
+    
 });
 function initFilters(){
     $('#sucursalSelect').on('change', function(){
@@ -42,39 +49,38 @@ function initFilters(){
                     );
                 });
                 anio = $("#anioSelect").val();
+                $.ajax({
+                    url: '/api/months_captacion',
+                    method: 'GET',
+                    data: {sucursal: sucursal, anio: anio},
+                    success: function (response) {
+                        loadSaldos(sucursal,anio,mes)
+                        loadCaptacionEvolutionChart(sucursal,anio,mes);
+                        loadVariacionMensualCaptacion(sucursal, anio);
+                        loadCaptacionSucursalChart(sucursal,anio,mes);
+                        loadCaptacionTipoSocioChart(sucursal,anio,mes);
+                        let mesSelect = $('#mesSelect');
+                        mesSelect.empty();
+                        response.forEach(function (mes) {
+                            mesSelect.append(
+                                `<option value="${mes}">
+                                    ${mes.toUpperCase()}
+                                </option>`
+                            );
+                        });
+                    },
+                    error: function (xhr) {
+                        console.error(xhr);
+                    }
+                });
             }
         });
         
-        $.ajax({
-            url: '/api/months_captacion',
-            method: 'GET',
-            data: {sucursal: sucursal, anio: anio},
-            success: function (response) {
-                loadSaldos(sucursal,anio,mes)
-                loadCaptacionEvolutionChart(sucursal,anio,mes);
-                loadCaptacionProductoChart(sucursal,anio,mes);
-                loadCaptacionSucursalChart(sucursal,anio,mes);
-                loadCaptacionTipoSocioChart(sucursal,anio,mes);
-                let mesSelect = $('#mesSelect');
-                mesSelect.empty();
-                response.forEach(function (mes) {
-                    mesSelect.append(
-                        `<option value="${mes}">
-                            ${mes.toUpperCase()}
-                        </option>`
-                    );
-                });
-            },
-            error: function (xhr) {
-                console.error(xhr);
-            }
-        });
     });
     $('#anioSelect').on('change', function () {
         let anio = $(this).val();
-        let mes = $("#mesSelect").val();
         let sucursal = $("#sucursalSelect").val();
-        console.log("Año seleccionado:", anio, "  mes:   ", mes);
+        console.log("Año seleccionado:", anio);
         $.ajax({
             url: '/api/months_captacion',
             method: 'GET',
@@ -83,11 +89,6 @@ function initFilters(){
                 anio: anio
             },
             success: function (response) {
-                loadSaldos(sucursal,anio,mes)
-                loadCaptacionEvolutionChart(sucursal, anio,mes);
-                loadCaptacionProductoChart(sucursal,anio,mes);
-                loadCaptacionSucursalChart(sucursal,anio,mes);
-                loadCaptacionTipoSocioChart(sucursal,anio,mes);
                 let mesSelect = $('#mesSelect');
                 mesSelect.empty();
                 response.forEach(function (mes) {
@@ -97,6 +98,12 @@ function initFilters(){
                         </option>`
                     );
                 });
+                let mes = $("#mesSelect").val();
+                loadSaldos(sucursal,anio,mes)
+                loadCaptacionEvolutionChart(sucursal, anio,mes);
+                loadCaptacionSucursalChart(sucursal,anio,mes);
+                loadCaptacionTipoSocioChart(sucursal,anio,mes);
+                loadVariacionMensualCaptacion(sucursal, anio);
             },
             error: function (xhr) {
                 console.error(xhr);
@@ -114,6 +121,57 @@ function initFilters(){
         loadCaptacionSucursalChart(sucursal,anio,mes);
         loadCaptacionTipoSocioChart(sucursal,anio,mes);
     });
+}
+function initCharts(){
+    variacionMensualCaptacionChart = createBarChart({
+        element: '#chart_variacion_mensual_captacion',
+        labels: [],
+        series: [{
+            name: 'Variación del saldo',
+            data: []
+        }],
+        title: '',
+        xAxisTitle: 'Periodo',
+        yAxisTitle: 'Variación del saldo ($)',
+        valueType: 'currency',
+        compact: true,
+        decimals: 2,
+        height: 350,
+        legend: false
+    });
+    evolucionNumeroCuentasChart = createLineChart({
+        element: '#chart_evolucion_numero_cuentas',
+        labels: [],
+        series: [{
+            name: 'Cuentas registradas',
+            data: []
+        }],
+        title: '',
+        xAxisTitle: 'Periodo',
+        yAxisTitle: 'Número de cuentas',
+        valueType: 'number',
+        compact: true,
+        decimals: 0,
+        height: 300,
+        legend: false
+    });
+    evolucionSociosAhorradoresChart = createLineChart({
+        element: '#chart_evolucion_socios_ahorradores',
+        labels: [],
+        series: [{
+            name: 'Socios ahorradores',
+            data: []
+        }],
+        title: 'Evolución de socios ahorradores',
+        xAxisTitle: 'Periodo de corte',
+        yAxisTitle: 'Número de socios',
+        valueType: 'number',
+        compact: true,
+        decimals: 0,
+        height: 300,
+        legend: false
+    });
+    
 }
 function loadSaldos(sucursal, anio, mes){
     $.ajax({
@@ -573,4 +631,109 @@ function getDonutOptions(labels,series){
         }
     }
 
+}
+function loadVariacionMensualCaptacion(sucursal, anio) {
+    $.ajax({
+        url: '/api/captacion/get_variacion_mensual',
+        method: 'GET',
+        data: { sucursal, anio },
+        success: function(response) {
+            if (variacionMensualCaptacionChart) {
+                variacionMensualCaptacionChart.destroy();
+            }
+
+            variacionMensualCaptacionChart = createBarChart({
+                element: '#chart_variacion_mensual_captacion',
+                labels: response.chart_labels || [],
+                series: [{
+                    name: 'Variación del saldo',
+                    data: response.chart_values || []
+                }],
+                title: '',
+                xAxisTitle: 'Periodo',
+                yAxisTitle: 'Variación del saldo ($)',
+                valueType: 'currency',
+                compact: true,
+                decimals: 2,
+                height: 350,
+                legend: false
+            });
+        },
+        error: function(xhr) {
+            console.error(
+                'Error al cargar la variación mensual de captación:',
+                xhr.responseText
+            );
+        }
+    });
+}
+function loadEvolucionSociosAhorradores(sucursal, anio, mes = 'all') {
+    $.ajax({
+        url: '/api/captacion/get_evolucion_socios_ahorradores',
+        method: 'GET',
+        data: { sucursal, anio, mes },
+        success: function(response) {
+            if (evolucionSociosAhorradoresChart) {
+                evolucionSociosAhorradoresChart.destroy();
+            }
+
+            evolucionSociosAhorradoresChart = createBarChart({
+                element: '#chart_evolucion_socios_ahorradores',
+                labels: response.chart_labels || [],
+                series: [{
+                    name: 'Socios ahorradores',
+                    data: response.chart_values || []
+                }],
+                title: '',
+                xAxisTitle: 'Producto',
+                yAxisTitle: 'Número de socios',
+                valueType: 'number',
+                compact: true,
+                decimals: 0,
+                height: 350,
+                legend: false
+            });
+        },
+        error: function(xhr) {
+            console.error(
+                'Error al cargar socios ahorradores por producto:',
+                xhr.responseText
+            );
+        }
+    });
+}
+function loadEvolucionNumeroCuentas(sucursal, anio, mes = 'all') {
+    $.ajax({
+        url: '/api/captacion/get_evolucion_numero_cuentas',
+        method: 'GET',
+        data: { sucursal, anio, mes },
+        success: function(response) {
+            if (evolucionNumeroCuentasChart) {
+                evolucionNumeroCuentasChart.destroy();
+            }
+
+            evolucionNumeroCuentasChart = createBarChart({
+                element: '#chart_evolucion_numero_cuentas',
+                labels: response.chart_labels || [],
+                series: [{
+                    name: 'Número de cuentas',
+                    data: response.chart_values || []
+                }],
+                title: '',
+                xAxisTitle: 'Producto',
+                yAxisTitle: 'Número de cuentas',
+                valueType: 'number',
+                compact: true,
+                decimals: 0,
+                height: 350,
+                legend: false
+            });
+        },
+        error: function(xhr) {
+            console.error(
+                'Error al cargar cuentas por producto:',
+                xhr.responseText
+            );
+        }
+    });
 }
