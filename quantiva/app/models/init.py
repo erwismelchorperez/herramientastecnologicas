@@ -1,2 +1,2 @@
 from .user import User
-from .credito import Credito
+from .creditos import Credito

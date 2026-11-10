@@ -12,20 +12,28 @@ class DashboardService:
         chart_data = CarteraService.get_evolution_chart()
         return {**cartera_data,**captacion_data, **chart_data}
     @staticmethod
-    def get_evolution_cartera(anio=None):
+    def get_evolution_cartera(anio=None, sucursal=None):
+
         if not anio:
             ultimo_periodo = CarteraService.get_latest_period()
             anio = ultimo_periodo.anio
 
         mes_orden = month_case(Credito.mes)
-        datos = db.session.query(
+
+        query = db.session.query(
             Credito.mes,
             func.sum(
                 Credito.capital_vigente
             ).label('total')
         ).filter(
             Credito.anio == anio
-        ).group_by(
+        )
+
+        # Filtrar por sucursal cuando se especifique
+        if sucursal:
+            query = query.filter(Credito.sucursal == sucursal)
+
+        datos = query.group_by(
             Credito.mes
         ).order_by(
             mes_orden.asc()
@@ -36,7 +44,8 @@ class DashboardService:
 
         for row in datos:
             labels.append(row.mes.upper())
-            series.append(float(row.total))
+            series.append(float(row.total or 0))
+
         return {
             'chart_labels': labels,
             'chart_series': series

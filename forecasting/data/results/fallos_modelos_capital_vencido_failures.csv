@@ -1,0 +1,25 @@
+model,fold,error
+holt_winters_add,1,Cannot compute initial seasonals using heuristic method with less than two full seasonal cycles in the data.
+holt_winters_add,2,Cannot compute initial seasonals using heuristic method with less than two full seasonal cycles in the data.
+holt_winters_add,3,Cannot compute initial seasonals using heuristic method with less than two full seasonal cycles in the data.
+holt_winters_add,4,Cannot compute initial seasonals using heuristic method with less than two full seasonal cycles in the data.
+holt_winters_add,5,Cannot compute initial seasonals using heuristic method with less than two full seasonal cycles in the data.
+holt_winters_add,6,Cannot compute initial seasonals using heuristic method with less than two full seasonal cycles in the data.
+holt_winters_mul,1,endog must be strictly positive when usingmultiplicative trend or seasonal components.
+holt_winters_mul,2,endog must be strictly positive when usingmultiplicative trend or seasonal components.
+holt_winters_mul,3,endog must be strictly positive when usingmultiplicative trend or seasonal components.
+holt_winters_mul,4,endog must be strictly positive when usingmultiplicative trend or seasonal components.
+holt_winters_mul,5,endog must be strictly positive when usingmultiplicative trend or seasonal components.
+holt_winters_mul,6,endog must be strictly positive when usingmultiplicative trend or seasonal components.
+linear_regression,1,Se necesitan al menos 24 observaciones para entrenar este modelo.
+linear_regression,2,Se necesitan al menos 24 observaciones para entrenar este modelo.
+linear_regression,3,Se necesitan al menos 24 observaciones para entrenar este modelo.
+linear_regression,4,Se necesitan al menos 24 observaciones para entrenar este modelo.
+linear_regression,5,Se necesitan al menos 24 observaciones para entrenar este modelo.
+linear_regression,6,Se necesitan al menos 24 observaciones para entrenar este modelo.
+random_forest,1,Se necesitan al menos 24 observaciones para entrenar este modelo.
+random_forest,2,Se necesitan al menos 24 observaciones para entrenar este modelo.
+random_forest,3,Se necesitan al menos 24 observaciones para entrenar este modelo.
+random_forest,4,Se necesitan al menos 24 observaciones para entrenar este modelo.
+random_forest,5,Se necesitan al menos 24 observaciones para entrenar este modelo.
+random_forest,6,Se necesitan al menos 24 observaciones para entrenar este modelo.

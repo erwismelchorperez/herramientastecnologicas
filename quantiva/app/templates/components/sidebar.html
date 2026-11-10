@@ -150,11 +150,11 @@
         </div>-->
         <!-- Credit risk -->
         <div class="nav-group">
-            <span class="nav-label">Riesgo de crédito</span>
+            <span class="nav-label">Riesgos</span>
             <div class="nav-item {% if request.endpoint in ['credit_risk.dashboard', 'credit_risk.evaluation'] %} open {% endif %}" id="grp-credit-risk">
                 <a class="nav-link" onclick="toggle('grp-credit-risk')">
                     <i class="nav-icon bi bi-people"></i>
-                    <span>Dashboard</span>
+                    <span>Riesgos</span>
                     <i class="nav-arrow bi bi-chevron-right"></i>
                 </a>
                 <div class="sub-menu">
@@ -162,7 +162,7 @@
                         <span class="sub-dot"></span>Dashboard
                     </a>-->
                     <a href="{{ url_for('credit_risk.evaluation') }}" class="sub-link  {% if request.endpoint == 'credit_risk.evaluation' %}active{% endif %}" >
-                        <span class="sub-dot"></span>Evaluación
+                        <span class="sub-dot"></span>Riesgo de crédito con IA
                     </a>
                     <!--<a class="sub-link" onclick="nav('socios-fid',this)">
                         <span class="sub-dot"></span>Antigüedad / Fidelización
@@ -170,62 +170,88 @@
                 </div>
             </div>
         </div>
-    <!--
-        <nav class="mt-1">
-            <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="navigation" data-accordion="false">
-                <li class="nav-item">
-                    <a href="{{ url_for('dashboard.index') }}" class="nav-link {% if request.endpoint == 'dashboard.index' %} active {% endif %}">
-                        <i class="nav-icon fas fa-chart-line"></i>
-                        <p>Dashboard</p>
+        <!-- Pronósticos Financieros -->
+        <div class="nav-group">
+            <span class="nav-label">Pronósticos Financieros</span>
+
+            <div class="nav-item {% if request.endpoint in [
+                'forecast_cartera.resumen',
+                'forecast_cartera.generar',
+                'forecast_cartera.institucion',
+                'forecast_cartera.sucursales',
+                'forecast_cartera.historial',
+                'forecast_cartera.modelos_institucionales',
+                'forecast_cartera.modelos_sucursal',
+                'forecast_cartera.evaluacion_modelos'
+            ] %} open {% endif %}" id="grp-forecast">
+
+                <a class="nav-link" onclick="toggle('grp-forecast')">
+                    <i class="nav-icon bi bi-graph-up-arrow"></i>
+                    <span>Pronósticos</span>
+                    <i class="nav-arrow bi bi-chevron-right"></i>
+                </a>
+
+                <div class="sub-menu">
+
+                    <!-- Resumen --> 
+                    <a href="{{ url_for('forecast_cartera.resumen') }}"
+                    class="sub-link {% if request.endpoint == 'forecast_cartera.resumen' %}active{% endif %}">
+                        <span class="sub-dot"></span>
+                        Resumen
                     </a>
-                </li>
-                <li class="nav-header">Cartera</li>
-                <li class="nav-item  {% if request.endpoint in ['cartera.dashboard'] %} menu-open {% endif %}">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon bi bi-wallet2"></i>
-                        <p>Análisis de Cartera<i class="nav-arrow bi bi-chevron-right"></i></p>
+
+                    <!-- Generar pronóstico -->
+                    <a href="{{ url_for('forecast_cartera.generar') }}"
+                    class="sub-link {% if request.endpoint == 'forecast_cartera.generar' %}active{% endif %}">
+                        <span class="sub-dot"></span>
+                        Generar pronóstico
                     </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item"><a href="{{ url_for('cartera.dashboard') }}" class="nav-link  {% if request.endpoint == 'cartera.dashboard' %} active {% endif %}"><i class="nav-icon fas fa-wallet"></i><p>Cartera</p></a></li>
-                        <li class="nav-item"><a href="#" class="nav-link"><i class="nav-icon fas fa-arrow-trend-down"></i><p>Cartera Vencida</p></a></li>
-                        <li class="nav-item"><a href="#" class="nav-link"><i class="nav-icon fas fa-building"></i><p>Cartera Sucursal</p></a></li>
-                    </ul>
-                </li>
-                <li class="nav-header">Captación</li>
-                <li class="nav-item  {% if request.endpoint in ['captacion.dashboard'] %} menu-open {% endif %}">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon bi bi-wallet2"></i>
-                        <p>Análisis de Captación<i class="nav-arrow bi bi-chevron-right"></i></p>
+
+                    <!-- Consultar pronósticos -->
+                    <span class="sub-label">Consultar pronósticos</span>
+
+                    <a href="{{ url_for('forecast_cartera.institucion') }}"
+                    class="sub-link {% if request.endpoint == 'forecast_cartera.institucion' %}active{% endif %}">
+                        <span class="sub-dot"></span>
+                        Institución
                     </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item"><a href="{{ url_for('captacion.dashboard') }}" class="nav-link  {% if request.endpoint == 'captacion.dashboard' %} active {% endif %}"><i class="nav-icon fas fa-piggy-bank"></i><p>Captación</p></a></li>
-                    </ul>
-                </li>
-                <li class="nav-header">Socios</li>
-                <li class="nav-item  {% if request.endpoint in ['socios.dashboard'] %} menu-open {% endif %}">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon bi bi-wallet2"></i>
-                        <p>Análisis de Socios<i class="nav-arrow bi bi-chevron-right"></i></p>
+
+                    <a href="{{ url_for('forecast_cartera.sucursales') }}"
+                    class="sub-link {% if request.endpoint == 'forecast_cartera.sucursales' %}active{% endif %}">
+                        <span class="sub-dot"></span>
+                        Sucursales
                     </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item"><a href="{{ url_for('socios.dashboard') }}" class="nav-link  {% if request.endpoint == 'socios.dashboard' %} active {% endif %}"><i class="nav-icon fas fa-users"></i><p>Socios</p></a></li>
-                    </ul>
-                </li>
-                <li class="nav-header">Forecast</li>
-                <li class="nav-item {% if request.endpoint in ['forecast_cartera.dashboard'] %} menu-open {% endif %}">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon bi bi-wallet2"></i>
-                        <p>Forecast IA<i class="nav-arrow bi bi-chevron-right"></i></p>
+
+                    <!-- Historial -->
+                    <a href="{{ url_for('forecast_cartera.historial') }}"
+                    class="sub-link {% if request.endpoint == 'forecast_cartera.historial' %}active{% endif %}">
+                        <span class="sub-dot"></span>
+                        Historial
                     </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item"><a href="{{ url_for('forecast_cartera.dashboard') }}" class="nav-link  {% if request.endpoint == 'forecast_cartera.dashboard' %} active {% endif %}"><i class="nav-icon fas fa-wallet"></i><p>Cartera</p></a></li>
-                        <li class="nav-item"><a href="#" class="nav-link"><i class="nav-icon fas fa-piggy-bank"></i><p>Captación</p></a></li>
-                        <li class="nav-item"><a href="#" class="nav-link"><i class="nav-icon fas fa-users"></i><p>Socios</p></a></li>
-                    </ul>
-                </li>
-            </ul>
-        </nav>
-    -->
+
+                    <!-- Modelos predictivos -->
+                    <span class="sub-label">Modelos predictivos</span>
+
+                    <a href="{{ url_for('forecast_cartera.modelos_institucionales') }}"
+                    class="sub-link {% if request.endpoint == 'forecast_cartera.modelos_institucionales' %}active{% endif %}">
+                        <span class="sub-dot"></span>
+                        Modelos institucionales
+                    </a>
+
+                    <a href="{{ url_for('forecast_cartera.modelos_sucursal') }}"
+                    class="sub-link {% if request.endpoint == 'forecast_cartera.modelos_sucursal' %}active{% endif %}">
+                        <span class="sub-dot"></span>
+                        Modelos por sucursal
+                    </a>
+
+                    <a href="{{ url_for('forecast_cartera.evaluacion_modelos') }}"
+                    class="sub-link {% if request.endpoint == 'forecast_cartera.evaluacion_modelos' %}active{% endif %}">
+                        <span class="sub-dot"></span>
+                        Evaluación de modelos
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="sidebar-foot">
         <div class="ava">JR</div>

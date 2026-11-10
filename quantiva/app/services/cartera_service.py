@@ -871,7 +871,8 @@ class CarteraService:
                 if total_cartera > 0 else 0
             )
 
-            meses.append(nombres_meses.get(fila.mes, fila.mes))
+            #meses.append(nombres_meses.get(fila.mes, fila.mes))
+            meses.append(fila.mes.upper())
             morosidad_mensual.append(round(morosidad, 2))
 
         return {
@@ -948,9 +949,7 @@ class CarteraService:
         }
 
         return {
-            'categories': [
-                nombres_meses.get(mes, mes) for mes in meses
-            ],
+            'categories': [mes.upper() for mes in meses],
             'series': series
         }
     @staticmethod
@@ -1036,7 +1035,7 @@ class CarteraService:
             colocacion_mensual[int(mes)] = float(colocacion or 0)
 
         return {
-            'chart_labels': meses,
+            'chart_labels': [mes.upper() for mes in meses],
             'chart_series': [
                 {
                     'name': 'Colocación',
@@ -1076,7 +1075,7 @@ class CarteraService:
                 creditos_mensuales[mes] = int(total or 0)
 
         return {
-            'chart_labels': meses,
+            'chart_labels': [mes.upper() for mes in meses],
             'chart_series': [
                 {
                     'name': 'Créditos otorgados',
