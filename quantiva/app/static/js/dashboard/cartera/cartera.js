@@ -241,7 +241,7 @@ function getChartOptions(labels,series){
 
         chart: {
             type: 'line',
-            height: 200,
+            height: 300,
             background: 'transparent',
             toolbar: {
                 show: false

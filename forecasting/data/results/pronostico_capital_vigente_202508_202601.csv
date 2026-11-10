@@ -1,0 +1,7 @@
+fecha,forecast,target,model
+2025-08-31,92983338.44106157,capital_vigente,holt_damped
+2025-09-30,93421688.49215494,capital_vigente,holt_damped
+2025-10-31,93772368.53302963,capital_vigente,holt_damped
+2025-11-30,94052912.5657294,capital_vigente,holt_damped
+2025-12-31,94277347.79188919,capital_vigente,holt_damped
+2026-01-31,94456895.97281703,capital_vigente,holt_damped

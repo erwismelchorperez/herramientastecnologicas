@@ -17,8 +17,6 @@ class Credito(db.Model):
     monto_original = db.Column(db.Numeric(14,2),nullable=True)
 """
 from app import db
-
-
 class Credito(db.Model):
 
     __tablename__ = 'creditos'
@@ -39,11 +37,7 @@ class Credito(db.Model):
     fecha_vencimiento = db.Column(db.Date, nullable=False)
 
     tasa_ord_nom_anual = db.Column(db.Numeric(10, 4), nullable=False)
-    tasa_moratoria_nom_anual = db.Column(
-        db.Numeric(10, 4),
-        nullable=False,
-        default=0
-    )
+    tasa_moratoria_nom_anual = db.Column(db.Numeric(10, 4),nullable=False,default=0)
 
     plazo_credito = db.Column(db.String(50), nullable=False)
     frecuencia_pago_capital = db.Column(db.String(50), nullable=True)
@@ -181,3 +175,5 @@ class Credito(db.Model):
         onupdate=db.func.current_timestamp(),
         nullable=False
     )
+    institucion_id = db.Column(db.BigInteger,db.ForeignKey('institucion.id'),nullable=True)
+    institucion = db.relationship( 'Institucion', backref=db.backref('creditos', lazy=True))

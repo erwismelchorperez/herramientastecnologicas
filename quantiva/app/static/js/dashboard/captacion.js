@@ -272,7 +272,7 @@ function getCaptacionEvolutionOptions(labels,series){
     return {
         chart: {
             type: 'line',
-            height: 250,
+            height: 300,
             toolbar: {
                 show: false
             }
@@ -650,12 +650,12 @@ function loadVariacionMensualCaptacion(sucursal, anio) {
                     data: response.chart_values || []
                 }],
                 title: '',
-                xAxisTitle: 'Periodo',
+                xAxisTitle: '',
                 yAxisTitle: 'Variación del saldo ($)',
                 valueType: 'currency',
                 compact: true,
                 decimals: 2,
-                height: 350,
+                height: 300,
                 legend: false
             });
         },

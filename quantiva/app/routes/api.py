@@ -116,10 +116,8 @@ def get_monto_original_por_producto_mes():
     return jsonify(data)
 @api.route('/cartera/evolution-vig-venc-chart')
 def get_evolutionvigvenc_chart():
-
     anio = request.args.get('anio', type=int)
     sucursal = request.args.get('sucursal')
-
     return jsonify(CarteraService.get_evolutionvigvenc_chart(sucursal,anio))
 @api.route('/cartera/get_colocacion_mensual')
 def get_colocacion_mensual():
@@ -265,10 +263,7 @@ def get_composicion_producto():
     return jsonify(datos)
 @api.route('/captacion/get_variacion_mensual')
 def get_variacion_mensual():
-    datos = CaptacionService.get_variacion_mensual_captacion(
-        sucursal=request.args.get('sucursal', 'all'),
-        anio=request.args.get('anio')
-    )
+    datos = CaptacionService.get_variacion_mensual_captacion(sucursal=request.args.get('sucursal', 'all'),anio=request.args.get('anio'))
     return jsonify(datos)
 @api.route('/captacion/get_evolucion_socios_ahorradores')
 def get_evolucion_socios_ahorradores():
@@ -385,8 +380,8 @@ def get_cards():
     Dashboard inicial
 """
 @api.route('/dashboard/cartera')
-def get_evolution_cartera(anio=None):
-    return jsonify(DashboardService.get_evolution_cartera(anio))
+def get_evolution_cartera(anio=None, sucursal=None):
+    return jsonify(DashboardService.get_evolution_cartera(anio, sucursal))
 @api.route('/cartera/get_morosidad_por_sucursal')
 def get_morosidad_por_sucursal():
     sucursal=request.args.get('sucursal')

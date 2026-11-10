@@ -509,7 +509,7 @@ function getIndiceMorosidadAnualChartOptions(categories, series) {
     return {
         chart: {
             type: 'line',
-            height: 350,
+            height: 300,
             background: 'transparent',
             toolbar: {
                 show: false
