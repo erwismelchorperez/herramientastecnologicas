@@ -471,7 +471,7 @@ class CaptacionService:
             variacion = actual['saldo'] - anterior['saldo']
 
             variaciones.append({
-                'periodo': f"{actual['mes'].capitalize()} {actual['anio']}",
+                'periodo': f"{actual['mes'].upper()}",
                 'variacion': round(variacion, 2),
                 'saldo_actual': round(actual['saldo'], 2),
                 'saldo_anterior': round(anterior['saldo'], 2)
@@ -608,7 +608,7 @@ class CaptacionService:
 
         return {
             'chart_labels': [
-                f"{r.numero_socio} - {r.nombre_socio or 'Sin nombre'}"
+                f"{r.numero_socio}"
                 for r in resultados
             ],
             'chart_values': [

@@ -36,6 +36,14 @@ def create_app():
     from app.routes.credit_risk import credit_risk
     from app.routes.configuracion import configuracion
 
+    # MODELOS DE FORECASTING
+    from app.models.institucion import Institucion
+    from app.models.forecast_model import ForecastModel
+    from app.models.forecast_model_metric import ForecastModelMetric
+    from app.models.forecast_run import ForecastRun
+    from app.models.forecast_value import ForecastValue
+    from app.models.forecast_comparison import ForecastComparison
+
     # BLUEPRINTS
     app.register_blueprint(auth)
     app.register_blueprint(dashboard)
